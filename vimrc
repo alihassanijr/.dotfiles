@@ -120,6 +120,10 @@ map <leader>sp :SplitVifm<cr>
 map <leader>dv :DiffVifm<cr>
 map <leader>tv :TabVifm<cr>
 
+" Terminal
+map <leader>vt :vert term<cr>
+map <leader>st :term<cr>
+
 " Vim wiki
 set nocompatible
 filetype plugin on

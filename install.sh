@@ -112,8 +112,14 @@ fi
 
 # Replace the vifm files
 echo "Linking vifm files..."
-rm -r $HOMEDIR/.vifm
-ln -s $THISDIR/vifm $HOMEDIR/.vifm
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    VIFMRC=$THISDIR/vifmrc.mac
+else
+    VIFMRC=$THISDIR/vifmrc
+fi
+rm -rf $HOMEDIR/.vifm
+cp -r $THISDIR/vifm $HOMEDIR/.vifm
+ln -s $VIFMRC $HOMEDIR/.vifm/vifmrc
 
 # Replace the vim files
 echo "Linking vim files..."
