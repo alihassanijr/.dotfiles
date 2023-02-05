@@ -19,3 +19,6 @@
 [submodule "third_party/vim/lightline"]
 	path = third_party/vim/lightline
 	url = https://github.com/itchyny/lightline.vim
+[submodule "third_party/vim/vimwiki"]
+	path = third_party/vim/vimwiki
+	url = https://github.com/vimwiki/vimwiki
