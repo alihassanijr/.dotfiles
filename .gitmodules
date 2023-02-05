@@ -1,0 +1,21 @@
+[submodule "third_party/vim/vim-pire"]
+	path = third_party/vim/vim-pire
+	url = https://github.com/habamax/vim-pire/
+[submodule "third_party/zsh/ohmyzsh"]
+	path = third_party/zsh/ohmyzsh
+	url = https://github.com/ohmyzsh/ohmyzsh
+[submodule "third_party/zsh/zsh-autosuggestions"]
+	path = third_party/zsh/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "third_party/vim/lightline"]
+	path = third_party/vim/lightline
+	url = https://github.com/itchyny/lightline.vim
+[submodule "third_party/vim/gitbranch"]
+	path = third_party/vim/gitbranch
+	url = https://github.com/itchyny/vim-gitbranch
+[submodule "third_party/vifm"]
+	path = third_party/vifm
+	url = https://github.com/vifm/vifm
+[submodule "third_party/vim/vifm.vim"]
+	path = third_party/vim/vifm.vim
+	url = https://github.com/vifm/vifm.vim

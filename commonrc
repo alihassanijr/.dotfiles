@@ -1,0 +1,51 @@
+# Common rc
+# Things I want in both bash and zsh, because I don't necessarily use zsh all the time.
+
+# General Exports
+export EDITOR="vim"
+
+# Load local binaries
+export PATH=~/.local/bin:$PATH
+
+# "My Binz"
+# Just a bunch of scripts I use daily that I put in a different repository
+# Because some are exclusive to different devices and I want to keep it branched.
+export PATH=~/.binz/:$PATH
+
+##########
+# Aliases
+##########
+# Add color and make human readable
+alias la='ls -ltah --color=auto'
+alias df='df -h'
+# Grep to have color, give line number, don't tell me it can't access restricted files (sudo), and don't process binary files (garbage output ):
+alias grep='grep --color=always --line-number --no-messages --binary-files=without-match'
+
+alias vi='vim'
+#alias top='htop'
+alias ssh='ssh -YC'
+
+alias gip="curl -s http://ipinfo.io/ip | cut -d'%' -f1"
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # No window manager for mac
+    # Tmux doesn't like to recognize 256 coloring, so let's force it
+    # -u fixes backspace error thing
+    alias tmux='tmux -2 -u'
+    alias mux="tmux a"
+    # Fixes tmux window renaming
+    DISABLE_AUTO_TITLE="true"
+    # Unset the autonaming for tmux
+    DISABLE_AUTO_TITLE="true"
+fi
+
+
+# SSH-Agent (from my binz)
+alias sagent='source sagent'
+source sagent
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Anaconda initializer (from my binz)
+    # I only use anaconda on *nix and not my mac.
+    source cnda
+fi

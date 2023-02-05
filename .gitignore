@@ -1,0 +1,11 @@
+~*
+*.swp
+*.swo
+vim/bundle*
+!vim/bundle/Vundle.vim
+vim/undodir/*
+.netrwhist
+*/.netrwhist
+tags
+vifm/vifminfo.json
+local/
