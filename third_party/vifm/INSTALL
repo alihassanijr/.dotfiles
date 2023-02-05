@@ -1,0 +1,208 @@
+Installation
+~~~~~~~~~~~~
+
+On *nix you need:
+
+    A working version of ncursesw built as a shared library (*.so files,
+    enabled by the --with-shared switch of ncurses' configure script) and
+    an ascii compliant terminal.  ncurses can be static, but that will
+    require providing appropriate options for linker (thus might not work
+    out of the box).
+
+    Hints for building on Debian-based systems (Debian/Ubuntu/Linux Mint):
+     * ncurses package you need to build vifm is called "libncursesw5-dev"
+     * additional (optional) tools used in sample vifmrc:
+       - sudo aptitude install sshfs curlftpfs fuse fuse-zip fusefat fuseiso
+       - for a support of .rar-archive files see:
+         https://gist.github.com/enberg/84710b619bdb0b10e945
+
+    For best user-experience with Vim plugins availability of either perl
+    interpreter or vim executable is needed to automatically generate tags.
+
+*nix Installation (Cygwin emulates *nix environment, so follow these steps
+when building with Cygwin):
+
+    If you checkout sources from git, run scripts/fix-timestamps script first
+    to suppress any spurious build files regeneration.
+
+    ./configure
+    make
+    ("su" if you don't have access to /usr/local/bin)
+    make install
+
+    ./configure has the following options (the value in square brackets is
+    the default one):
+
+      --disable/[enable]-extended-keys - controls whether to build vifm with
+          support of extended keys (like arrows, home, end, etc.).
+          If it's disabled, there absence of a delay after pressing escape is
+          guaranteed for all curses implementations.
+
+      --disable/[enable]-desktop-files - controls whether vifm will parse
+          *.desktop files found on your system to get a list of programs
+          associated with mimetype of a file.
+
+      --disable/[enable]-remote-cmds - enable remote command sending.
+
+      --[disable]/enable-developer - enables features of interest to
+          developers:
+           - debug information
+           - debug-friendly optimizations
+           - treating compilation warnings as errors
+
+      --[disable]/enable-werror - pass -Werror flag to compiler.
+
+      --[disable]/enable-coverage - enables code coverage generation.
+
+      --disable/[enable]-build-timestamp - disables embedding compilation date
+          into executable.
+
+      --with-sanitize=basic|thread|leak - enables address and undefined, thread
+          or leaks sanitizers respecitively.
+
+      --without/[with]-gtk - use GTK+ to determine mimetypes if available.
+
+      --without/[with]-libmagic - use libmagic to determine mimetypes if
+          available.
+
+      --without/[with]-X11 - use libX11 to get terminal window title before
+          changing it to restore it on exit.
+
+      --without/[with]-dyn-X11 - load libX11 dynamically
+
+      --with-curses=[/usr] - path to installation root of curses library
+
+      --with-curses-name=[ncursesw] - name of the curses library
+
+    You can install vifm in your ~/ directory if you prefer.  To do this
+    manually copy the vifm and vifm-pause executables from the src/ directory
+    to where you want to run them.  Another possibility is to pass --prefix
+    argument to the ./configure script, with path under the home directory,
+    e.g. --prefix=$HOME/local.  You will also need to copy vifm-help.txt and
+    vifmrc files from the data/ directory to ~/.vifm/.
+
+    After you start vifm for the first time, you can edit the configuration
+    file.  It will be at ~/.vifm/vifmrc.  See help for description of other
+    files in ~/.vifm directory.
+
+On OS X you need:
+
+    Get and install libscursesw or libncursesw as shared libraries (*.so
+    files, enabled by the --with-shared switch of ncurses' configure script).
+
+    Proceed like in *nix Installation section.
+
+    Also you probably want to pass --with-gtk=no argument to ./configure
+    script to omit unwanted error message when vifm starts.
+
+On Windows you need:
+
+    Mingw
+
+    The following libraries installed from dev-packages for Mingw (they
+    should include DLL's):
+     - Pdcurses for Mingw (with applied patches under patches/pdcurses*/)
+     - Regex for Mingw
+     - pthreads for Windows
+
+Cross-compiling for Windows using MXE (http://mxe.cc/):
+
+    Required MXE packages:
+     - gcc
+     - pdcurses (put patches from patches/pdcurses*/ to src/ directory of MXE)
+     - libgnurx
+     - pthreads
+
+    To build vifm using i686-pc-mingw32 toolchain:
+     - add usr/bin/ directory of MXE to the PATH environment variable, e.g.
+         PATH="$MXE_ROOT/usr/bin/:$PATH"
+     - cd src/
+     - make -f Makefile.win CROSS=i686-pc-mingw32-
+
+Windows Installation (using Windows native API, not Cygwin):
+
+    cd src
+    (uncomment some lines in Makefile.win below 'config:' if you want)
+    make -f Makefile.win
+
+    Copy vifm.exe and win_helper.exe to where you want to run them (but they
+    all should be in the same directory).  You will also need to copy vifm help
+    files and vifmrc file to %HOME%/.vifm/ or APPDATA%/Vifm/.
+
+    In case you want to be able to create symbolic links, you should set a
+    "Run as Administrator" attribute for the win_helper.exe.
+    Note: symbolic links are supported on Windows starting from Windows Vista.
+
+    If you use *nix shells copy vifm-pause to some directory that is
+    included in the %PATH%.  The better solution is to put it into
+    %HOME%/.vifm/scripts or %APPDATA%/Vifm/scripts.
+
+    On Windows you can also use vifm in a portable way (e.g. keep it on a
+    removable device).  To do that just put your vifmrc file where vifm.exe
+    is and all configuration files will be stored there.
+
+Vim Specific Options:
+
+    vim/ directory referred to below is:
+     - {install_prefix}/share/vifm/vim/ on *nix-like systems;
+     - data/vim/ on Windows.
+
+    Recommended way of installing Vifm-Vim integration is to point Vim's
+    'runtimepath' option to the vim/ directory, like this
+
+        set runtimepath+=/usr/share/vifm/vim/
+
+    in your .vimrc file.  Such setup has an additional benefit of Vifm help
+    being not visible unless Vim is started via :help command from Vifm.
+    If it's not what you desire, just add vim-doc/ directory in a similar
+    manner:
+
+        set runtimepath+=/usr/share/vifm/vim-doc/
+
+    Alternatively, you can install whole vim/ directory into Vim or only some
+    parts of it as described below.
+
+    vim/doc/vifm.txt file should go to your ~/.vim/doc directory or the system
+    vim/doc directory.  Then launch Vim and give the command
+
+        :helptags ~/.vim/doc
+
+    or
+
+        :helptags path/to/system/vim/doc
+
+    depending on where you installed the vifm.txt file.  Note that you have to
+    have write permission to corresponding directory.
+
+    You will also need to set 'vimhelp' option in ~/.vifm/vifmrc as the default
+    setting is to use the plain text file.
+
+    If you want to use syntax highlighting and file type plugin for
+    vifmrc file and on editing command line command externally, copy
+    vim/syntax/vifm.vim, vim/ftdetect/vifm.vim and all files in vim/ftplugin/
+    appropriately to either system wide or user syntax/ and ftplugin/
+    directories of Vim.  One can also add to .vimrc file commands like, but
+    using ftdetect/ directory is a cleaner way to achieve the same:
+
+        autocmd BufNewFile,BufRead vifmrc :set filetype=vifm
+        autocmd BufNewFile,BufRead ~/.vifm/colors/* :set filetype=vifm
+
+    or when parsing of mode lines is enabled in Vim, add the following as the
+    first or last line to configuration file and color schemes:
+
+        " vim: set filetype=vifm :
+
+    To use vifm.vim plugin install vim/plugin/vifm.vim script to Vim in the same
+    way as described above.  The script allows you to use Vifm from Vim to
+    select files and open them in different ways (e.g. in splits, tabs).
+    Note: you need at least Vim 7.3 to use it.
+
+Building with broken wide curses:
+
+    OpenBSD used to have perverted ncursesw library, which had stubs with
+    infinite loops instead of real wide functions.  Vifm had a workaround for
+    it.  The situation on OpenBSD has improved since then and the workaround is
+    now disabled by default.  If you still need it to build on older OpenBSD or
+    for some other system, run ./configure with "CFLAGS=-DBROKEN_WIDE_CURSES"
+    argument.  Mind that this is a workaround and it probably best works with
+    Latin characters.

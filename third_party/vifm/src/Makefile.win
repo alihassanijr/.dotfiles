@@ -1,0 +1,210 @@
+CC = $(CROSS)gcc
+WINDRES = $(CROSS)windres
+STRIP = $(CROSS)strip
+
+# function to get absolute path to parent directory of a path
+getparentdir = $(abspath $(dir $1))
+# determine location of this Makefile
+src_dir := $(call getparentdir, $(lastword $(MAKEFILE_LIST)))
+
+# lookup for out-of-tree builds
+VPATH := $(src_dir)
+
+override CFLAGS := -c -Wall -Werror $(CFLAGS)
+override CFLAGS += -include ../build-aux/config.h -pipe
+override CFLAGS += -pthread -MMD -MP
+ifeq ($(RELEASE),1)
+    override CFLAGS += -O2
+else
+    override CFLAGS += -gdwarf-3 -O0
+endif
+
+MANGEN := groff
+UNDER_VCS := $(shell [ "`which git 2> /dev/null`" -a -d ../.git ] && echo 1)
+
+LIBS := -lregex -lnetapi32 -lws2_32 -lm -lole32 -luuid -lmpr
+ifeq ($(OS),Windows_NT)
+    LIBS += -lpdcurses
+else
+    # new versions of MXE name pdcurses this way
+    LIBS += -lcurses
+endif
+
+LDFLAGS := -pthread
+
+cfg := config.c info.c
+cfg := $(addprefix cfg/, $(cfg))
+
+compat := curses.c dtype.c getopt.c getopt1.c os.c pthread.c reallocarray.c
+compat += wcwidth.c
+compat := $(addprefix compat/, $(compat))
+
+engine := abbrevs.c autocmds.c cmds.c functions.c completion.c keys.c mode.c \
+          options.c parsing.c text_buffer.c var.c variables.c
+engine := $(addprefix engine/, $(engine))
+
+int := ext_edit.c file_magic.c fuse.c path_env.c term_title.c vim.c
+int := $(addprefix int/, $(int))
+
+io := private/ioc.c private/ioe.c private/ioeta.c private/ionotif.c
+io += private/traverser.c ioe.c ioeta.c iop.c ior.c
+io := $(addprefix io/, $(io))
+
+lua := lapi.c lauxlib.c lbaselib.c lcode.c lcorolib.c lctype.c ldblib.c \
+       ldebug.c ldo.c ldump.c lfunc.c lgc.c linit.c liolib.c llex.c lmathlib.c \
+       lmem.c loadlib.c lobject.c lopcodes.c loslib.c lparser.c lstate.c \
+       lstring.c lstrlib.c ltable.c ltablib.c ltm.c lundump.c lutf8lib.c lvm.c \
+       lzio.c
+lua := $(addprefix lua/, $(lua))
+lua := $(addprefix lua/, $(lua) common.c vifm_cmds.c vifm_handlers.c \
+                                vlua_state.c vifm_keys.c vifm_tabs.c \
+                                vifm_viewcolumns.c vifmentry.c vifmjob.c \
+                                vifmtab.c vifmview.c vlua.c)
+
+menus := apropos_menu.c bmarks_menu.c cabbrevs_menu.c colorscheme_menu.c \
+         commands_menu.c dirhistory_menu.c dirstack_menu.c filetypes_menu.c \
+         find_menu.c grep_menu.c history_menu.c jobs_menu.c locate_menu.c \
+         trash_menu.c trashes_menu.c map_menu.c marks_menu.c menus.c \
+         plugins_menu.c registers_menu.c undolist_menu.c users_menu.c \
+         vifm_menu.c volumes_menu.c
+menus := $(addprefix menus/, $(menus))
+
+dialogs := attr_dialog_win.c change_dialog.c msg_dialog.c sort_dialog.c
+dialogs := $(addprefix dialogs/, $(dialogs))
+
+modes := $(dialogs) cmdline.c file_info.c menu.c modes.c more.c normal.c \
+         view.c visual.c
+modes := $(addprefix modes/, $(modes))
+
+ui := cancellation.c color_manager.c color_scheme.c colored_line.c column_view.c
+ui += escape.c fileview.c statusbar.c statusline.c tabs.c quickview.c ui.c
+ui := $(addprefix ui/, $(ui))
+
+utilities := cancellation.c dynarray.c env.c file_streams.c \
+             filemon.c filter.c fs.c fsdata.c fsddata.c fswatch_win.c globs.c \
+             gmux_win.c hist.c int_stack.c log.c matcher.c matchers.c parson.c \
+             path.c regexp.c selector_win.c shmem_win.c str.c string_array.c \
+             trie.c utf8.c utils.c utils_win.c
+utilities := $(addprefix utils/, $(utilities))
+
+vifm_SOURCES := $(cfg) $(compat) $(engine) $(int) $(io) $(lua) $(menus) \
+                $(modes) $(ui) $(utilities) args.c background.c bmarks.c \
+                bracket_notation.c builtin_functions.c cmd_completion.c \
+                cmd_core.c cmd_handlers.c compare.c compile_info.c dir_stack.c \
+                event_loop.c filelist.c filename_modifiers.c fops_common.c \
+                fops_cpmv.c fops_misc.c fops_put.c fops_rename.c filetype.c \
+                filtering.c flist_hist.c flist_pos.c flist_sel.c instance.c \
+                ipc.c macros.c marks.c ops.c opt_handlers.c plugins.c \
+                registers.c running.c search.c signals.c sort.c status.c \
+                tags.c trash.c types.c undo.c vcache.c version.c \
+                viewcolumns_parser.c vifmres.o vifm.c
+
+vifm_OBJECTS := $(vifm_SOURCES:.c=.o)
+vifm_EXECUTABLE := vifm.exe
+
+DIRS := $(sort $(dir $(vifm_OBJECTS)))
+
+# determine list of output directories that don't exist at the moment
+out_dirs := $(sort $(dir $(vifm_OBJECTS)))
+out_dirs := $(filter-out $(wildcard $(out_dirs)) ./, $(out_dirs))
+out_dirs := $(addprefix $(abspath .)/,$(out_dirs))
+
+win_helper_SOURCES := win_helper.c
+win_helper_OBJECTS := $(win_helper_SOURCES:.c=.o)
+win_helper_EXECUTABLE := win_helper.exe
+
+.PHONY: all clean check update_compile_info
+
+all: ../data/vifm-help.txt $(vifm_EXECUTABLE) $(win_helper_EXECUTABLE)
+
+$(vifm_EXECUTABLE): $(vifm_OBJECTS) | ../build-aux/config.h
+	$(CC) $^ -o $@ $(LDFLAGS) $(LIBS)
+ifeq ($(RELEASE),1)
+	$(STRIP) -S --strip-unneeded $@
+endif
+$(win_helper_EXECUTABLE): $(win_helper_OBJECTS) | ../build-aux/config.h
+	$(CC) $^ -o $@ $(LDFLAGS)
+ifeq ($(RELEASE),1)
+	$(STRIP) -S --strip-unneeded $@
+endif
+
+vifm.res: vifm.rc ../data/graphics/vifm.ico
+	$(WINDRES) --use-temp-file -i $(src_dir)/vifm.rc -o vifm.res
+
+vifmres.o: vifm.res
+	$(WINDRES) --use-temp-file -i ./vifm.res -o vifmres.o
+
+../build-aux/config.h: Makefile.win
+	@echo Creating sample $@
+	mkdir -p ../build-aux
+	echo '#define VERSION "0.12.1"' > $@; \
+	echo '#define ENABLE_EXTENDED_KEYS' >> $@; \
+	echo '#define _GNU_SOURCE 1' >> $@; \
+	echo '#define _XOPEN_SOURCE 1' >> $@; \
+	echo '#define _XOPEN_SOURCE_EXTENDED 1' >> $@; \
+	echo '#define _FILE_OFFSET_BITS 64' >> $@; \
+	echo '#define PACKAGE_SYSCONF_DIR ""' >> $@; \
+	echo '#define ENABLE_REMOTE_CMDS 1' >> $@; \
+	echo '#define WITH_BUILD_TIMESTAMP 1' >> $@; \
+	echo '#define WINVER 0x0600' >> $@; \
+	echo '#define _WIN32_WINNT 0x0600' >> $@; \
+	echo '#define PDC_WIDE' >> $@; \
+#	echo '#define HAVE_FILE_PROG' >> $@;
+ifneq ($(OS),Windows_NT)
+	@echo '#define __USE_MINGW_ANSI_STDIO 1' >> $@
+endif
+
+version.o: $(filter-out version.o, $(vifm_OBJECTS))
+compile_info.c: update_compile_info
+	@$(src_dir)/update-compile-info $(UNDER_VCS)
+
+# No action needed for this target.
+update_compile_info:
+
+%.o: %.c | ../build-aux/config.h $(out_dirs)
+	$(CC) $(CFLAGS) $< -o $@
+
+../data/vifm-help.txt: $(src_dir)/../data/man/vifm.1 | $(abspath ../data/)
+	@if [ "x$$(which $(MANGEN))" != "x" -a "x$$(which sed)" != "x" ]; then \
+		$(MANGEN) -Tascii -man $< | \
+		    sed -e 's/.\x08//g' -e 's/\x1b\[[0-9]*m//g' -e 's/\r//g' >| '$@'; \
+	fi
+
+tags.c: ../data/vim/doc/app/vifm-app.txt
+	@if [ "x$$(which vim)" != "x" -a "x$$(which awk)" != "x" ]; then \
+		vim -e -s -c 'helptags $(dir $<)|q'; \
+		awk ' \
+			BEGIN { \
+				print "const char *tags[] = {" \
+			} \
+			{ \
+				print "\t\"" $$1 "\"," \
+			} \
+			END { \
+				print "\t0,\n};" \
+			} \
+		' $(dir $<)/tags > $@; \
+		dos2unix "$@"; \
+	fi
+
+$(out_dirs) $(abspath ../data/):
+	mkdir -p $@
+
+# only builds tests without running them
+tests: | ../build-aux/config.h $(vifm_EXECUTABLE)
+	mkdir -p "$(abspath ../tests)"
+	+make -C $(src_dir)/../tests/ B='$(abspath ../tests)/' CC='$(CC)' \
+	     TEST_RUN_PREFIX='$(TEST_RUN_PREFIX)' build
+
+# runs the tests, building them before if needed
+check: tests
+	+make -C $(src_dir)/../tests/ B='$(abspath ../tests)/' CC='$(CC)' \
+	     TEST_RUN_PREFIX='$(TEST_RUN_PREFIX)'
+
+clean:
+	-$(RM) compile_info.c tags.c
+	-$(RM) $(addsuffix *.o, $(DIRS))
+	-$(RM) $(addsuffix *.d, $(DIRS))
+	-$(RM) *.res *.exe
+
+include $(wildcard $(addsuffix *.d, $(DIRS)))

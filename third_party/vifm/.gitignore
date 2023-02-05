@@ -1,0 +1,41 @@
+# local automatically generated files
+/data/vim/doc/app/tags
+/data/vim/doc/plugin/tags
+/data/vifm-help.txt
+/src/compile_info.c
+/src/runtests
+/src/test-suite.log
+
+# created during build/test process
+/tests/bin/
+/tests/sandbox/
+
+# autotools generated files
+/autom4te.cache/
+/build-aux/config.h
+/build-aux/config.h.in~
+/build-aux/stamp-h1
+/src/Makefile
+/src/runtests.log
+/src/runtests.trs
+/Makefile
+/config.log
+/config.status
+.deps/
+.dirstamp
+
+# *nix executables
+/src/vifm
+
+# compiler output
+*.o
+*.d
+*.gch
+
+# code coverage
+*.gcda
+*.gcno
+
+# windows specific
+src/*.exe
+src/*.res

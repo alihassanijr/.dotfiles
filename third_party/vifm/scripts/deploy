@@ -1,0 +1,171 @@
+#!/bin/bash
+
+# Variables:
+#  * VIFM_DATE_OVERRIDE -- date to use instead of "now"
+
+if [ "$#" -lt "1" ] || [ "$#" -gt "2" ]; then
+    echo "Usage: $0 version [all|update|commit|archive]"
+    exit 1
+fi
+
+ver="$1"
+case "$ver" in
+    [0-9].[0-9][0-9].[0-9]-beta);;
+    [0-9].[0-9][0-9]-beta);;
+    [0-9].[0-9]-beta);;
+    [0-9].[0-9][0-9].[0-9]);;
+    [0-9].[0-9][0-9]);;
+    [0-9].[0-9]);;
+    *)
+        echo "ERROR: unrecognized version format: $ver"
+        exit 1
+esac
+
+target="all"
+
+if [ $# -eq 2 ]; then
+    target="$2"
+fi
+
+function date() {
+    if [ -z "$VIFM_DATE_OVERRIDE" ]; then
+        command date "$@"
+    else
+        command date --date="$VIFM_DATE_OVERRIDE" "$@"
+    fi
+}
+
+# this check is for me, since I'm always use vifm.exe from the repository
+if [ "$OS" = Windows_NT ]; then
+    if [ "$target" = all ] || [ "$target" = archive ]; then
+        vifm_running="$(ps -W | grep vifm.exe)"
+        if [ -n "$vifm_running" ]; then
+            echo "ERROR: vifm is running"
+            exit 2
+        fi
+    fi
+fi
+
+if [ "$target" = all ] || [ "$target" = update ]; then
+    echo "Updating version number..."
+
+    # update version in ChangeLog
+    sed -i "1s/current/$ver ($(date '+%Y-%m-%d'))/" ChangeLog
+
+    # update version in configure script
+    sed -i "/AC_INIT(/s/, [^,]\\+/, $ver/" configure.ac
+
+    if [ "$OS" != Windows_NT ]; then
+        # regenerate autotools files
+        autoreconf
+        # some voodoo magic to preserve old version of aclocal.m4 file
+        make
+        git checkout aclocal.m4
+        make
+        # this one is to get rid of trailing whitespace
+        git checkout src/Makefile.in
+        make
+    fi
+
+    # update version in src/Makefile.win
+    makefile=src/Makefile.win
+    sed -i "/define VERSION/s/VERSION \".*\"/VERSION \"$ver\"/" "${makefile}"
+
+    vimplugindoc=data/vim/doc/plugin/vifm-plugin.txt
+    vimappdoc=data/vim/doc/app/vifm-app.txt
+    # update version in vifm-{app,plugin}.txt
+    sed -i "/For Vifm version/s/version \\S\\+/version $ver/" "${vimplugindoc}"
+    sed -i "/For Vifm version/s/version \\S\\+/version $ver/" "${vimappdoc}"
+    # update last change date in vifm-{app,plugin}.txt
+    sed -i "/Last change/s/: .*/: $(date '+%Y %b %d')/" "${vimplugindoc}"
+    sed -i "/Last change/s/: .*/: $(date '+%Y %b %d')/" "${vimappdoc}"
+
+    # update date in README
+    sed -i "/^This file last updated:/s/:.*/:$(date '+ %d %B %Y')/" README
+    # update version in README
+    sed -i "/^Version:/s/ .*/ $ver/" README
+    # update year in README
+    sed -i "/^2001 - /s/-.*/$(date '+- %Y')/" README
+
+    # update date in README.md
+    sed -i "/^_Latest release is /s/on .*/on $(date '+%d %B %Y')._/" README.md
+    # update version in README.md
+    sed -i "/^_Latest release is /s/is .*\.  /is ${ver}.  /" README.md
+
+    # update man pages
+    sed -i "1s/\"[^\"]\\+\" \"[^\"]\\+\"\$/\"$(date '+%d %B %Y')\" \"vifm $ver\"/" data/man/*.1
+
+    # update first header in the NEWS file
+    sed -i -e "1s/.*/$(date '+%d %B %Y')/" \
+           -e "2{s/.*/$(date '+%d %B %Y')/;s/./=/g}" NEWS
+fi
+
+if [ "$target" = all ] || [ "$target" = commit ]; then
+    echo "Making version commit..."
+
+    if ! git commit -av -m "Version v$ver"; then
+        echo 'Committing error.'
+        exit 1
+    fi
+    # force mark commit with tag taking the last section in the NEWS for message
+    sed -n -e '/^~~~~~~~~~~~~~~~~~/q' -e '/^vifm/,$p' NEWS |
+        git tag --force --file=- --sign "v$ver"
+fi
+
+if [ "$target" = all ] || [ "$target" = archive ]; then
+    echo "Building archive..."
+
+    # make archive
+    if [ "$OS" != Windows_NT ]; then
+        archive_name="vifm-$ver.tar.bz2"
+        make distcheck
+    else
+        # remove config.h to make Makefile.win install default configuration
+        rm -f build-aux/config.h
+
+        # build vifm
+        make -C src/ -f Makefile.win clean
+        git checkout src/tags.c
+        if ! RELEASE=1 make -C src/ -f Makefile.win; then
+            echo "ERROR: Building project failed."
+            exit 3
+        fi
+        if ! RELEASE=1 make -C tests/ check; then
+            echo "ERROR: Testing project failed."
+            exit 4
+        fi
+
+        set -e
+
+        dir="vifm-w32-$ver-binary"
+        rm -rf "$dir"
+        mkdir "$dir"
+        cp -R data "$dir"
+        for i in "$dir/data/colors"/*; do
+            unix2dos -c ISO "$i"
+        done
+        rm "$dir/data"/*.desktop
+        rm -r "$dir/data/man"
+        unix2dos -c ISO "$dir/data/vifm-help.txt"
+        unix2dos -c ISO "$dir/data/vifmrc"
+        mv "$dir/data/vim/doc/plugin/vifm-plugin.txt" "$dir/data/vim/doc/vifm-plugin.txt"
+        rmdir "$dir/data/vim/doc/plugin"
+        mkdir "$dir/data/vim-doc"
+        mv "$dir/data/vim/doc/app" "$dir/data/vim-doc/doc"
+        pkgfiles='AUTHORS BUGS ChangeLog COPYING COPYING.3party FAQ INSTALL NEWS README THANKS TODO'
+        for i in $pkgfiles; do
+            dest="$dir/$i.txt"
+            cp "$i" "$dest"
+            unix2dos -c ISO "$dest"
+        done
+        cp src/vifm-pause src/*.dll src/*.exe "$dir"
+        strip -S --strip-unneeded "$dir"/*.dll "$dir"/*.exe
+
+        archive_name="$dir.zip"
+        rm -f "$archive_name"
+        zip -9 -r "$archive_name" "$dir"
+
+        set +e
+    fi
+    echo "Archive: $archive_name"
+fi

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+eval "$*"
+echo -n Press any key to close this region...
+old_stty_cfg="$(stty -g)"
+stty raw -echo
+head -c 1
+stty "$old_stty_cfg"
+screen -X remove

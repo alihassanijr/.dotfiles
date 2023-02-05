@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -e
+
+cd src/
+
+# download and build pdcurses with patches
+if [ ! -d PDCurses-3.8/ ]; then
+
+wget 'https://github.com/wmcbrine/PDCurses/archive/3.8.tar.gz'
+tar vxf 3.8.tar.gz
+
+ls ../patches/pdcurses38/* | sort |
+while read patch; do
+    (cd PDCurses-3.8/; patch -p1 < "../$patch");
+done
+
+make -C PDCurses-3.8/wincon/ WIDE=Y UTF8=Y
+mv PDCurses-3.8/wincon/pdcurses.a PDCurses-3.8/wincon/libpdcurses.a
+
+patch --verbose -p1 << EOF
+--- a/PDCurses-3.8/curses.h
++++ b/PDCurses-3.8/curses.h
+@@ -180,6 +180,9 @@ typedef struct
+ #define PDC_MOUSE_WHEEL_RIGHT   0x0100
+ 
+ #define A_BUTTON_CHANGED        (Mouse_status.changes & 7)
++#ifdef MOUSE_MOVED
++#undef MOUSE_MOVED
++#endif
+ #define MOUSE_MOVED             (Mouse_status.changes & PDC_MOUSE_MOVED)
+ #define MOUSE_POS_REPORT        (Mouse_status.changes & PDC_MOUSE_POSITION)
+ #define BUTTON_CHANGED(x)       (Mouse_status.changes & (1 << ((x) - 1)))
+EOF
+
+fi
+
+# download and build regex library (the one in MSYS2 seems to be buggy)
+if [ ! -d mingw-libgnurx-2.5.1/ ]; then
+
+wget 'https://downloads.sourceforge.net/project/mingw/Other/UserContributed/regex/mingw-regex-2.5.1/mingw-libgnurx-2.5.1-src.tar.gz'
+tar vxf mingw-libgnurx-2.5.1-src.tar.gz
+cd mingw-libgnurx-2.5.1/
+./configure
+make
+
+fi

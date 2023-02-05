@@ -1,0 +1,72 @@
+#!/bin/sh
+# this script prevents useless rebuilds after checking out sources from git, run
+# it to omit build files regeneration, which otherwise require build tools being
+# available
+# see https://www.gnu.org/software/automake/manual/automake.html#CVS
+
+# Usage: without arguments updates timestamps unconditionally
+#        with at least one argument (not analyzed) checks timestamps and skips
+#        updates if everything is up-to-date
+
+# Note: this script sometimes doesn't work for out-of-tree builds, not sure
+#       exactly why
+
+next_second()
+{
+    echo Waiting for time change...
+    sleep 1
+}
+
+update()
+{
+    echo "Updating $@"
+    touch "$@"
+}
+
+# checks whether timestamps are OK, OK looks like this:
+# configure.ac
+#    < aclocal.m4
+#        < configure build-aux/config.h.in `find . -name Makefile.in -print`
+everything_is_up_to_date()
+{
+    if [ ! configure.ac -ot aclocal.m4 ]; then
+        echo 'configure.ac is not older than aclocal.m4'
+        return 1
+    fi
+
+    for file in configure build-aux/config.h.in \
+               `find . -name Makefile.in -print`; do
+        if [ ! aclocal.m4 -ot "$file" ]; then
+            echo "aclocal.m4 is not older than $file"
+            return 1
+        fi
+    done
+
+    return 0
+}
+
+if [ $# -gt 0 ]; then
+    if everything_is_up_to_date; then
+        exit 0
+    fi
+fi
+
+next_second
+
+# aclocal-generated aclocal.m4 depends on locally-installed '.m4' macro files,
+# as well as on 'configure.ac'
+update aclocal.m4
+
+next_second
+
+# autoconf-generated configure depends on aclocal.m4 and on configure.ac
+update configure
+
+# so does autoheader-generated config.h.in
+update build-aux/config.h.in
+
+# and all the automake-generated Makefile.in files
+update `find . -name Makefile.in -print`
+
+# generated tags.c file should be newer than tags in data/vim/doc/app/
+update src/tags.c

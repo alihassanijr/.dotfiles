@@ -1,0 +1,60 @@
+Vifm - Vim-like file manager
+2001 - 2022
+
+Version: 0.12.1
+
+This file last updated: 21 September 2022
+
+Brief Description
+
+    Vifm is a Vim-like file manager with curses interface extended with some
+    useful ideas from mutt.  If you use Vim, Vifm gives you complete keyboard
+    control over your files without having to learn a new set of commands.  It
+    goes not just about Vim-like keybindings, but also about modes, options,
+    registers, commands and other things you might already like in Vim.
+
+    Just like Vim, Vifm tries to adhere to the Unix philosophy.  So instead of
+    working solutions which are set in stone user is provided with a set of
+    means for customization of Vifm to one's likings.  Though builtin
+    functionality should be enough for most of use cases.
+
+Contacts
+
+    Website: https://vifm.info/
+    Wiki:    https://wiki.vifm.info/
+    Q&A:     https://q2a.vifm.info/
+
+    Bugs and feature requests can be reported at:
+    * https://github.com/vifm/vifm/issues
+    * https://sourceforge.net/p/vifm/_list/tickets
+
+    The preferred way of posting usage questions is Q&A site:
+    * https://q2a.vifm.info/
+
+    Bugs, suggestions and comments can also be communicated via email:
+    * xaizek@posteo.net
+
+    Read-only and very low traffic news mailing list is at:
+    * vifm-announce@lists.sourceforge.net
+    Subscription form for it is here:
+    * https://lists.sourceforge.net/lists/listinfo/vifm-announce
+
+    Repositories:
+    * https://sourceforge.net/projects/vifm/
+    * https://github.com/vifm/vifm
+
+    Vim plugin:
+    * https://github.com/vifm/vifm.vim
+
+    Collection of color schemes is available at:
+    * https://github.com/vifm/vifm-colors
+    Their previews can be found at:
+    * https://vifm.info/colorschemes.shtml
+
+    Configurations for iconic fonts:
+    * https://github.com/cirala/vifm_devicons
+    * https://github.com/yanzhang0219/dotfiles/tree/master/.config/vifm
+
+    Preview scripts:
+    * https://github.com/cirala/vifmimg
+    * https://github.com/eylles/vifm-sixel-preview

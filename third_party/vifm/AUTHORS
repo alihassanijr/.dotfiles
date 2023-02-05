@@ -1,0 +1,158 @@
+All suggestions or complaints should be sent to xaizek@posteo.net.
+
+Current author is xaizek <xaizek@posteo.net> (since 2011).
+Original author is Ken Steen <ksteen@users.sourceforge.net> (2001 - 2011).
+
+The pauseme script (removed in 0.6.3) was from the tkdesk program.
+
+Some of the code is from emelfm by Michael Clark.
+
+The screen-open-region-with-program and screen-ren-program-in-region were
+written by Miciah Dashiel Butler Masters.
+
+The file sorting function is from the git program by Tudor Hulubei
+and Andrei Pitis.
+
+A patch for filetypes detection was written by Stefan Walter.
+
+FreeBSD and NetBSD  ports by Stefan Walter.
+
+Debian package by Edelhard Becker.
+
+Terry Brown wrote part of the keybinding code.
+
+Gentoo package by Peter Johanson.
+
+Ralf Arens added the configurable color code and rewrote the bookmarks
+code.
+
+Dmitry Suzdalev fixed the :!<Enter> bug.
+
+MacOSX Fink package by Damien Ferrand
+
+Karsten Schoelzel - submitted a patch to fix the handling of files with
+a % in the name.
+
+Ali Gholami Rudi - submitted patch fixing buffer overflow in
+colorschemes.
+
+Ondrej Martinak - Patch to fix handling of directories with spaces.
+                  Patch for file sizes larger than 4 Gb and to correct typos.
+
+pld-linux group patch for malloc in colorschemes
+
+Woody Kiang - command completion and wide character support in
+:commands.
+
+Minozake - start vifm --help fix
+
+Dan Price - wrote the human friendly file size and the ascending and
+descending sort.
+
+from fork of wsdookadr (Petrea Stefan Corneliu):
+- %b
+- unmount all FUSE mounts on exit
+- functional keys in user mappings
+- idea of temporary blocking inotify events from very active files
+
+seatest is written by Keith Nicholas
+
+Patches for Vim plugin and handling of errors from external applications
+without temporary files by Colin Cartade.
+
+Patch that fixes using of invalid (or at least strange) item names in the
+stat structure by Kaspars Bankovskis.
+
+Chris Yuen provided a patch to fix compilation on Mac OS X.
+
+Chris Skalenda wrote a patch to allow setting the trash directory location.
+
+Miles (pkordy) provided a patch to fix opening of tagged (selected) symbolic
+links to a directory.
+
+Gentoo ebuild by Oleg Gordienko (gordio).
+
+Seth VanHeulen (a.k.a. svanheulen) added integration with tmux.
+
+MadMaverick9 provided patches for various fixes.
+
+lyuts fixed trash emptying in csh-like shells.
+
+Patches for Vim plugin by Jonathan Da Silva.
+
+More human-friendly (xterm-like) names for 256 colors by Michael
+Vetter (a.k.a. jubalh).
+
+Some build system fixes/updates/best practices by Hendrik Jaeger (a.k.a.
+henk).
+
+Shell completions and patches for Vim plugin, vifm-screen-split, documentation
+and code by filterfalse.
+
+Christian Fillion (a.k.a. cfillion) fixed crash on navigation to end of line
+in command-line mode.
+
+%FOREGROUND FUSE mount flag by Johannes (a.k.a. johannesmeng).
+
+Brian Callahan (a.k.a. ibara) fixed build on OpenBSD.
+
+Cosmin Popescu (a.k.a. cosminadrianpopescu) added "*" to 'slowfs', match numbers
+to search messages, :shell!, extension sorting fix, fileext sorting key, dynamic
+view column alignment.
+
+Michel Normand fixed compilation for PowerPC where PAGE_SIZE isn't defined.
+
+Dennis Hamester fixed interaction with emacsclient due to reopening terminal as
+/dev/tty.
+
+Svyatoslav Mishyn (a.k.a. juef) aligned options in conflict resolution dialog.
+
+oo- added shortcuts to dialogs.
+
+Dmitry Frank (a.k.a. dimonomid) provided multiple patches.
+
+John Shea (a.k.a. coachshea) provided fix for the plugin related to neovim.
+
+Daniel Mueller fixed CWD of the process not matching current view after vifm
+picked up change in file system and on startup.
+
+Ma_Sys.ma implemented 'syncregs' option which defines group of instances that
+share registers.
+
+Konst Mayer (a.k.a. cdlscpmv) dropped leading space from value of 'timefmt'.
+
+rbong authored a number of changes that extend functionality of the Vim plugin
+originally as a separate plugin for neovim, later merged into the main one.
+
+zsugabubus provided multiple patches.
+
+Von Welch submitted vifm-media-osx script.
+
+Richard Benson provided icon for the project (since October 2013).
+
+Roman Plášil (a.k.a. Quiark) authored script for converting Vim's color scheme
+into a Vifm's one.
+
+Bas Bossink (a.k.a. basbossink) fixed issues with non-tiny 'shellcmdflag' on
+Windows.
+
+Stephen Horst (a.k.a. sjhorst) fixed adding files with spaces in their names
+as e-mail attachments in the plugin.
+
+Hans Bieshaar added HardLink highlight group.
+
+Alborz Jafari added rate and progress bar to progress dialog.
+
+pkgs/AppImage/* provided by michaellee8.
+
+M Kelly fixed inability to map escape sequences due to extended keys in
+terminfo database and added notation for some shifted keys.
+
+Phil Runninger helped to provide target information for drives in :volumes
+menu.
+
+qsmodo contributed multiple patches.
+
+Hescalalu provided icon for the project (since July 2021).
+
+Completion for fish shell by Hoang Nguyen (a.k.a. FollieHiyuki).

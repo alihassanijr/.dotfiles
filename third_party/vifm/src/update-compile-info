@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if [ $# -gt 1 ]; then
+    echo "`basename "$0"`: [git]"
+    exit 1
+fi
+
+in_repo="$1"
+
+if [ -r compile_info.c ]; then
+    old="`cat compile_info.c`"
+fi
+
+if [ -n "$in_repo" ]; then
+    # This is set for scripts running from git hooks, but it breaks the command
+    # below.
+    unset GIT_DIR
+
+    info="`git describe --tags --long --always --abbrev=12 --dirty`"
+else
+    info='built out of repository'
+fi
+new="const char GIT_INFO[] = \"$info\";"
+
+if [ "$old" != "$new" -o ! -f compile_info.c ]; then
+    echo "Updating build revision"
+    echo "$new" > compile_info.c
+fi

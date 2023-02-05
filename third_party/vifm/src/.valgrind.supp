@@ -1,0 +1,93 @@
+{
+   wcscpy-ssse3-wrong-read
+   Memcheck:Addr8
+   fun:__wcscpy_ssse3
+}
+
+{
+   wcsncmp-avx2-uninitialized-read
+   Memcheck:Value8
+   fun:__wcsncmp_avx2
+}
+
+{
+   wcsncmp-avx2-uninitialized-cond
+   Memcheck:Cond
+   fun:__wcsncmp_avx2
+}
+
+{
+   wcsncmp-avx2-wrong-read
+   Memcheck:Addr32
+   fun:__wcsncmp_avx2
+}
+
+{
+   wcscmp-wrong-read
+   Memcheck:Addr8
+   fun:wcscmp
+}
+
+{
+   re_compile-uninitialized-data
+   Memcheck:Cond
+   fun:re_compile_fastmap_iter.isra.*
+   fun:re_compile_fastmap
+   fun:regcomp
+}
+
+{
+   thread-tls-1
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:allocate_dtv
+   fun:_dl_allocate_tls
+   fun:allocate_stack
+   fun:pthread_create*
+}
+
+{
+   thread-tls-2
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:_dl_allocate_tls
+   fun:pthread_create*
+}
+
+{
+   there-is-no-leak-of-origin
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:strdup
+   fun:replace_dir_entries
+   fun:clone_view
+}
+{
+   there-is-no-leak-of-entry-array
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:realloc
+   fun:dynarray_extend
+   fun:replace_dir_entries
+   fun:clone_view
+}
+
+{
+   there-is-no-leak-of-lua-objects-1
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:realloc
+   fun:l_alloc
+}
+{
+   there-is-no-leak-of-lua-objects-2
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:realloc
+   fun:l_alloc
+}
