@@ -3,6 +3,7 @@
 THISDIR=$HOME/.dotz
 HOMEDIR=$HOME
 LOCALDIR=$HOME/.local/
+NCDIR=$HOME/.ncurses/
 
 echo "This sets things up!"
 echo "It'll set up oh my zsh, my zsh and bash rc, vim, and vifm."
