@@ -25,8 +25,6 @@ alias vi='vim'
 #alias top='htop'
 alias ssh='ssh -YC'
 
-alias gip="curl -s http://ipinfo.io/ip | cut -d'%' -f1"
-
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # No window manager for mac
     # Tmux doesn't like to recognize 256 coloring, so let's force it
@@ -39,6 +37,49 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     DISABLE_AUTO_TITLE="true"
 fi
 
+
+# SSH-Agent (from scripts/)
+alias sagent='source sagent'
+source sagent
+
+# Anaconda initializer (from scripts/)
+if [[ "$OSTYPE" == "linux-gnu"* ]] && [[ $(hostname) != *"login"* ]]; then
+    # I only use anaconda on linux compute nodes.
+    source cnda
+fi
+
+# Force NCCL to use IPV4
+# export NCCL_SOCKET_FAMILY="AF_INET"
+
+# Custom wandb tmp directory
+MY_WANDB_DIR="$HOME/.tmp/wandb/"
+[ ! -d "$MY_WANDB_DIR" ] && mkdir -p $MY_WANDB_DIR
+export WANDB_DIR="$MY_WANDB_DIR"
+
+# Custom ENROOT config path
+MY_ENROOT="$HOME/.enroot"
+export ENROOT_CONFIG_PATH="$MY_ENROOT"
+
+# My functions
+
+# Who has processes?
+alias whodat='ps haeo user | sort -u'
+
+# IP address lookup
+alias lip="hostname -I | cut -d' ' -f1"
+alias gip="curl -s http://ipinfo.io/ip | cut -d'%' -f1"
+
+# My go-to rsync with deletion
+ry () {
+    rsync -a -H -x -v --numeric-ids --delete --progress -e "ssh -T -o Compression=no -x" $1 $2
+}
+
+# My go-to rsync WITHOUT deletion
+rys () {
+    rsync -a -H -x -v --numeric-ids --ignore-existing --progress -e "ssh -T -o Compression=no -x" $1 $2
+}
+
+# Opens vifm and cds into the directory you :q from.
 vicd() {
     local dst="$(command vifm --choose-dir - "$@")"
     if [ -z "$dst" ]; then
@@ -48,13 +89,7 @@ vicd() {
     cd "$dst"
 }
 
-
-# SSH-Agent (from my binz)
-alias sagent='source sagent'
-source sagent
-
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    # Anaconda initializer (from my binz)
-    # I only use anaconda on *nix and not my mac.
-    source cnda
-fi
+# SMUX: SSH and then attach to tmux
+smux () {
+    ssh -t ${@} 'bash -c "tmux a"'
+}

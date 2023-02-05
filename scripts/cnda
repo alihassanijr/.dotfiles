@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# This script initializes anaconda, if it finds an anaconda install
+# Depending on what server/computer I'm on, anaconda might be installed in one of 
+# many possible directories. This script looks those up based on username and
+# picks the first one it finds.
+
+# The reason why I keep it out of my bashrc/zshrc is that in some scenarios,
+# I actually don't want conda, or at least not by default.
+# For instance, on my mac conda init takes 1 or 2 seconds, and I don't even use it
+# that often. On login nodes I definitely don't want to have conda, because I want
+# to be forced to set up my entire environment in a compute node.
+#
+# If I need conda but it's not initialized, I can always do `source cnda`
+
+
+# Look for conda
+usr=$(whoami)
+paths=("/home/${usr}/anaconda3" "/home/users/${usr}/anaconda3" "/workspace/${usr}/anaconda3" "/Users/${usr}/opt/anaconda3")
+found=false
+for pth in ${paths[@]}
+do
+    if [[ -d $pth ]]
+    then
+        found=true
+        break
+    fi
+done
+
+# Initialize if found
+if [[ $found ]]
+then
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$(\"$pth/bin/conda\" 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "$pth/etc/profile.d/conda.sh" ]; then
+            . "$pth/etc/profile.d/conda.sh"
+        else
+            export PATH="$pth/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+fi

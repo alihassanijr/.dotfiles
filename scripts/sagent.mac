@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# SAGENT starts an SSH agent if my user doesn't already have one running.
+# It first looks up ssh-agent processes associated with my user and sets
+# the environment variable associated with it so the terminal recognizes it.
+# If it doesn't find on, it starts one.
+
+# This script gets sourced in my bashrc/zshrc.
+
+# The difference between this and the linux version is that
+# for some reason, ssh-agent ignores `-a` (bind address) on OSX.
+# Therefore we don't set the bind address manually.
+# And the time limit is longer.
+
+AGENTFOUND=0
+
+for agentsocket in $(pgrep -f "ssh-agent -s" -n -u $(whoami)) ; do
+    #if [ $AGENTFOUND != 0 ] ; then break ; fi
+    #if sshagent_testsocket $agentsocket ; then AGENTFOUND=1 ; fi
+    AGENTFOUND=1
+    export SSH_AGENT_PID=$agentsocket
+    break
+done
+
+# If at this point we still haven't located an agent, it's time to
+# start a new one
+if [ $AGENTFOUND = 0 ] ; then
+    eval "$(ssh-agent -s -a ~/.ssh/ssh-agent.sock -t 18h)"
+    export SSH_AGENT_PID=$SSH_AGENT_PID
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh-agent.sock
+echo "Agent set: ${SSH_AGENT_PID}"

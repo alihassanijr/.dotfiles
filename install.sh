@@ -132,7 +132,21 @@ ln -s $THISDIR/vimrc $HOMEDIR/.vimrc
 rm -rf $HOMEDIR/.oh-my-zsh
 echo "Linking oh-my-zsh to home directory"
 ln -s $THISDIR/third_party/zsh/ohmyzsh $HOMEDIR/.oh-my-zsh
+rm -f $HOMEDIR/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 ln -s $THISDIR/third_party/zsh/zsh-autosuggestions $HOMEDIR/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+# Set up my custom scripts
+echo "Linking custom scripts"
+rm -f $LOCALDIR/bin/cnda
+rm -f $LOCALDIR/bin/kssh
+rm -f $LOCALDIR/bin/sagent
+ln -s $THISDIR/scripts/cnda $LOCALDIR/bin/cnda 
+ln -s $THISDIR/scripts/kssh $LOCALDIR/bin/kssh
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    ln -s $THISDIR/scripts/sagent.mac $LOCALDIR/bin/sagent
+else
+    ln -s $THISDIR/scripts/sagent $LOCALDIR/bin/sagent
+fi
 
 
 echo "Installation complete"
