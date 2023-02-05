@@ -55,8 +55,6 @@ set showmode            "Shows mode in bottom left
 set scrolloff=5         "Keep at lease 5 lines above and below
 set colorcolumn=129     " Vertical white bar at 80 chars
 set tw=128              " Line wrapping
-" use `gq` to wrap selected text and `gqG` to wrap text till end of file
-" all ranges work like normal. `gqip` wraps current paragraph
 
 "Error bells.  All are off
 set noerrorbells        "Removes error bells
@@ -125,3 +123,4 @@ map <leader>tv :TabVifm<cr>
 " Vim wiki
 set nocompatible
 filetype plugin on
+let g:vimwiki_list = [{'path': '~/.aliswiki/', 'name': 'Ali`s Wiki', 'path_html': '~/wiki/', 'auto_export': 1, 'auto_toc': 1}]
