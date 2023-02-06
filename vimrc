@@ -127,4 +127,11 @@ map <leader>st :term<cr>
 " Vim wiki
 set nocompatible
 filetype plugin on
-let g:vimwiki_list = [{'path': '~/.aliswiki/', 'name': 'Ali`s Wiki', 'path_html': '~/wiki/', 'auto_export': 1, 'auto_toc': 1}]
+let g:vimwiki_list = [{'path': '~/.aliswiki/', 
+    \ 'name': 'Ali`s Wiki', 
+    \ 'path_html': '~/wiki/', 
+    \ 'auto_export': 1, 
+    \ 'auto_toc': 1}]
+
+" Git gutter
+set updatetime=100

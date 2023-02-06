@@ -22,3 +22,6 @@
 [submodule "third_party/vim/vimwiki"]
 	path = third_party/vim/vimwiki
 	url = https://github.com/vimwiki/vimwiki
+[submodule "third_party/vim/vim-gitgutter"]
+	path = third_party/vim/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter.git
