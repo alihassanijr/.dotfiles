@@ -86,7 +86,10 @@ map <leader>ss :setlocal spell!<cr>
 set spell                     "Turns on Spellcheck
 set spell spelllang=en_us
 hi clear SpellBad             "Highlights misspelled words
-hi SpellBad cterm=underline ctermfg=red  "Makes misspelled words highlited, bold, and underline white
+hi SpellBad cterm=bold,underline ctermfg=red  "Makes misspelled words bold, underlined, and red
+hi SpellCap cterm=bold ctermfg=red  "Makes words in caps bold and red
+hi SpellLocal cterm=bold,underline ctermfg=magenta  "Makes local words bold, underlined, and magenta
+hi SpellRare cterm=underline ctermfg=magenta  "Makes rare words bold and magenta
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Turn persistent undo on
@@ -114,11 +117,11 @@ let g:lightline = {
       \ }
 
 " Vifm.vim
-map <leader>vv :Vifm<cr>
-map <leader>vs :VsplitVifm<cr>
-map <leader>sp :SplitVifm<cr>
-map <leader>dv :DiffVifm<cr>
-map <leader>tv :TabVifm<cr>
+map <leader>vv :Vifm .<cr>
+map <leader>vs :VsplitVifm .<cr>
+map <leader>sp :SplitVifm .<cr>
+map <leader>dv :DiffVifm .<cr>
+map <leader>tv :TabVifm .<cr>
 
 " Terminal
 map <leader>vt :vert term<cr>
