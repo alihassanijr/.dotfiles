@@ -43,7 +43,7 @@ set shiftwidth=4        "Tab width
 set softtabstop=4
 
 autocmd FileType vim,lua,nginx set shiftwidth=2 softtabstop=2
-autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh set shiftwidth=2 softtabstop=2
+autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx set shiftwidth=2 softtabstop=2
 autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
 autocmd FileType asm set noexpandtab shiftwidth=8 softtabstop=0 syntax=nasm
 
@@ -138,3 +138,8 @@ let g:vimwiki_list = [{'path': '~/.aliswiki/',
 
 " Git gutter
 set updatetime=100
+
+" VimTeX
+" This is necessary for VimTeX to load properly. The "indent" is optional.
+" Note that most plugin managers will do this automatically.
+filetype plugin indent on

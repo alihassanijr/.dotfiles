@@ -25,3 +25,6 @@
 [submodule "third_party/vim/vim-gitgutter"]
 	path = third_party/vim/vim-gitgutter
 	url = https://github.com/airblade/vim-gitgutter.git
+[submodule "third_party/vim/vimtex"]
+	path = third_party/vim/vimtex
+	url = https://github.com/lervag/vimtex
