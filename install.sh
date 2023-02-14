@@ -22,7 +22,9 @@ git submodule update --init --recursive
 # Install bat?
 ## 
 if \
-    [[ -f "$(which bat)" ]]; then
+    [[ -f "$LOCALDIR/bin/bat" ]]; then
+#    Not explicitly checking if bat is recognized because we want our minimum version satisfied
+#    [[ -f "$(which bat)" ]]; then
     echo "bat appears to be installed ($(which bat)); skipping..."
 else
     echo "which bat: $(which bat)"
@@ -54,13 +56,16 @@ else
             echo "ostype: $OSTYPE"
             exit 1
         fi
+        rm -rf $TMPDIR
     fi
 fi
 
 # Install rg?
 ## 
 if \
-    [[ -f "$(which rg)" ]]; then
+    [[ -f "$LOCALDIR/bin/rg" ]]; then
+#    Not explicitly checking if rg is recognized because we want our minimum version satisfied
+#    [[ -f "$(which rg)" ]]; then
     echo "Ripgrep (rg) appears to be installed ($(which rg)); skipping..."
 else
     echo "which rg: $(which rg)"
@@ -90,6 +95,7 @@ else
             echo "ostype: $OSTYPE"
             exit 1
         fi
+        rm -rf $TMPDIR
     fi
 fi
 
@@ -129,8 +135,9 @@ fi
 # Install vifm?
 ## 
 if \
-    [[ -f "$LOCALDIR/bin/vifm" ]] || \
-    [[ -f "$(which vifm)" ]]; then
+    [[ -f "$LOCALDIR/bin/vifm" ]] \
+#    Not explicitly checking if vifm is recognized because we want our minimum version satisfied
+#    [[ -f "$(which vifm)" ]]; then
     echo "vifm appears to be installed; skipping..."
 else
     echo "which vifm: $(which vifm)"
@@ -151,11 +158,14 @@ fi
 # Install fzf?
 ## 
 if \
-    [[ -f "$(which fzf)" ]]; then
+    [[ -d "$HOMEDIR/.fzf" ]]; then
+#    Not explicitly checking if fzf is recognized because we want our minimum version satisfied
+#    [[ -f "$(which fzf)" ]]; then
     echo "Fuzzy finder (fzf) appears to be installed ($(which fzf)); skipping..."
 else
     echo "which fzf: $(which fzf)"
     read -p "Install fzf? [y/n]: " -n 1 -r
+    echo "WARNING: DO NOT ADD IT TO BASHRC; I WILL ADD IT FOR YOU!!!"
     echo ""
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
