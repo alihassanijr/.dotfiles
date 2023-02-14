@@ -1,9 +1,6 @@
 [submodule "third_party/vim/vifm.vim"]
 	path = third_party/vim/vifm.vim
 	url = https://github.com/vifm/vifm.vim
-[submodule "third_party/vim/vim-pire"]
-	path = third_party/vim/vim-pire
-	url = https://github.com/habamax/vim-pire/
 [submodule "third_party/zsh/ohmyzsh"]
 	path = third_party/zsh/ohmyzsh
 	url = https://github.com/ohmyzsh/ohmyzsh
