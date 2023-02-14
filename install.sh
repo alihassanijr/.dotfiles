@@ -135,7 +135,7 @@ fi
 # Install vifm?
 ## 
 if \
-    [[ -f "$LOCALDIR/bin/vifm" ]] \
+    [[ -f "$LOCALDIR/bin/vifm" ]]; then \
 #    Not explicitly checking if vifm is recognized because we want our minimum version satisfied
 #    [[ -f "$(which vifm)" ]]; then
     echo "vifm appears to be installed; skipping..."

@@ -40,7 +40,11 @@ fi
 
 # SSH-Agent (from scripts/)
 alias sagent='source sagent'
-source sagent
+#source sagent
+if [[ $(hostname) != *"hyperplane"* ]] && [[ $(hostname) != *"scalar"* ]]; then
+    # Don't start ssh agent on compute nodes
+    source sagent
+fi
 
 # Anaconda initializer (from scripts/)
 if [[ "$OSTYPE" == "linux-gnu"* ]] && [[ $(hostname) != *"login"* ]]; then
