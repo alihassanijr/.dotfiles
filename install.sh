@@ -19,6 +19,80 @@ fi
 # Ensure submodules are cloned
 git submodule update --init --recursive
 
+# Install bat?
+## 
+if \
+    [[ -f "$(which bat)" ]]; then
+    echo "bat appears to be installed ($(which bat)); skipping..."
+else
+    echo "which bat: $(which bat)"
+    read -p "Install bat? [y/n]: " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Installing bat"
+        mkdir -p $LOCALDIR/bin
+        TMPDIR=$THISDIR/tmp
+        mkdir -p $TMPDIR
+        BATURL=""
+        arch="$(uname -m)"
+        if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
+            BATURL="https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-x86_64-apple-darwin.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+            BATURL="https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-i686-unknown-linux-gnu.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+            BATURL="https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-x86_64-unknown-linux-gnu.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+            BATURL="https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-arm-unknown-linux-gnueabihf.tar.gz"
+        fi
+        if [[ "$BATURL" != "" ]]; then
+            echo "Fetching static bat binaries"
+            cd $TMPDIR && wget $BATURL && tar -xzf bat*.tar.gz && rm bat*.tar.gz && mv bat*/bat $LOCALDIR/bin/bat
+        else
+            echo "Failed to install static bat. Please install it manually before proceeding."
+            echo "arch: $arch"
+            echo "ostype: $OSTYPE"
+            exit 1
+        fi
+    fi
+fi
+
+# Install rg?
+## 
+if \
+    [[ -f "$(which rg)" ]]; then
+    echo "Ripgrep (rg) appears to be installed ($(which rg)); skipping..."
+else
+    echo "which rg: $(which rg)"
+    read -p "Install ripgrep? [y/n]: " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Installing ripgrep"
+        mkdir -p $LOCALDIR/bin
+        TMPDIR=$THISDIR/tmp
+        mkdir -p $TMPDIR
+        RGURL=""
+        arch="$(uname -m)"
+        if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
+            RGURL="https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep-13.0.0-x86_64-apple-darwin.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+            RGURL="https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep-13.0.0-x86_64-unknown-linux-musl.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+            RGURL="https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep-13.0.0-arm-unknown-linux-gnueabihf.tar.gz"
+        fi
+        if [[ "$RGURL" != "" ]]; then
+            echo "Fetching static ripgrep"
+            cd $TMPDIR && wget $RGURL && tar -xzf ripgrep*.tar.gz && rm ripgrep*.tar.gz && mv ripgrep*/rg $LOCALDIR/bin/rg
+        else
+            echo "Failed to install static ripgrep. Please install it manually before proceeding."
+            echo "arch: $arch"
+            echo "ostype: $OSTYPE"
+            exit 1
+        fi
+    fi
+fi
+
 # Install ncurses?
 ## 
 if \
@@ -55,7 +129,8 @@ fi
 # Install vifm?
 ## 
 if \
-       [[ -f "$LOCALDIR/bin/vifm" ]]; then
+    [[ -f "$LOCALDIR/bin/vifm" ]] || \
+    [[ -f "$(which vifm)" ]]; then
     echo "vifm appears to be installed; skipping..."
 else
     echo "which vifm: $(which vifm)"
@@ -70,6 +145,25 @@ else
         fi
         cd $THISDIR/third_party/vifm/ && ./configure --prefix=$LOCALDIR $NCARG && make && make install
         cd $THISDIR
+    fi
+fi
+
+# Install fzf?
+## 
+if \
+    [[ -f "$(which fzf)" ]]; then
+    echo "Fuzzy finder (fzf) appears to be installed ($(which fzf)); skipping..."
+else
+    echo "which fzf: $(which fzf)"
+    read -p "Install fzf? [y/n]: " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Installing fzf"
+        cd $THISDIR/third_party/fzf/ && ./install
+        cd $THISDIR
+        rm -rf $HOMEDIR/.fzf
+        ln -s $THISDIR/third_party/fzf $HOMEDIR/.fzf
     fi
 fi
 

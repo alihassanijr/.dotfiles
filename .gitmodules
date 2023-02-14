@@ -28,3 +28,9 @@
 [submodule "third_party/vim/vimtex"]
 	path = third_party/vim/vimtex
 	url = https://github.com/lervag/vimtex
+[submodule "third_party/fzf"]
+	path = third_party/fzf
+	url = https://github.com/junegunn/fzf
+[submodule "third_party/vim/fzf.vim"]
+	path = third_party/vim/fzf.vim
+	url = https://github.com/junegunn/fzf.vim

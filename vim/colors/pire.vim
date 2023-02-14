@@ -1,1 +1,0 @@
-../../third_party/vim/vim-pire/colors/pire.vim

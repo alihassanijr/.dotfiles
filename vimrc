@@ -1,5 +1,6 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""" Ali's Vim Config """""""""""""""""""""""""""""""
+""""""""" Started off https://github.com/stevenwalton/.dotfiles """""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "set langmenu=en_US
 "let $LANG = 'en_US'
@@ -8,43 +9,39 @@
 
 
 
-"source ~/.vim/custom/plugins.vim " Plugins and plugin options
 source ~/.vim/custom/remaps.vim " Personal Remaps
 
-" Keep loads above this so they don't mess with these settings
-" These settings will override those from above
-syntax on               "Turns on Syntax highlighting 
-set background=dark
-try
-    colorscheme mypire   "Color Scheme (in ~/.vim/colors)
-catch
-    colorscheme peachpuff   "backup color scheme (in /usr/share/vim...)
-endtry
-set mouse=a             "For people that can't use vim
-set path+=**            "Recursive path lookup
-
+" Color scheme and related settings
+syntax on                       "Turns on Syntax highlighting 
 set t_Co=256
-"set cursorline          "Highlight current line
-set nocompatible        "Cool stuff in Vim. Makes vi non-compatible 
-set lazyredraw          "Faster rendering
-set showcmd             "Show command as typing
-set wildmenu            "wildmenu buffer, auto completion
+set background=dark             "Dark mode
+colorscheme vim-monokai-tasty   "Color Scheme (in ~/.vim/colors)
+hi Normal ctermbg=black
+
+set mouse=a                     "For people that can't use vim
+set path+=**                    "Recursive path lookup
+
+"set cursorline                  "Highlight current line
+set nocompatible                "Cool stuff in Vim. Makes vi non-compatible 
+set lazyredraw                  "Faster rendering
+set showcmd                     "Show command as typing
+set wildmenu                    "wildmenu buffer, auto completion
 
 " Indenting
-set autoindent          "Auto indent
+set autoindent                  "Auto indent
 " No indenting on # mark 
-set cindent             " Uses C indenting rules (spaces)
+set cindent                     " Uses C indenting rules (spaces)
 set cinkeys-=0#
 set indentkeys-=0#
-set wrap                "Wraps text
-set expandtab           "Spaces and not tabs
-set smarttab            "Tries to figure out when to tab
-set shiftwidth=4        "Tab width 
+set wrap                        "Wraps text
+set expandtab                   "Spaces and not tabs
+set smarttab                    "Tries to figure out when to tab
+set shiftwidth=4                "Tab width 
 set softtabstop=4
 
 autocmd FileType vim,lua,nginx set shiftwidth=2 softtabstop=2
-autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx set shiftwidth=2 softtabstop=2
-autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
+autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx set shiftwidth=2 softtabstop=2 "C/CXX/CPP/CUDA
+autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0 "Make forces tabs not spaces
 autocmd FileType asm set noexpandtab shiftwidth=8 softtabstop=0 syntax=nasm
 
 set backspace=indent,eol,start  " backspace works through indents, end of line, etc
@@ -85,11 +82,11 @@ syntax spell toplevel   " Spell check fixing for tex
 map <leader>ss :setlocal spell!<cr>
 set spell                     "Turns on Spellcheck
 set spell spelllang=en_us
-hi clear SpellBad             "Highlights misspelled words
-hi SpellBad cterm=bold,underline ctermfg=red  "Makes misspelled words bold, underlined, and red
-hi SpellCap cterm=bold ctermfg=red  "Makes words in caps bold and red
-hi SpellLocal cterm=bold,underline ctermfg=magenta  "Makes local words bold, underlined, and magenta
-hi SpellRare cterm=underline ctermfg=magenta  "Makes rare words bold and magenta
+hi clear SpellBad
+hi SpellBad cterm=bold,underline ctermbg=None ctermfg=red  "Makes misspelled words bold, underlined, and red
+hi SpellCap cterm=bold ctermfg=red ctermbg=None  "Makes words in caps bold and red
+hi SpellLocal cterm=bold,underline ctermbg=None ctermfg=magenta  "Makes local words bold, underlined, and magenta
+hi SpellRare cterm=underline ctermbg=None ctermfg=magenta  "Makes rare words bold and magenta
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Turn persistent undo on
@@ -143,3 +140,6 @@ set updatetime=100
 " This is necessary for VimTeX to load properly. The "indent" is optional.
 " Note that most plugin managers will do this automatically.
 filetype plugin indent on
+
+" If installed using git
+set rtp+=~/.fzf
