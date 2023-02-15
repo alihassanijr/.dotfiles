@@ -41,9 +41,9 @@ else
         if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
             BATURL="https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-x86_64-apple-darwin.tar.gz"
         elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
-            BATURL="https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-i686-unknown-linux-gnu.tar.gz"
-        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
             BATURL="https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-x86_64-unknown-linux-gnu.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "i686" ]]; then
+            BATURL="https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-i686-unknown-linux-gnu.tar.gz"
         elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
             BATURL="https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-arm-unknown-linux-gnueabihf.tar.gz"
         fi
@@ -192,10 +192,16 @@ rm $HOMEDIR/.zlogout
 ln -s $THISDIR/zlogout $HOMEDIR/.zlogout
 
 # Bashrc
-echo "Appending bashrc to ~/.bashrc"
 rm $HOMEDIR/.bashrc2
 ln -s $THISDIR/bashrc $HOMEDIR/.bashrc2
-echo "[ -f $HOME/.bashrc2 ] && source $HOME/.bashrc2" >> $HOMEDIR/.bashrc
+SOURCEBASHRC="[ -f $HOME/.bashrc2 ] && source $HOME/.bashrc2"
+# Check if it's already appended
+if grep -Fxq "$SOURCEBASHRC" $HOMEDIR/.bashrc; then
+    echo "Perfect! Looks like you already installed one. Skipping appending bashrc to ~/.bashrc because it's already there!"
+else
+    echo "Appending bashrc to ~/.bashrc"
+    echo $SOURCEBASHRC >> $HOMEDIR/.bashrc
+fi
 
 # Inputrc
 if [[ "$OSTYPE" == "darwin"* ]]; then
