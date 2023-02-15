@@ -116,7 +116,7 @@ if \
         mkdir -p $LOCALDIR
         mkdir -p $NCDIR
         rm -rf local
-        mkdir local
+        mkdir -p local
         cd local && \
             wget http://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.4.tar.gz && \
             tar -xzf ncurses*.tar.gz && \
@@ -129,6 +129,7 @@ if \
                 LIBS="-L$NCDIR/lib" && \
             make && make install
         cd $THISDIR
+        rm -rf local
     fi
 fi
 
