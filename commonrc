@@ -97,6 +97,3 @@ vicd() {
 smux () {
     ssh -t ${@} 'bash -c "tmux a"'
 }
-
-# FZF
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

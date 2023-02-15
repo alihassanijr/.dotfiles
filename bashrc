@@ -14,3 +14,6 @@ fi
 export PATH="${PATH}:/opt"
 
 source ~/.commonrc
+
+# FZF
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

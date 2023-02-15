@@ -44,3 +44,6 @@ compinit
 source ~/.commonrc
 
 export TERM=xterm-256color
+
+# FZF
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
