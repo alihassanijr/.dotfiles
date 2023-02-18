@@ -70,6 +70,10 @@ set smartcase           "for searching
 set splitright          "Puts new window to right of current (vsplit)
 set splitbelow          "Same but below (split)
 
+" Undo history
+set undofile                          " Enables persistent undo files
+set undodir=$HOME/.vimfiles/undodir   " Sets the path to undo files (installer ensures it exists)
+
 "Ctags
 set tags="./.tags,../.tags,~/.tags"
 
@@ -87,16 +91,6 @@ hi SpellBad cterm=bold,underline ctermbg=None ctermfg=red  "Makes misspelled wor
 hi SpellCap cterm=bold ctermfg=red ctermbg=None  "Makes words in caps bold and red
 hi SpellLocal cterm=bold,underline ctermbg=None ctermfg=magenta  "Makes local words bold, underlined, and magenta
 hi SpellRare cterm=underline ctermbg=None ctermfg=magenta  "Makes rare words bold and magenta
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Turn persistent undo on
-" means that you can undo even when you close a buffer/VIM
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-try
-    set undofile
-    set undodir=~/.vim/undodir
-catch
-endtry
 
 """""""""""""" Plugins """"""""""""""
 

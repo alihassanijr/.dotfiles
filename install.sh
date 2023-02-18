@@ -238,6 +238,7 @@ rm -r $HOMEDIR/.vim
 rm -r $HOMEDIR/.vimrc
 ln -s $THISDIR/vim $HOMEDIR/.vim
 ln -s $THISDIR/vimrc $HOMEDIR/.vimrc
+mkdir -p $HOMEDIR/.vimfiles/undodir
 
 # Setup oh my zsh
 rm -rf $HOMEDIR/.oh-my-zsh
