@@ -9,10 +9,11 @@
 
 
 
-source ~/.vim/custom/remaps.vim " Personal Remaps
+" source ~/.vim/custom/remaps.vim " Personal Remaps
 
 " Color scheme and related settings
 syntax on                       "Turns on Syntax highlighting 
+let &t_ut=''
 set t_Co=256
 set background=dark             "Dark mode
 colorscheme vim-monokai-tasty   "Color Scheme (in ~/.vim/colors)
@@ -126,6 +127,7 @@ let g:vimwiki_list = [{'path': '~/.aliswiki/',
     \ 'path_html': '~/wiki/', 
     \ 'auto_export': 1, 
     \ 'auto_toc': 1}]
+map <leader>we :VimwikiTOC<cr>
 
 " Git gutter
 set updatetime=100
@@ -135,5 +137,5 @@ set updatetime=100
 " Note that most plugin managers will do this automatically.
 filetype plugin indent on
 
-" If installed using git
+" FZF
 set rtp+=~/.fzf
