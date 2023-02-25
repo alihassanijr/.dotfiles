@@ -65,7 +65,8 @@ set vimhelp
 set norunexec
 
 " List of color schemes to try (picks the first one supported by the terminal)
-colorscheme Default-256 Default
+"colorscheme Default-256 Default
+colorscheme zb
 
 " Format for displaying time in file list. For example:
 " TIME_STAMP_FORMAT=%m/%d-%H:%M

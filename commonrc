@@ -21,9 +21,11 @@ alias df='df -h'
 # Grep to have color, give line number, don't tell me it can't access restricted files (sudo), and don't process binary files (garbage output ):
 alias grep='grep --color=always --line-number --no-messages --binary-files=without-match'
 
-alias vi='vim'
+#alias vi='vim'
 #alias top='htop'
 alias ssh='ssh -YC'
+
+alias icat="kitty +kitten icat"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # No window manager for mac
