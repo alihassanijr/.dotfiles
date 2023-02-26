@@ -63,3 +63,6 @@ GEMM
 backend
 ImageNet
 deliminated
+scanline
+rasterizer
+rasterize
