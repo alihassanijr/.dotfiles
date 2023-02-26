@@ -14,9 +14,7 @@
 
 AGENTFOUND=0
 
-for agentsocket in $(pgrep -f "ssh-agent -s" -n -u $(whoami)) ; do
-    #if [ $AGENTFOUND != 0 ] ; then break ; fi
-    #if sshagent_testsocket $agentsocket ; then AGENTFOUND=1 ; fi
+for agentsocket in $(pgrep -f -n -u $(whoami) "ssh-agent -s") ; do
     AGENTFOUND=1
     export SSH_AGENT_PID=$agentsocket
     break
