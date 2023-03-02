@@ -139,3 +139,10 @@ filetype plugin indent on
 
 " FZF
 set rtp+=~/.fzf
+
+" Vim Markdown
+if has('macunix')
+  let vim_markdown_preview_github=1
+  let vim_markdown_preview_toggle=1
+  let vim_markdown_preview_browser='Google Chrome'
+endif

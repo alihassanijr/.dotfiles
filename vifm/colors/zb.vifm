@@ -1,30 +1,51 @@
+" My attempt at recreating monokai
+" Including its LSCOLORS
+"
+" Started off of:
 " zenburn like color scheme for vifm
 " http://kippura.org/zenburnpage/
 
 " Reset all styles first
 highlight clear
 
-highlight Border	cterm=none	ctermfg=235	ctermbg=237
+highlight Border	cterm=none	ctermfg=59	ctermbg=235
 
-highlight TopLine	cterm=none	ctermfg=108	ctermbg=235
-highlight TopLineSel	cterm=bold	ctermfg=186	ctermbg=235
+highlight TopLine	cterm=none	ctermfg=250	ctermbg=59
+highlight TopLineSel	cterm=bold	ctermfg=250	ctermbg=59
 
-highlight Win		cterm=none	ctermfg=188	ctermbg=237
-highlight Directory	cterm=none	ctermfg=108	ctermbg=237
+highlight Win		cterm=none	ctermfg=231	ctermbg=235
+highlight Directory	cterm=none	ctermfg=81	ctermbg=235
 "
-highlight CurrLine	cterm=none	ctermfg=223	ctermbg=235
-highlight OtherLine	cterm=none	ctermfg=247	ctermbg=237
+highlight CurrLine	cterm=none	ctermfg=0	ctermbg=231
+highlight OtherLine	cterm=none	ctermfg=247	ctermbg=235
 highlight Selected	cterm=none	ctermfg=116	ctermbg=238
 
 highlight JobLine	cterm=bold	ctermfg=116	ctermbg=238
 highlight StatusLine	cterm=bold	ctermfg=144	ctermbg=236
-highlight ErrorMsg	cterm=bold	ctermfg=115	ctermbg=237
-highlight WildMenu	cterm=bold	ctermfg=235	ctermbg=144
-highlight CmdLine	cterm=none	ctermfg=188	ctermbg=237
+highlight ErrorMsg	cterm=bold	ctermfg=115	ctermbg=235
+highlight WildMenu	cterm=bold	ctermfg=59      ctermbg=144
+highlight CmdLine	cterm=none	ctermfg=188	ctermbg=235
 
-highlight Executable	cterm=none	ctermfg=172	ctermbg=237
-highlight Link		cterm=none	ctermfg=142	ctermbg=237
-highlight BrokenLink	cterm=none	ctermfg=174	ctermbg=237
-highlight Device	cterm=none	ctermfg=228	ctermbg=237
-highlight Fifo		cterm=none	ctermfg=109	ctermbg=237
-highlight Socket	cterm=none	ctermfg=110	ctermbg=237
+highlight Executable	cterm=none	ctermfg=197	ctermbg=235
+highlight Link		cterm=none	ctermfg=197	ctermbg=235
+highlight BrokenLink	cterm=none	ctermfg=0	ctermbg=203
+highlight Device	cterm=none	ctermfg=228	ctermbg=235
+highlight Fifo		cterm=none	ctermfg=109	ctermbg=235
+highlight Socket	cterm=none	ctermfg=110	ctermbg=235
+
+highlight {LICENSE}     cterm=none      ctermfg=145     ctermbg=235
+highlight {*.txt,*.md}  cterm=none      ctermfg=185     ctermbg=235
+highlight {*.sh,*.bash} cterm=none      ctermfg=48      ctermbg=235
+highlight {*.go,*.py}   cterm=none      ctermfg=48      ctermbg=235
+highlight {*.vim,*.zsh} cterm=none      ctermfg=48      ctermbg=235
+highlight {*.tex}       cterm=none      ctermfg=84      ctermbg=235
+highlight {*.css,*.lua} cterm=none      ctermfg=84      ctermbg=235
+highlight {*README*}    cterm=none      ctermfg=0       ctermbg=228
+highlight {.*,*.conf}   cterm=none      ctermfg=148     ctermbg=235
+highlight {*.bst,*.bib} cterm=none      ctermfg=148     ctermbg=235
+highlight {*.sty}       cterm=none      ctermfg=145     ctermbg=235
+highlight {*.zip,*.rar,*.tar,*.gz,*.bz2,*.iso} cterm=underline ctermfg=197 ctermbg=235
+highlight {*.ini,*.yml,*.json,*.desktop} cterm=none      ctermfg=148     ctermbg=235
+highlight {*.mov,*.mp4,*.gif,*.mpeg,*.mpg,*.flv,*.avi,*.png,*.bmp,*.jpg,*.jpeg,*.pnm,*.svg,*.ico} cterm=none ctermfg=208 ctermbg=235
+highlight {*.c,*.h,*.cxx,*.hxx,*.cpp,*.hpp,*.cu,*.cuh,*.cu.h,*.cs}   cterm=none      ctermfg=48      ctermbg=235
+highlight {*.pdf,*.doc,*.docx,*.xls,*.xlsx,*.ppt,*.pptx,*.csv} cterm=none      ctermfg=186     ctermbg=235
