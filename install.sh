@@ -230,7 +230,13 @@ else
     then
         echo "Installing htop"
         mkdir -p $LOCALDIR/bin
-        cd $THISDIR/third_party/htop/ && ./autogen.sh && HTOP_NCURSES6_CONFIG_SCRIPT=$NCDIR/bin/ncursesw6-config ./configure --prefix=$LOCALDIR && make && make install
+        cd $THISDIR/third_party/htop/ && ./autogen.sh && \
+            HTOP_NCURSES6_CONFIG_SCRIPT=$NCDIR/bin/ncursesw6-config \
+            LDFLAGS="-L$NCDIR/lib" \
+            CPPFLAGS="-I$NCDIR/include" \
+            CFLAGS="-I$NCDIR/include" \
+            ./configure --prefix=$LOCALDIR \
+                    && make && make install
     fi
 fi
 
