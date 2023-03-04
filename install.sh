@@ -142,13 +142,11 @@ fi
 # Install ncurses?
 ## 
 if \
-       [[ -f "/usr/include/ncurses.h" ]] || \
-       [[ -d "$NCDIR" ]] || \
-       [[ -f "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/curses.h" ]]; then
+       [[ -d "$NCDIR" ]]; then
     echo "libncurses appears to be installed; skipping..."
     else
     echo "libncurses not found!"
-    read -p "Install ncurses (vifm requires ncurses)? [y/n]: " -n 1 -r
+    read -p "Install ncurses (vifm and htop require ncurses)? [y/n]: " -n 1 -r
     echo ""
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
@@ -188,9 +186,7 @@ else
     then
         echo "Installing vifm"
         mkdir -p $LOCALDIR/bin
-        if [[ -d "$NCDIR" ]]; then
         NCARG="--with-curses=$NCDIR --with-curses-name=ncursesw"
-        fi
         cd $THISDIR/third_party/vifm/ && autoreconf -f -i && ./configure --prefix=$LOCALDIR $NCARG && make && make install
         cd $THISDIR
     fi
@@ -215,6 +211,26 @@ else
         cd $THISDIR
         rm -rf $HOMEDIR/.fzf
         ln -s $THISDIR/third_party/fzf $HOMEDIR/.fzf
+    fi
+fi
+
+# Install htop?
+## 
+if \
+    [[ -f "$LOCALDIR/bin/htop" ]]; then
+#    Not explicitly checking if htop is recognized because we want our minimum version satisfied
+#    [[ -f "$(which htop)" ]]; then
+    echo "htop appears to be installed ($(which htop)); skipping..."
+else
+    echo "htop was not found."
+    echo "which htop: $(which htop)"
+    read -p "Install htop? [y/n]: " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Installing htop"
+        mkdir -p $LOCALDIR/bin
+        cd $THISDIR/third_party/htop/ && ./autogen.sh && HTOP_NCURSES6_CONFIG_SCRIPT=$NCDIR/bin/ncursesw6-config ./configure --prefix=$LOCALDIR && make && make install
     fi
 fi
 

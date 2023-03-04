@@ -31,3 +31,6 @@
 [submodule "third_party/vim/fzf.vim"]
 	path = third_party/vim/fzf.vim
 	url = https://github.com/junegunn/fzf.vim
+[submodule "third_party/htop"]
+	path = third_party/htop
+	url = https://github.com/htop-dev/htop
