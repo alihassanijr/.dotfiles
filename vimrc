@@ -132,17 +132,32 @@ map <leader>we :VimwikiTOC<cr>
 " Git gutter
 set updatetime=100
 
-" VimTeX
-" This is necessary for VimTeX to load properly. The "indent" is optional.
-" Note that most plugin managers will do this automatically.
-filetype plugin indent on
-
 " FZF
 set rtp+=~/.fzf
 
-" Vim Markdown
+" Plugins I use on mac only
 if has('macunix')
+  " Vim Markdown
+  packadd vim-markdown-preview
   let vim_markdown_preview_github=1
   let vim_markdown_preview_toggle=1
   let vim_markdown_preview_browser='Google Chrome'
+
+  " VimTeX
+  packadd vimtex
+  filetype plugin indent on
+  let g:vimtex_view_method = 'zathura'
+
+  let g:vimtex_compiler_latexmk = {
+      \ 'build_dir' : '',
+      \ 'callback' : 1,
+      \ 'continuous' : 1,
+      \ 'executable' : 'latexmk',
+      \ 'hooks' : [],
+      \ 'options' : [
+      \   '-verbose',
+      \   '-file-line-error',
+      \   '-synctex=1',
+      \ ],
+        \}
 endif

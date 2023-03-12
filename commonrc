@@ -134,3 +134,10 @@ vicd() {
 smux () {
     ssh -t ${@} 'bash -c "tmux a"'
 }
+
+# OSX-specific env variables
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # DBUS env variable
+    # This is just so that vimtex can communicate with zathura through dbus
+    export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
+fi

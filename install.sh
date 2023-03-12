@@ -364,4 +364,23 @@ else
 fi
 
 
+# Zathura
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Zathura is mac only for now
+    if ! [[ -f "$(which zathura)" ]]; then
+        read -p "Install Zathura? (requires homebrew and a reboot) [y/n]: " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            ./tools/zathura.mac.sh
+        fi
+    fi
+    echo "Linking zathura config"
+    rm -rf $HOMEDIR/.config/zathura
+    mkdir -p $HOMEDIR/.config/
+    ln -s $THISDIR/config/zathura $HOMEDIR/.config/zathura
+fi
+
+
+
 echo "Installation complete"
