@@ -97,6 +97,27 @@ if [[ "$OSTYPE" == "linux-gnu"* ]] && [[ $(hostname) != *"login"* ]]; then
     source cnda
 fi
 
+# Modules (cluster only)
+###if [[ $(hostname) == "lambda-"* ]]; then
+### Checking based on availability
+### Hostname is a terrible way of doing that, because even lambda test drive
+### machines are named lambda-xxx.
+if [[ -f /etc/profile.d/modules.sh ]]; then
+    source /etc/profile.d/modules.sh
+    # Slurm
+    if [[ "$(module avail)" == *"slurm"* ]]; then
+        module load slurm
+    fi
+    # CUDA
+    if [[ "$(module avail)" == *"cuda11.7"* ]]; then
+        module load cuda11.7
+    fi 
+    # Bright cluster manager shell
+    if [[ "$(module avail)" == *"cmsh"* ]]; then
+        module load cmsh
+    fi
+fi
+
 # Force NCCL to use IPV4
 # export NCCL_SOCKET_FAMILY="AF_INET"
 
