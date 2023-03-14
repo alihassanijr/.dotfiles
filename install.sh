@@ -349,6 +349,8 @@ echo "Linking oh-my-zsh to home directory"
 ln -s $THISDIR/third_party/zsh/ohmyzsh $HOMEDIR/.oh-my-zsh
 rm -f $HOMEDIR/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 ln -s $THISDIR/third_party/zsh/zsh-autosuggestions $HOMEDIR/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+rm -f $HOMEDIR/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+ln -s $THISDIR/third_party/zsh/zsh-syntax-highlighting $HOMEDIR/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting 
 
 # Set up my custom scripts
 echo "Linking custom scripts"

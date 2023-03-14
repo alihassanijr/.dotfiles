@@ -11,10 +11,10 @@ ZSH_THEME="lambda"
 # Add wisely, as too many plugins slow down shell startup.
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Mac
-    plugins=(history-substring-search colored-man-pages macos zsh-autosuggestions)
+    plugins=(history-substring-search colored-man-pages macos zsh-autosuggestions zsh-syntax-highlighting)
 else
     # Linux Plugins
-    plugins=(history-substring-search colored-man-pages zsh-autosuggestions)
+    plugins=(history-substring-search colored-man-pages zsh-autosuggestions zsh-syntax-highlighting)
 fi
 
 
