@@ -1,6 +1,6 @@
 #!/bin/bash
 
-THISDIR=$HOME/.dotz
+THISDIR=$HOME/.dotfiles
 HOMEDIR=$HOME
 LOCALDIR=$HOME/.local/
 NCDIR=$HOME/.ncurses/
@@ -9,10 +9,10 @@ echo "This sets things up!"
 echo "It'll set up oh my zsh, my zsh and bash rc, vim, and vifm."
 echo "It'll install vifm locally, and it'll be able to build ncurses locally as well if it doesn't find it."
 
-# Check that .dotz is in home
+# Check that .dotfiles is in home
 if [[ ! -d $THISDIR ]]
 then
-    echo "Please place .dotz in $HOME"
+    echo "Please place .dotfiles in $HOME"
     exit 1
 fi
 

@@ -51,8 +51,16 @@ fi
 
 # OSX-specific aliases for my mac
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Zathura in background
+    zat () {
+        zathura "$@" > /dev/null 2>&1 &
+    }
+
+    # Kitty icat and clear icat (iclear)
     alias icat="kitty +kitten icat --silent --transfer-mode=stream"
     alias iclear="kitty +kitten icat --silent --clear --transfer-mode=stream"
+
+    # GUI applications
     alias zoom="open -a zoom.us"
     alias spotify="open -a Spotify"
     alias slack="open -a Slack"
