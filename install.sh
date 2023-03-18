@@ -63,16 +63,29 @@ else
     then
         echo "Installing vim"
         mkdir -p $LOCALDIR/bin
+        # Couple of notes:
+        # A. I disable selinux because not all the servers I'm on have it installed
+        #    so I'm not going to bother.
+        # B. To get my local ncurses (really ncursesw) to be recognized, I added
+        #    its path to LDFLAGS and CFLAGS.
+        # C. Needed to explicitly use --disable-darwin to have it build normally on
+        #    mac.
+        # D. Obviously installing to ~/.local/bin -- sourced in commonrc.
+        # E. I added the submodule to path third_party/vim9 because third_party/vim
+        #    holds all the vim plugins, and I really don't want to move submodules now.
         cd $THISDIR/third_party/vim9/ && \
             make clean && make distclean &&           \
-            env LDFLAGS=-L${NCDIR} ./configure        \
+            LDFLAGS=-L${NCDIR}/lib                    \
+            CFLAGS=-I${NCDIR}/include                 \
+            ./configure                               \
             --with-features=huge                      \
             --enable-terminal                         \
             --enable-multibyte                        \
             --enable-pythoninterp=dynamic             \
             --enable-python3interp=dynamic            \
-            --with-tlib=ncurses                       \
+            --with-tlib=ncursesw                      \
             --disable-darwin                          \
+            --disable-selinux                         \
             --disable-gui                             \
             --disable-netbeans                        \
             --disable-channel                         \
