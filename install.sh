@@ -88,7 +88,6 @@ else
             --disable-selinux                         \
             --disable-gui                             \
             --disable-netbeans                        \
-            --disable-channel                         \
             --enable-cscope                           \
             --prefix=${LOCALDIR} &&                   \
             make && make install && make clean

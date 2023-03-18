@@ -135,8 +135,12 @@ set updatetime=100
 " FZF
 set rtp+=~/.fzf
 
+
 " Plugins I use on mac only
-if has('macunix')
+" macunix won't work because I'm building vim from source without the darwin flag.
+"if has('macunix')
+let g:os = substitute(system('uname'), '\n', '', '')
+if g:os == 'Darwin'
   " Vim Markdown
   packadd vim-markdown-preview
   let vim_markdown_preview_github=1
