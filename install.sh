@@ -19,6 +19,38 @@ fi
 # Ensure submodules are cloned
 git submodule update --init --recursive
 
+# Install ncurses?
+## 
+if \
+       [[ -d "$NCDIR" ]]; then
+    echo "libncurses appears to be installed; skipping..."
+    else
+    echo "libncurses not found!"
+    read -p "Install ncurses (vim, vifm and htop require ncurses)? [y/n]: " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Installing ncurses"
+        mkdir -p $LOCALDIR
+        mkdir -p $NCDIR
+        rm -rf local
+        mkdir -p local
+        cd local && \
+            wget http://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.4.tar.gz && \
+            tar -xzf ncurses*.tar.gz && \
+            rm ncurses*.tar.gz && \
+            cd ncurses-6.4 && \
+            ./configure \
+                --enable-widec --with-shared \
+                --prefix=$NCDIR \
+                CFLAGS="-I$NCDIR/include" \
+                LIBS="-L$NCDIR/lib" && \
+            make && make install
+        cd $THISDIR
+        rm -rf local
+    fi
+fi
+
 # Install vim?
 if \
     [[ -f "$LOCALDIR/bin/vim" ]]; then
@@ -31,12 +63,15 @@ else
     then
         echo "Installing vim"
         mkdir -p $LOCALDIR/bin
-        cd $THISDIR/third_party/vim9/ && ./configure  \
+        cd $THISDIR/third_party/vim9/ && \
+            make clean && make distclean &&           \
+            env LDFLAGS=-L${NCDIR} ./configure        \
             --with-features=huge                      \
             --enable-terminal                         \
             --enable-multibyte                        \
             --enable-pythoninterp=dynamic             \
             --enable-python3interp=dynamic            \
+            --with-tlib=ncurses                       \
             --disable-darwin                          \
             --disable-gui                             \
             --disable-netbeans                        \
@@ -165,38 +200,6 @@ else
             exit 1
         fi
         rm -rf $TMPDIR
-    fi
-fi
-
-# Install ncurses?
-## 
-if \
-       [[ -d "$NCDIR" ]]; then
-    echo "libncurses appears to be installed; skipping..."
-    else
-    echo "libncurses not found!"
-    read -p "Install ncurses (vifm and htop require ncurses)? [y/n]: " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
-        echo "Installing ncurses"
-        mkdir -p $LOCALDIR
-        mkdir -p $NCDIR
-        rm -rf local
-        mkdir -p local
-        cd local && \
-            wget http://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.4.tar.gz && \
-            tar -xzf ncurses*.tar.gz && \
-            rm ncurses*.tar.gz && \
-            cd ncurses-6.4 && \
-            ./configure \
-                --enable-widec --with-shared \
-                --prefix=$NCDIR \
-                CFLAGS="-I$NCDIR/include" \
-                LIBS="-L$NCDIR/lib" && \
-            make && make install
-        cd $THISDIR
-        rm -rf local
     fi
 fi
 

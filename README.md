@@ -54,7 +54,7 @@ My installer sets everything up locally, meaning you don't need to worry about h
 (see [Installer script](#installer-script).
 
 ### ncurses
-`libncurses`: I don't know exactly what it does, but I know vifm and htop require it, so...
+`libncurses`: You need it to compile vim, vifm, and htop.
 
 ### Vim
 I started installing vim from source for a number of reasons, including, but not limited to: I want the same version of vim 
