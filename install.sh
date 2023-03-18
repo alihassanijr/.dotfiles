@@ -19,6 +19,35 @@ fi
 # Ensure submodules are cloned
 git submodule update --init --recursive
 
+# Install vim?
+if \
+    [[ -f "$LOCALDIR/bin/vim" ]]; then
+    echo "Vim appears to be installed locally; skipping..."
+else
+    echo "I highly recommend installing the latest vim locally."
+    read -p "Install vim locally? (This may take a while) [y/n]: " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Installing vim"
+        mkdir -p $LOCALDIR/bin
+        cd $THISDIR/third_party/vim9/ && ./configure  \
+            --with-features=huge                      \
+            --enable-terminal                         \
+            --enable-multibyte                        \
+            --enable-pythoninterp=dynamic             \
+            --enable-python3interp=dynamic            \
+            --disable-darwin                          \
+            --disable-gui                             \
+            --disable-netbeans                        \
+            --disable-channel                         \
+            --enable-cscope                           \
+            --prefix=${LOCALDIR} &&                   \
+            make && make install && make clean
+        cd $THISDIR
+    fi
+fi
+
 # Install bat?
 ## 
 if \
