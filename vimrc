@@ -153,15 +153,18 @@ if g:os == 'Darwin'
   let g:vimtex_view_method = 'zathura'
 
   " TermPDF split preview
-  " Inspired by and heavily based on:
+  " Inspired by and based on:
   " https://github.com/camspiers/dotfiles
   " 
   " Expects `termpdf` to be recognizable and fetch the correct system paths
   " Otherwise it will kill the new split upon launch
   let g:vimtex_view_automatic = 0
-  let g:termpdf_exp_width  = float2nr(float2nr(winheight(0) * 15) / 2)
-  let g:termpdf_curr_width = float2nr(float2nr(winwidth(0) * 8) / 2)
-  let g:termpdf_resize_init = - float2nr((g:termpdf_curr_width - g:termpdf_exp_width) / 18)
+  " Compute `expected width`
+  " I don't want the pdf to take half of my screen because it's usually too much for it.
+  " This is just my messy little formula that just works out.
+  let termpdf_exp_width  = float2nr(float2nr(winheight(0) * 15) / 2)
+  let termpdf_curr_width = float2nr(float2nr(winwidth(0) * 8) / 2)
+  let g:termpdf_resize_init = - float2nr((termpdf_curr_width - termpdf_exp_width) / 18)
 
   function! TermPDFReset() abort
     call system('kitty @ resize-window --match title:tpdfv'. b:vimtex.name . '.pdf -a reset')
@@ -191,14 +194,14 @@ if g:os == 'Darwin'
 
   function! DisableTermPDF()
     call TermPDFClose()
-    let g:vimtex_view_general_callback = ''
+    " let g:vimtex_view_general_callback = ''
     augroup VimtexTest
       autocmd!
     augroup end
   endfunction
 
   function! EnableTermPDF()
-    let g:vimtex_view_general_callback = 'TermPDF'
+    " let g:vimtex_view_general_callback = 'TermPDF'
     augroup VimtexTest
       autocmd!
       "autocmd FileType tex :VimtexClean
@@ -210,7 +213,7 @@ if g:os == 'Darwin'
   endfunction
 
   function! ToggleTermPDF()
-    if g:vimtex_view_general_callback == 'TermPDF'
+    " if g:vimtex_view_general_callback == 'TermPDF'
       call DisableTermPDF()
     else
       call EnableTermPDF()
