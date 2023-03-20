@@ -9,3 +9,7 @@ vim/undodir/*
 tags
 vifm/vifminfo.json
 local/
+
+vim/colors/vim-monokai-tasty.vim
+vim/pack/plugins/start/lightline/autoload/lightline/colorscheme/monokai_tasty.vim
+third_party/vim/lightline/autoload/lightline/colorscheme/monokai_tasty.vim

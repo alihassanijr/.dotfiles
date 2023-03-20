@@ -408,7 +408,15 @@ rm -r $HOMEDIR/.vim
 rm -r $HOMEDIR/.vimrc
 ln -s $THISDIR/vim $HOMEDIR/.vim
 ln -s $THISDIR/vimrc $HOMEDIR/.vimrc
+### Persistent undo history
 mkdir -p $HOMEDIR/.vimfiles/undodir
+### Monokai Tasty color scheme
+rm -f $HOMEDIR/.vim/colors/vim-monokai-tasty.vim
+rm -f $HOMEDIR/.vim/pack/plugins/start/lightline/autoload/lightline/colorscheme/monokai_tasty.vim
+mkdir -p $HOMEDIR/.vim/colors
+mkdir -p $HOMEDIR/.vim/pack/plugins/start/lightline/autoload/lightline/colorscheme
+ln -s $THISDIR/third_party/vim/vim-monokai-tasty/colors/vim-monokai-tasty.vim $HOMEDIR/.vim/colors/vim-monokai-tasty.vim
+ln -s $THISDIR/third_party/vim/vim-monokai-tasty/autoload/lightline/colorscheme/monokai_tasty.vim $HOMEDIR/.vim/pack/plugins/start/lightline/autoload/lightline/colorscheme/monokai_tasty.vim
 
 # Kitty
 if [[ "$OSTYPE" == "darwin"* ]]; then

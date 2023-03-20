@@ -98,7 +98,7 @@ set spell spelllang=en_us
 " Lightline
 set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'one',
+      \ 'colorscheme': 'monokai_tasty',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
