@@ -428,12 +428,11 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 
-# TermPDF.py
 # Kitty PDF viewer
 # Set up to work with VimTeX + Kitty on mac
 if [[ "$OSTYPE" == "darwin"* ]]; then
     if ! [[ -f "$(which termpdf)" ]]; then
-        read -p "Install TermPDF? (requires python3) [y/n]: " -n 1 -r
+        read -p "Install TermPDF? (requires python3 and kitty) [y/n]: " -n 1 -r
         echo ""
         if [[ $REPLY =~ ^[Yy]$ ]]
         then
@@ -443,8 +442,18 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
             ln -s $THISDIR/third_party/misc/termpdf/termpdf.py $LOCALDIR/bin/termpdf
         fi
     fi
+    if ! [[ -f "$(which dcat)" ]]; then
+        read -p "Install Document Cat (dcat)? (requires python3 and kitty) [y/n]: " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            echo "Setting up dcat"
+            pip3 install PyMuPDF
+            rm -rf $LOCALDIR/bin/dcat
+            ln -s $THISDIR/scripts/dcat $LOCALDIR/bin/dcat
+        fi
+    fi
 fi
-
 
 
 echo "Installation complete"

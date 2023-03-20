@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Document cat
+# Written using PyMuPDF by Ali Hassani (@alihassanijr)
+#
+
+FILENAME=$1
+THUMBNAIL="${1}_thumb.png"
+shift
+
+python3 -c "import fitz; doc = fitz.open('$FILENAME'); page = doc[0]; pix = page.get_pixmap(); pix.save('$THUMBNAIL');" > /dev/null
+kitty +kitten icat --silent --transfer-mode=stream "$@" $THUMBNAIL
+rm -r $THUMBNAIL > /dev/null
