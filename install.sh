@@ -476,5 +476,23 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 
+# TermPDF.py
+# Kitty PDF viewer
+# Set up to work with VimTeX + Kitty on mac
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    if ! [[ -f "$(which termpdf)" ]]; then
+        read -p "Install TermPDF? (requires python3) [y/n]: " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            echo "Setting up termpdf"
+            cd $THISDIR/third_party/misc/termpdf/ && pip3 install -r requirements.txt
+            rm -rf $LOCALDIR/bin/termpdf
+            ln -s $THISDIR/third_party/misc/termpdf/termpdf.py $LOCALDIR/bin/termpdf
+        fi
+    fi
+fi
+
+
 
 echo "Installation complete"

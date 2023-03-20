@@ -43,3 +43,6 @@
 [submodule "third_party/vim9"]
 	path = third_party/vim9
 	url = https://github.com/vim/vim
+[submodule "third_party/misc/termpdf"]
+	path = third_party/misc/termpdf
+	url = https://github.com/dsanson/termpdf.py
