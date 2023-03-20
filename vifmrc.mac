@@ -180,7 +180,7 @@ command! reload :write | restart full
 
 " Pdf
 filextype {*.pdf},<application/pdf> zathura %c %i &, apvlv %c, xpdf %c
-fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
+"fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
 
 " PostScript
 filextype {*.ps,*.eps,*.ps.gz},<application/postscript>
@@ -545,6 +545,12 @@ fileviewer *.png,*.jpg,*.jpeg,*.bmp
     \ kitty +kitten icat --silent --transfer-mode=stream --place=%pwx%ph@%pxx%py %c >/dev/tty </dev/tty %N
     \ %pc
     \ kitty +kitten icat --clear --silent >/dev/tty </dev/tty %N
+
+fileviewer *.pdf,*.xps,*.oxps,*.epub,*.cbz,*.cbr,*.fb2
+    \ dcat %c --place=%pwx%ph@%pxx%py >/dev/tty </dev/tty %N
+    \ %pc
+    \ kitty +kitten icat --clear --silent >/dev/tty </dev/tty %N
+
 
 fileviewer *[^/] bat --color=always --style=numbers --wrap never --pager never %c -p
 fileviewer .*/,*/ tre -c always -l 2 %c
