@@ -5,6 +5,8 @@ HOMEDIR=$HOME
 LOCALDIR=$HOME/.local/
 NCDIR=$HOME/.ncurses/
 
+CMAKEVER="3.25.3"
+
 echo "This sets things up!"
 echo "It'll set up oh my zsh, my zsh and bash rc, vim, and vifm."
 echo "It'll install vifm locally, and it'll be able to build ncurses locally as well if it doesn't find it."
@@ -18,6 +20,52 @@ fi
 
 # Ensure submodules are cloned
 git submodule update --init --recursive
+
+# Install cmake?
+# I am tired of the old cmakes and having to use conda whenever I need cutlass.
+# I am done!
+## 
+if \
+    [[ -f "$LOCALDIR/bin/cmake" ]]; then
+#    Not explicitly checking if bat is recognized because we want our minimum version satisfied
+#    [[ -f "$(which bat)" ]]; then
+    echo "cmake appears to be installed locally; skipping..."
+else
+    echo "Local cmake was not found. Highly recommended."
+    echo "Your current cmake: $(cmake --version)"
+    echo "What I'm about to install: $CMAKEVER"
+    read -p "Install cmake? [y/n]: " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Installing cmake"
+        mkdir -p $LOCALDIR/bin
+        mkdir -p $LOCALDIR/share
+        TMPDIR=$THISDIR/tmp
+        mkdir -p $TMPDIR
+        CMAKEURL=""
+        arch="$(uname -m)"
+        if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
+            CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-macos-universal.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+            CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-linux-x86_64.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "aarch64" ]]; then
+            CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-linux-aarch64.tar.gz"
+        fi
+        if [[ "$CMAKEURL" != "" ]]; then
+            echo "Fetching static cmake binaries"
+            cd $TMPDIR && wget $CMAKEURL && tar -xzf cmake*.tar.gz && rm cmake*.tar.gz && \
+                mv cmake*/bin/* $LOCALDIR/bin/ && \
+                mv cmake*/share/* $LOCALDIR/share/
+        else
+            echo "Failed to install static cmake. Please install it manually before proceeding."
+            echo "arch: $arch"
+            echo "ostype: $OSTYPE"
+            exit 1
+        fi
+        rm -rf $TMPDIR
+    fi
+fi
 
 # Install ncurses?
 ## 
