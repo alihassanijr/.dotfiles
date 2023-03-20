@@ -44,9 +44,11 @@ else
         TMPDIR=$THISDIR/tmp
         mkdir -p $TMPDIR
         CMAKEURL=""
+        CMAKEDIR="cmake*/"
         arch="$(uname -m)"
         if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
             CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-macos-universal.tar.gz"
+            CMAKEDIR="cmake*/CMake.app/Contents/"
         elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
             CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-linux-x86_64.tar.gz"
         elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "aarch64" ]]; then
@@ -55,8 +57,8 @@ else
         if [[ "$CMAKEURL" != "" ]]; then
             echo "Fetching static cmake binaries"
             cd $TMPDIR && wget $CMAKEURL && tar -xzf cmake*.tar.gz && rm cmake*.tar.gz && \
-                mv cmake*/bin/* $LOCALDIR/bin/ && \
-                mv cmake*/share/* $LOCALDIR/share/
+                mv $CMAKEDIR/bin/* $LOCALDIR/bin/ && \
+                mv $CMAKEDIR/share/* $LOCALDIR/share/
         else
             echo "Failed to install static cmake. Please install it manually before proceeding."
             echo "arch: $arch"
