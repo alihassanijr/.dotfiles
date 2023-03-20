@@ -58,7 +58,7 @@ else
             echo "Fetching static cmake binaries"
             cd $TMPDIR && wget $CMAKEURL && tar -xzf cmake*.tar.gz && rm cmake*.tar.gz && \
                 mv $CMAKEDIR/bin/* $LOCALDIR/bin/ && \
-                mv $CMAKEDIR/share/* $LOCALDIR/share/
+                cp -r -n -v $CMAKEDIR/share/* $LOCALDIR/share/
         else
             echo "Failed to install static cmake. Please install it manually before proceeding."
             echo "arch: $arch"
