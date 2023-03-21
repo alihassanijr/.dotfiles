@@ -45,7 +45,7 @@
 	url = https://github.com/vim/vim
 [submodule "third_party/misc/termpdf"]
 	path = third_party/misc/termpdf
-	url = https://github.com/dsanson/termpdf.py
+	url = https://github.com/alihassanijr/termpdf.py
 [submodule "third_party/vim/vim-monokai-tasty"]
 	path = third_party/vim/vim-monokai-tasty
 	url = https://github.com/patstockwell/vim-monokai-tasty

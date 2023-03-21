@@ -12,6 +12,9 @@ export PATH=~/.local/bin:$PATH
 # Because some are exclusive to different devices and I want to keep it branched.
 export PATH=~/.binz/:$PATH
 
+# Bat config
+export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
+
 # ls color scheme
 export LS_COLORS="$(cat ~/.lscolors)"
 
@@ -169,4 +172,18 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # DBUS env variable
     # This is just so that vimtex can communicate with zathura through dbus
     export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
+fi
+
+# NVIDIA Bug report
+## Handy function when I want to grab logs related to GPU issues quickly
+## and send over to Lambda.
+if [[ -f /usr/bin/nvidia-bug-report.sh ]]; then
+    nvb () {
+        dts=$(date +"%Y%m%d-%H%M%S")
+        nvb_filename="nvidia-bug-report-${dts}.gz"
+        ipmi_filename="ipmitool-${dts}.txt"
+        echo "Storing logs in $nvb_filename and $ipmi_filename"
+        sudo /usr/bin/nvidia-bug-report.sh --output-file $nvb_filename "$@"
+        sudo ipmitool sel elist >> $ipmi_filename
+    }
 fi
