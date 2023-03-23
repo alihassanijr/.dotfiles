@@ -375,6 +375,11 @@ if [[ -f "/usr/bin/tmux" ]]; then
     echo "Linking tmux.conf to $HOMEDIR/.tmux.conf"
     rm $HOMEDIR/.tmux.conf
     ln -s $THISDIR/tmux.conf $HOMEDIR/.tmux.conf
+
+    # Tmux config
+    mkdir -p $HOMEDIR/.config/
+    rm -rf $HOMEDIR/.config/tmux
+    ln -s $THISDIR/config/tmux $HOMEDIR/.config/tmux
 fi
 
 
@@ -417,11 +422,13 @@ mkdir -p $HOMEDIR/.vim/colors
 mkdir -p $HOMEDIR/.vim/pack/plugins/start/lightline/autoload/lightline/colorscheme
 ln -s $THISDIR/third_party/vim/vim-monokai-tasty/colors/vim-monokai-tasty.vim $HOMEDIR/.vim/colors/vim-monokai-tasty.vim
 ln -s $THISDIR/third_party/vim/vim-monokai-tasty/autoload/lightline/colorscheme/monokai_tasty.vim $HOMEDIR/.vim/pack/plugins/start/lightline/autoload/lightline/colorscheme/monokai_tasty.vim
+
+# Bat config
 mkdir -p $HOMEDIR/.config/
 rm -rf $HOMEDIR/.config/bat
 ln -s $THISDIR/config/bat $HOMEDIR/.config/bat
 
-# Kitty
+# Kitty config
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Kitty's mac only for now
     echo "Linking kitty config"

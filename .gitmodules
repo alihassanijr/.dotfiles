@@ -49,3 +49,6 @@
 [submodule "third_party/vim/vim-monokai-tasty"]
 	path = third_party/vim/vim-monokai-tasty
 	url = https://github.com/patstockwell/vim-monokai-tasty
+[submodule "third_party/tmux/themepack"]
+	path = third_party/tmux/themepack
+	url = https://github.com/jimeh/tmux-themepack
