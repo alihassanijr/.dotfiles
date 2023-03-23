@@ -26,12 +26,23 @@ You can find it at `vimrc`, obviously.
 Watch out for the if statements -- there's plugins I enable only on my mac.
 Hostnames might be a better idea if you only use linux.
 
+![Vim with VimTeX and split screen preview](assets/vimtex.png)
+
 ### Vifm config
 That's under `vifmrc` for \*nix and `vifmrc.mac` for Mac.
+
+![Vim file manager with previews](assets/vifm.png)
 
 ### Kitty config
 I only use kitty on my mac, so there's not much of a \*nix config for that.
 Both are under `config/`.
+
+![Kitty split screen](assets/kitty.png)
+
+### Tmux config
+Just the basics: vim key bindings, and a more modern color scheme and setup.
+
+![Tmux with my attempt at producing monokai](assets/tmux.png)
 
 ### Zathura config
 My go-to PDF viewer, especially if I'm writing TeX, because it's awesome and has vim key bindings.
@@ -143,4 +154,7 @@ I just use the vim plugin manager.
 Plugins I only use on my personal device, because of both dependencies and usage.
 * [VimTex](https://github.com/lervag/vimtex)
     * You need to install a LaTeX engine locally (i.e. `latexmk`)
+    * I also use [termpdf](https://github.com/dsanson/termpdf.py) ([my fork](https://github.com/alihassanijr/termpdf.py)) to
+      preview latex pdf outputs. I managed to get VimTeX to call Kitty's remote control commands and have it split screen and
+      view the pdf. You can toggle it with `<leader>lp`, and you can still get Zathura to open with `<leader>lv`.
 * [vim-markdown-preview](https://github.com/iamcco/markdown-preview.nvim)
