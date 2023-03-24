@@ -49,3 +49,6 @@
 [submodule "third_party/vim/vim-monokai-tasty"]
 	path = third_party/vim/vim-monokai-tasty
 	url = https://github.com/patstockwell/vim-monokai-tasty
+[submodule "third_party/misc/diff-so-fancy"]
+	path = third_party/misc/diff-so-fancy
+	url = https://github.com/so-fancy/diff-so-fancy

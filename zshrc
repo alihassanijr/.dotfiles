@@ -1,6 +1,6 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="lambda"
+ZSH_THEME="agnoster"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -47,3 +47,7 @@ export TERM=xterm-256color
 
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Syntax colors
+source ~/.config/zsh/zsh-syntax-highlighting.sh
+source ~/.config/zsh/zsh-agnoster-custom.sh

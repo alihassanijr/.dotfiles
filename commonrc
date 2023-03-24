@@ -187,3 +187,8 @@ if [[ -f /usr/bin/nvidia-bug-report.sh ]]; then
         sudo ipmitool sel elist >> $ipmi_filename
     }
 fi
+
+# Diff so fancy
+diffs () {
+    diff -u $1 $2 | diff-so-fancy | less
+}
