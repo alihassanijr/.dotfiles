@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Best solution I have so far to force VIFM
+# to support true color without breaking my terminal
+#
+# Alias wouldn't work because zsh throws warnings when I
+# try and change $TERM.
+
+TERM="xterm-direct" vifm "$@"

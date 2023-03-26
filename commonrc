@@ -158,9 +158,11 @@ rys () {
     rsync -a -H -x -v --numeric-ids --ignore-existing --progress -e "ssh -T -o Compression=no -x" $1 $2
 }
 
+# I have a custom "vif" to force it to support true color
+# without upsetting zsh
 # Opens vifm and cds into the directory you :q from.
 vicd() {
-    local dst="$(command vifm --choose-dir - "$@")"
+    local dst="$(command vif --choose-dir - "$@")"
     if [ -z "$dst" ]; then
         echo 'Directory picking cancelled/failed'
         return 1

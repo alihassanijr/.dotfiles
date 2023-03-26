@@ -10,11 +10,28 @@
 
 " Color scheme and related settings
 syntax on                                               " Syntax highlighting 
-let &t_ut=''                                            " This prevents the background color issue with kitty
+
+" vim hardcodes background color erase even if the terminfo file does
+" not contain bce. This causes incorrect background rendering when
+" using a color theme with a background color in terminals such as
+" kitty that do not support background color erase.
+let &t_ut=''
+
+" Truecolor support
+let $TERM = "xterm-direct"                              " Uhhhh Vifm!
+let &t_8f = "\e[38:2:%lu:%lu:%lum"
+let &t_8b = "\e[48:2:%lu:%lu:%lum"
+let &t_RF = "\e]10;?\e\\"
+let &t_RB = "\e]11;?\e\\"
+
+
 set cursorline                                          " Row highlighting
 set cursorcolumn                                        " Column highlighting
 set background=dark                                     " Dark mode
-colorscheme vim-monokai-tasty                           " Color Scheme (in ~/.vim/colors)
+set t_Co=256
+set termguicolors
+let g:monokai_pro_highlight_active_window = 1           "
+colorscheme monokai-pro                                 " Color Scheme (in ~/.vim/colors)
 hi clear SpellBad
 hi SpellBad cterm=bold,underline ctermbg=None ctermfg=red  "Makes misspelled words bold, underlined, and red
 hi SpellCap cterm=bold ctermfg=red ctermbg=None  "Makes words in caps bold and red
@@ -98,7 +115,7 @@ set spell spelllang=en_us
 " Lightline
 set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'monokai_tasty',
+      \ 'colorscheme': 'monokai_pro',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]

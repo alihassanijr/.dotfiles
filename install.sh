@@ -415,13 +415,6 @@ ln -s $THISDIR/vim $HOMEDIR/.vim
 ln -s $THISDIR/vimrc $HOMEDIR/.vimrc
 ### Persistent undo history
 mkdir -p $HOMEDIR/.vimfiles/undodir
-### Monokai Tasty color scheme
-rm -f $HOMEDIR/.vim/colors/vim-monokai-tasty.vim
-rm -f $HOMEDIR/.vim/pack/plugins/start/lightline/autoload/lightline/colorscheme/monokai_tasty.vim
-mkdir -p $HOMEDIR/.vim/colors
-mkdir -p $HOMEDIR/.vim/pack/plugins/start/lightline/autoload/lightline/colorscheme
-ln -s $THISDIR/third_party/vim/vim-monokai-tasty/colors/vim-monokai-tasty.vim $HOMEDIR/.vim/colors/vim-monokai-tasty.vim
-ln -s $THISDIR/third_party/vim/vim-monokai-tasty/autoload/lightline/colorscheme/monokai_tasty.vim $HOMEDIR/.vim/pack/plugins/start/lightline/autoload/lightline/colorscheme/monokai_tasty.vim
 
 # Bat config
 mkdir -p $HOMEDIR/.config/
@@ -482,9 +475,11 @@ ln -s $THISDIR/third_party/zsh/zsh-syntax-highlighting $HOMEDIR/.oh-my-zsh/custo
 echo "Linking custom scripts"
 rm -f $LOCALDIR/bin/cnda
 rm -f $LOCALDIR/bin/kssh
+rm -f $LOCALDIR/bin/vif
 rm -f $LOCALDIR/bin/sagent
 ln -s $THISDIR/scripts/cnda $LOCALDIR/bin/cnda 
 ln -s $THISDIR/scripts/kssh $LOCALDIR/bin/kssh
+ln -s $THISDIR/scripts/vif $LOCALDIR/bin/vif
 if [[ "$OSTYPE" == "darwin"* ]]; then
     ln -s $THISDIR/scripts/sagent.mac $LOCALDIR/bin/sagent
 else
