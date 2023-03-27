@@ -42,13 +42,13 @@ DATE_FG  = ICON_FG
 CLOCK_BG = ICON_BG 
 DATE_BG  = ICON_BG 
 
-DEFAULT_BG: int = as_rgb(color_as_int(opts.color16))
+DEFAULT_BG: int = as_rgb(color_as_int(opts.color0))
 
-CUSTOM_FG: int = as_rgb(color_as_int(opts.color17))
-CUSTOM_BG: int = as_rgb(color_as_int(opts.color18))
+CUSTOM_FG: int = as_rgb(color_as_int(opts.color15))
+CUSTOM_BG: int = as_rgb(color_as_int(opts.color8))
 
-MUSIC_FG: int = as_rgb(color_as_int(opts.color19))
-MUSIC_BG: int = as_rgb(color_as_int(opts.color20))
+MUSIC_FG: int = as_rgb(color_as_int(opts.color22))
+MUSIC_BG: int = as_rgb(color_as_int(opts.color10))
 
 timer_id = None
 REFRESH_TIME = 10
