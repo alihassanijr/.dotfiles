@@ -5,11 +5,25 @@ After almost two years, it became really cluttered, so I cleaned up and reset th
 had way too many dependencies cloned into it, but not as submodules.
 
 ## What it contains
+
+### Color scheme
+For some reason I can't get my stuff Monokai enough, so everything will be Monokai themed (specifically Monokai Pro).
+I had to get creative with some of them to get the scheme I wanted though, so don't look for a lot of consistency.
+
+Both `$LSCOLORS` and my base16 colors are customized; obviously my vim, vifm, kitty, and tmux configs all source a monokai pro
+scheme. Some vim extensions (lightline) and zsh extensions (syntax highlighting, and the agnoster theme) also have such changes.
+I tried adding true color support to any and all schemes that supported it.
+
+The only thing bothering me was `vifm` (vim file manager) not enabling true color unless `$TERM` was `*-direct`.
+So I alias that (indirectly; zsh complains about me changing `$TERM` even when calling just one script, so I have a bash script
+`vif` that does that calls `vifm` with the appended `-direct`.)
+`vim` and `tmux` all are set up to enable true color, so hooray on that!
+
 ### Commonrc
 I almost always use zshell with [oh-my-zsh](https://ohmyz.sh/), the exception being certain servers I ssh into.
 (My tmux always uses zshell though.)
 
-My solution to not having two almost identical config files for bash and zsh was a "common" file: `commonrc`.
+My solution to not having two almost identical rc files for bash and zsh was a common file: `commonrc`.
 That holds most of what I would put in my `bashrc` or `zshrc`.
 Both my `bashrc` and `zshrc` source that file, and the rest of those files are things specific to each shell.
 
@@ -17,24 +31,16 @@ I also link the `bashrc` here to `~/.bashrc2` instead of replacing `~/.bashrc` w
 the existing one in most cases.
 The installer does append a line to `~/.bashrc` that sources `~/.bashrc2`, if it's not already there.
 
-### LSCOLORS
-My vim and vifm are set to monokai-like color schemes, so it make sense to have LSCOLORS follow.
-I'm more interested in colors in vifm's tree preview being consistent (also use tre instead of tree.)
-
 ### Vim config
 You can find it at `vimrc`, obviously.
 Watch out for the if statements -- there's plugins I enable only on my mac.
 Hostnames might be a better idea if you only use linux.
 
-![Vim with VimTeX and split screen preview](assets/vimtex.png)
-
 ### Vifm config
-That's under `vifmrc` for \*nix and `vifmrc.mac` for Mac.
-
-![Vim file manager with previews](assets/vifm.png)
+That's under `vifmrc` for linux and `vifmrc.mac` for Mac.
 
 ### Kitty config
-I only use kitty on my mac, so there's not much of a \*nix config for that.
+I only use kitty on my mac, so there's not much of a linux config for that.
 Both are under `config/`.
 
 ![Kitty split screen](assets/kitty.png)
@@ -46,6 +52,14 @@ Just the basics: vim key bindings, and a more modern color scheme and setup.
 
 ### Zathura config
 My go-to PDF viewer, especially if I'm writing TeX, because it's awesome and has vim key bindings.
+(Alias: `zat $FILENAME`)
+What I wish I could figure out is a way to get it running in-terminal instead of the GTK gui window, 
+but I'm guessing it's a long shot on mac.
+
+That's why by default, VimTex opens a kitty window split and calls a python-based PDF preview script with vim key bindings.
+It is useful  sometimes -- but if I ever need to dig in, zoom in, forward search, stuff like that, I get Zathura back by just 
+doing `<leader>lv`.
+
 
 ### Custom scripts
 These are under [scripts/](scripts/), but the installer links them to `~/.local/bin`.
@@ -70,7 +84,9 @@ My installer sets everything up locally, meaning you don't need to worry about h
 ### Vim
 I started installing vim from source for a number of reasons, including, but not limited to: I want the same version of vim 
 across devices, and I want vim 9.
-So the installer script will try to build vim if you're on either \*nix or Mac.
+So the installer script will try to build vim if you're on either linux or mac.
+
+![Vim with VimTeX and split screen preview](assets/vimtex.png)
 
 ### Vifm
 [Vim file manager](https://github.com/vifm/vifm) is *awesome*.
@@ -79,13 +95,26 @@ Again a submodule that will be built installed locally.
 It requires `libncurses`, again something that it will fetch and build locally so you save yourself from having to email a
 system admin.
 
+![Bat is set up to replace cat in vifm previews](assets/vifm-bat.png)
+
+![Tre is also set up to replace tree views in vifm](assets/vifm-tre.png)
+
+![Vim file manager with previews](assets/vifm-pdf.png)
+
 ### Bat
 Fancy `cat` substitute. Highly recommended.
 Used in my vifm config to preview files with syntax color.
 
+![bat vs cat](assets/bat.png)
+
+
 ### Tre
-Fancy `tre` substitute. Highly recommended.
-Used in my vifm config to preview directory trees with color, and not much depth, excluding hidden files.
+`tree` substitute.
+Used in my vifm config to preview directory trees, and not much depth, excluding hidden files.
+It's just easier to work with in some cases compared to `tree`.
+We get the monokai colors either way because we're modifying `$LSCOLORS`.
+
+![tre vs tree](assets/tre.png)
 
 ### Ripgrep
 Fancy `grep` substitute. Highly recommended.
@@ -97,15 +126,18 @@ plugin](https://github.com/junegunn/fzf.vim).
 ### Htop
 Substitute for `top`.
 
+![htop](assets/htop.png)
+
 ### Zathura
 Mac-only for now, and installed via homebrew.
 I put everything related to Zathura in `tools/zathura.mac.sh`.
-I have a \*nix version that I haven't really been able to test, therefore it's not tracked yet.
+
+![Zathura with dark mode](assets/zathura.png)
 
 
 ## Requirements
 
-### *nix
+### Linux
 Everything is built from source, so no need to email a sys admin to ask them to install your preferred version of things.
 Of course, you need the basics: make, cmake, autoconf, automake, autotools.
 
