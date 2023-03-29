@@ -200,3 +200,29 @@ fi
 diffs () {
     diff -u $1 $2 | diff-so-fancy | less
 }
+
+# Google Drive downloader
+# Download locally and rsync to remote no more!
+# Thanks Minchul!
+dget () {
+    # Args:
+    if [[ $# -eq 0 ]] || [[ $1 == "--help" ]]; then
+        echo "Google Drive Get (dget)"
+        echo "usage: dget [access key] [file id] [output file name]"
+        echo ""
+        echo "       dget \$GOOGLE_DRIVE_TOKEN \$GDRIVE_FILE_ID file.zip"
+        echo "  to download https://drive.google.com/file/d/\$GDRIVE_FILE_ID/view"
+        echo ""
+        echo "To get access key, go to https://developers.google.com/oauthplayground/"
+        echo "  and select Drive API v3, then select"
+        echo " \`https://www.googleapis.com/auth/drive.readonly\` and then click "
+        echo " \`Authorize APIs\`, and get to Step 2. Once in step 2, click the blue button"
+        echo " \`Exchange authorization code for tokens\` and you should see your access token"
+        echo " in the JSON shown on the right hand side view."
+    elif [[ $# -eq 3 ]]; then
+        curl -H "Authorization: Bearer $1" \
+        "https://www.googleapis.com/drive/v3/files/$2?alt=media" -o $3
+    else
+        echo "Invalid option: $@"
+    fi
+}
