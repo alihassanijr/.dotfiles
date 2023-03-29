@@ -222,11 +222,11 @@ dget () {
     # Args:
     if [[ $# -eq 0 ]] || [[ $1 == "--help" ]]; then
         echo "Google Drive Get (dget)"
-        echo "usage: dget [access key] [file id | url] [output file name]"
-        echo "       dget [url]"
+        echo "usage: dget [url | id]"
+        echo "       dget [url | id] [access key]"
+        echo "       dget [url | id] [access key] [output file name]"
         echo ""
-        echo "       dget \$GOOGLE_DRIVE_TOKEN \$GDRIVE_FILE_ID file.zip"
-        echo "  to download https://drive.google.com/file/d/\$GDRIVE_FILE_ID/view"
+        echo "       dget https://drive.google.com/file/d/XXXXXX/view"
         echo ""
         echo "To get access key, go to https://developers.google.com/oauthplayground/"
         echo "  and select Drive API v3, then select"
