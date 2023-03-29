@@ -205,10 +205,25 @@ diffs () {
 # Download locally and rsync to remote no more!
 # Thanks Minchul!
 dget () {
+    drive_url_to_id () {
+        local URL=$1
+        local FILE_ID=${URL#*google.com/}
+        FILE_ID=${FILE_ID#*file\/d\/}
+        FILE_ID=${FILE_ID#*file\/}
+        FILE_ID=${FILE_ID#*files\/}
+        FILE_ID=${FILE_ID#*\?id=}
+        FILE_ID=${FILE_ID/\/view/}
+        echo $FILE_ID
+    }
+    download_from_gdrive() {
+        curl -H "Authorization: Bearer $2" \
+        "https://www.googleapis.com/drive/v3/files/$1?alt=media" -o $3
+    }
     # Args:
     if [[ $# -eq 0 ]] || [[ $1 == "--help" ]]; then
         echo "Google Drive Get (dget)"
-        echo "usage: dget [access key] [file id] [output file name]"
+        echo "usage: dget [access key] [file id | url] [output file name]"
+        echo "       dget [url]"
         echo ""
         echo "       dget \$GOOGLE_DRIVE_TOKEN \$GDRIVE_FILE_ID file.zip"
         echo "  to download https://drive.google.com/file/d/\$GDRIVE_FILE_ID/view"
@@ -219,9 +234,38 @@ dget () {
         echo " \`Authorize APIs\`, and get to Step 2. Once in step 2, click the blue button"
         echo " \`Exchange authorization code for tokens\` and you should see your access token"
         echo " in the JSON shown on the right hand side view."
+    elif [[ $# -eq 1 ]]; then
+        DRIVE_URL=$1
+        FILE_ID=$(drive_url_to_id $DRIVE_URL)
+        echo "Downloading Google Drive file: $DRIVE_URL"
+        echo "ID: $FILE_ID"
+        echo ""
+        echo "Open https://developers.google.com/oauthplayground/"
+        echo "  and select Drive API v3, then select"
+        echo " \`https://www.googleapis.com/auth/drive.readonly\` and then click "
+        echo " \`Authorize APIs\`, and get to Step 2. Once in step 2, click the blue button"
+        echo " \`Exchange authorization code for tokens\` and you should see your access token"
+        echo " in the JSON shown on the right hand side view."
+        echo ""
+        echo "Enter access key: "
+        read DRIVE_ACCESS_KEY
+        echo ""
+        echo "Enter output file name (e.g. file.zip): "
+        read DRIVE_FILENAME
+        download_from_gdrive $FILE_ID $DRIVE_ACCESS_KEY $DRIVE_FILENAME
+    elif [[ $# -eq 1 ]]; then
+        DRIVE_URL=$1
+        FILE_ID=$(drive_url_to_id $DRIVE_URL)
+        DRIVE_ACCESS_KEY=$2
+        echo "Enter output file name (e.g. file.zip): "
+        read DRIVE_FILENAME
+        download_from_gdrive $FILE_ID $DRIVE_ACCESS_KEY $DRIVE_FILENAME
     elif [[ $# -eq 3 ]]; then
-        curl -H "Authorization: Bearer $1" \
-        "https://www.googleapis.com/drive/v3/files/$2?alt=media" -o $3
+        DRIVE_URL=$1
+        FILE_ID=$(drive_url_to_id $DRIVE_URL)
+        DRIVE_ACCESS_KEY=$2
+        DRIVE_FILENAME=$3
+        download_from_gdrive $FILE_ID $DRIVE_ACCESS_KEY $DRIVE_FILENAME
     else
         echo "Invalid option: $@"
     fi
