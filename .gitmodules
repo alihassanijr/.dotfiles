@@ -49,3 +49,6 @@
 [submodule "third_party/misc/diff-so-fancy"]
 	path = third_party/misc/diff-so-fancy
 	url = https://github.com/so-fancy/diff-so-fancy
+[submodule "third_party/vim/vim-polyglot"]
+	path = third_party/vim/vim-polyglot
+	url = https://github.com/sheerun/vim-polyglot
