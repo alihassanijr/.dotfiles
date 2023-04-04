@@ -65,6 +65,7 @@ else
             echo "ostype: $OSTYPE"
             exit 1
         fi
+        cd $THISDIR
         rm -rf $TMPDIR
     fi
 fi
@@ -145,6 +146,51 @@ else
     fi
 fi
 
+# Install exa?
+## 
+if \
+    [[ -f "$LOCALDIR/bin/exa" ]]; then
+#    Not explicitly checking if exa is recognized because we want our minimum version satisfied
+#    [[ -f "$(which exa)" ]]; then
+    echo "exa appears to be installed ($(which exa)); skipping..."
+else
+    echo "which exa: $(which exa)"
+    read -p "Install exa? [y/n]: " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Installing exa"
+        mkdir -p $LOCALDIR/bin
+        TMPDIR=$THISDIR/tmp
+        mkdir -p $TMPDIR
+        EXAURL=""
+        arch="$(uname -m)"
+        if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
+            EXAURL="https://github.com/ogham/exa/releases/download/v0.10.1/exa-macos-x86_64-v0.10.1.zip"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+            EXAURL="https://github.com/ogham/exa/releases/download/v0.10.1/exa-linux-x86_64-v0.10.1.zip"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+            EXAURL="https://github.com/ogham/exa/releases/download/v0.10.1/exa-linux-armv7-v0.10.1.zip"
+        fi
+        if [[ "$EXAURL" != "" ]]; then
+            echo "Fetching static exa binaries"
+            cd $TMPDIR && \
+                wget $EXAURL && \
+                unzip exa*.zip -d exa/ && \
+                rm exa*.zip && \
+                mv exa/bin/exa $LOCALDIR/bin/exa && \
+                cp -r -n -v exa/man/* $LOCALDIR/man/
+        else
+            echo "Failed to install static exa. Please install it manually before proceeding."
+            echo "arch: $arch"
+            echo "ostype: $OSTYPE"
+            exit 1
+        fi
+        cd $THISDIR
+        rm -rf $TMPDIR
+    fi
+fi
+
 # Install bat?
 ## 
 if \
@@ -182,6 +228,7 @@ else
             echo "ostype: $OSTYPE"
             exit 1
         fi
+        cd $THISDIR
         rm -rf $TMPDIR
     fi
 fi
@@ -222,6 +269,7 @@ else
             echo "ostype: $OSTYPE"
             exit 1
         fi
+        cd $THISDIR
         rm -rf $TMPDIR
     fi
 fi
@@ -261,6 +309,7 @@ else
             echo "ostype: $OSTYPE"
             exit 1
         fi
+        cd $THISDIR
         rm -rf $TMPDIR
     fi
 fi

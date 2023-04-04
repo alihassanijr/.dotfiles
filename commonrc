@@ -29,21 +29,17 @@ export LS_COLORS="$(cat ~/.lscolors)"
 ##########
 # Add color and make human readable
 
-# OSX-specific aliases
-if [[ "$OSTYPE" == "darwin"* ]] && [[ -f "$(which gls)" ]]; then
-    # Thank you apple!
-    alias ls="gls --color"
-    alias la='gls -ltah --color=auto'
-else
-    alias ls="ls --color=auto"
-    alias la='ls -ltah --color=auto'
+# Replace ls with exa
+if [[ -f "$(which exa)" ]]; then
+    alias ls="exa --color=auto"
+    alias la='exa -lah -s name --color=auto'
+    alias lm='exa -lah -s modified --color=auto'
+    alias ll='exa -lah -s size --color=auto'
 fi
 alias df='df -h'
 # Grep to have color, give line number, don't tell me it can't access restricted files (sudo), and don't process binary files (garbage output ):
 alias grep='grep --color=always --line-number --no-messages --binary-files=without-match'
 
-#alias vi='vim'
-#alias top='htop'
 alias ssh='ssh -YC'
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then

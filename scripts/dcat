@@ -5,15 +5,15 @@
 # by Ali Hassani (@alihassanijr)
 
 FILENAME=$1
-THUMBNAIL="/tmp/pdfthumb.png"
+THUMBNAIL="$HOME/.tmp/pdfthumb.png"
 shift
 
+python3 -c "import fitz; doc = fitz.open('$FILENAME'); page = doc[0]; pix = page.get_pixmap(); pix.save('$THUMBNAIL');"
 if [[ -w $THUMBNAIL ]]; then
-	python3 -c "import fitz; doc = fitz.open('$FILENAME'); page = doc[0]; pix = page.get_pixmap(); pix.save('$THUMBNAIL');"
 	kitty +kitten icat --silent --transfer-mode=stream "$@" $THUMBNAIL
 	# Not removing because it causes weird flicks
 	# My best guess is that it removes and icat fails to load
 	#rm -r $THUMBNAIL > /dev/null
 else
-	echo "Failed to preview PDF file $FILENAME. /tmp is not writable."
+	echo "Failed to preview PDF file $FILENAME. $THUMBNAIL is not writable."
 fi
