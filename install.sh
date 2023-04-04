@@ -21,6 +21,14 @@ fi
 # Ensure submodules are cloned
 git submodule update --init --recursive
 
+
+# Ensure expected directories exist
+mkdir -p $LOCALDIR/
+mkdir -p $LOCALDIR/bin
+mkdir -p $LOCALDIR/man
+mkdir -p $LOCALDIR/share
+mkdir -p $HOMEDIR/.config
+
 # Install cmake?
 # I am tired of the old cmakes and having to use conda whenever I need cutlass.
 # I am done!
