@@ -199,6 +199,55 @@ else
     fi
 fi
 
+# Install git-lfs?
+## 
+if \
+    [[ -f "$LOCALDIR/bin/git-lfs" ]]; then
+#    Not explicitly checking if git-lfs is recognized because we want our minimum version satisfied
+#    [[ -f "$(which git-lfs)" ]]; then
+    echo "git-lfs appears to be installed ($(which git-lfs)); skipping..."
+else
+    echo "which git-lfs: $(which git-lfs)"
+    read -p "Install git-lfs? [y/n]: " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "Installing git-lfs"
+        mkdir -p $LOCALDIR/bin
+        TMPDIR=$THISDIR/tmp
+        mkdir -p $TMPDIR
+        GITLFSURL=""
+        arch="$(uname -m)"
+        if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
+            GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v3.3.0/git-lfs-darwin-amd64-v3.3.0.zip"
+        elif [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "arm64" ]]; then
+            GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v3.3.0/git-lfs-darwin-arm64-v3.3.0.zip"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+            GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v3.3.0/git-lfs-linux-amd64-v3.3.0.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+            GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v3.3.0/git-lfs-linux-arm-v3.3.0.tar.gz"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm64" ]]; then
+            GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v3.3.0/git-lfs-linux-arm64-v3.3.0.tar.gz"
+        fi
+        if [[ "$GITLFSURL" != "" ]]; then
+            echo "Fetching static git-lfs binaries"
+            cd $TMPDIR && \
+                wget $GITLFSURL && \
+                tar -xzf git-lfs*.tar.gz && \
+                rm git-lfs*.tar.gz && \
+                mv git-lfs-*/git-lfs $LOCALDIR/bin/git-lfs && \
+                cp -r -n -v git-lfs-*/man/* $LOCALDIR/man/
+        else
+            echo "Failed to install static git-lfs. Please install it manually before proceeding."
+            echo "arch: $arch"
+            echo "ostype: $OSTYPE"
+            exit 1
+        fi
+        cd $THISDIR
+        rm -rf $TMPDIR
+    fi
+fi
+
 # Install bat?
 ## 
 if \
