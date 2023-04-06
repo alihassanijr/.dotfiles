@@ -606,3 +606,10 @@ hi link LspDiagnosticsUnderlineHint DiagnosticUnderlineHint
 " Must be at the end, because of ctermbg=234 bug.
 " https://groups.google.com/forum/#!msg/vim_dev/afPqwAFNdrU/nqh6tOM87QUJ
 set background=dark
+
+""" Just please don't highlight typos with a red background!!!
+hi clear SpellBad
+hi SpellBad cterm=bold,underline ctermbg=None ctermfg=red  "Makes misspelled words bold, underlined, and red
+hi SpellCap cterm=bold ctermfg=red ctermbg=None  "Makes words in caps bold and red
+hi SpellLocal cterm=bold,underline ctermbg=None ctermfg=magenta  "Makes local words bold, underlined, and magenta
+hi SpellRare cterm=underline ctermbg=None ctermfg=magenta  "Makes rare words bold and magenta

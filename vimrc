@@ -32,11 +32,6 @@ set t_Co=256
 set termguicolors
 let g:monokai_pro_highlight_active_window = 1           "
 colorscheme monokai-pro                                 " Color Scheme (in ~/.vim/colors)
-hi clear SpellBad
-hi SpellBad cterm=bold,underline ctermbg=None ctermfg=red  "Makes misspelled words bold, underlined, and red
-hi SpellCap cterm=bold ctermfg=red ctermbg=None  "Makes words in caps bold and red
-hi SpellLocal cterm=bold,underline ctermbg=None ctermfg=magenta  "Makes local words bold, underlined, and magenta
-hi SpellRare cterm=underline ctermbg=None ctermfg=magenta  "Makes rare words bold and magenta
 
 set mouse=a                                             " Mouse support for people that can't use vim
 set path+=**                                            " Recursive path lookup
@@ -208,6 +203,7 @@ if g:os == 'Darwin'
   function! TermPDF(status) abort
 
     if a:status
+      call TermPDFClose()
       call system('kitty @ launch --keep_focus --copy_env --location=vsplit ' . 
             \ '--title ' . g:termpdf_tab_prefix  . b:vimtex.name . '.pdf ' . 
             \ 'termpdf ' .  b:vimtex.root . '/' . b:vimtex.name . '.pdf')
@@ -267,3 +263,16 @@ if g:os == 'Darwin'
       \ ],
         \}
 endif
+
+" Goyo: focus mode
+" \gg
+let g:goyo_linenr = 1
+let g:goyo_width = "60%"
+let g:goyo_height = "100%"
+map <leader>gg :Goyo<cr>
+
+" Limelight
+" Enhanced focus
+" \gl
+let g:limelight_default_coefficient = 0.7
+map <leader>ge :Limelight!!<cr>

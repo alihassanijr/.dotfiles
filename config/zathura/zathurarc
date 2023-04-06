@@ -16,7 +16,7 @@ set database "sqlite"
 # Copyright © 2020-Present Vasundhara Sharma
 
 
-set recolor true
+#set recolor true
 
 # Lighthaus Colors:
 

@@ -52,3 +52,9 @@
 [submodule "third_party/vim/vim-polyglot"]
 	path = third_party/vim/vim-polyglot
 	url = https://github.com/sheerun/vim-polyglot
+[submodule "third_party/vim/goyo.vim"]
+	path = third_party/vim/goyo.vim
+	url = https://github.com/junegunn/goyo.vim
+[submodule "third_party/vim/limelight.vim"]
+	path = third_party/vim/limelight.vim
+	url = https://github.com/junegunn/limelight.vim
