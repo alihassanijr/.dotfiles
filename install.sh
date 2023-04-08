@@ -41,6 +41,7 @@ ensure_rg               # alternative to grep
 ensure_tre              # alternative to tree
 
 # Not as frequently used, but nice to have
+ensure_aria2            # download utility
 ensure_fzf              # Fuzzy finder
 
 

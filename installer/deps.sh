@@ -4,6 +4,12 @@
 # NOTE: this should be sourced from ./dotfiles/
 
 
+# Aria2
+source installer/dependencies/aria2.sh
+ensure_aria2() {
+  check_and_install_dependency "aria2" "$LOCALDIR/bin/aria2c" "install_aria2"
+}
+
 # Bat
 source installer/dependencies/bat.sh
 ensure_bat() {
