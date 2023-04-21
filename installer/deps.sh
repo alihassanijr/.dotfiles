@@ -58,7 +58,7 @@ ensure_htop() {
 # Kitty 
 source installer/dependencies/kitty.sh
 ensure_kitty() {
-  if [ $IS_PERSONAL ]; then
+  if [[ $IS_PERSONAL -eq 1 ]]; then
     check_and_install_dependency "kitty" "$(which kitty)" "install_kitty"
     configure_dependency "kitty" "configure_kitty"
   fi
@@ -86,7 +86,7 @@ ensure_rg() {
 # Tmux
 source installer/dependencies/tmux.sh
 ensure_tmux() {
-  if ! [ $IS_PERSONAL ]; then
+  if [[ $IS_PERSONAL -eq 1 ]]; then
     # check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
     check_soft_dependency "tmux"
     configure_dependency "tmux" "configure_tmux"
@@ -116,7 +116,7 @@ ensure_vifm() {
 # Zathura
 source installer/dependencies/zathura.sh
 ensure_zathura() {
-  if [ $IS_PERSONAL ]; then
+  if [[ $IS_PERSONAL -eq 1 ]]; then
     check_and_install_dependency "zathura" "$(which zathura)" "install_zathura"
     configure_dependency "zathura" "configure_zathura"
   fi

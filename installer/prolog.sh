@@ -18,7 +18,7 @@ NCDIR=$HOME/.ncurses/
 # Whether or not this is a personal device 
 ## I want certain things like my terminal emulator only on
 ## personal devices, not on servers.
-IS_PERSONAL=false
+IS_PERSONAL=0
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    IS_PERSONAL=true
+    IS_PERSONAL=1
 fi

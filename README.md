@@ -139,7 +139,7 @@ I put everything related to Zathura in `tools/zathura.mac.sh`.
 
 ### Linux
 Everything is built from source, so no need to email a sys admin to ask them to install your preferred version of things.
-Of course, you need the basics: make, cmake, autoconf, automake, autotools.
+Of course, you need the basics: make, cmake, autoconf, automake, autotools, pkg-config.
 
 ### Mac
 (Almost) everything is built from source.

@@ -4,6 +4,12 @@
 
 # Load functions
 source installer/prolog.sh
+if [[ $IS_PERSONAL -eq 1 ]]; then
+  echo "This is a personal device, is that right? (will attempt to install terminal emulator and pdf viewer.)"
+else
+  echo "This is NOT a personal device, is that right? (will skip installing terminal emulator and pdf viewer.)"
+fi
+read
 source installer/utils.sh
 source installer/deps.sh
 source installer/configs.sh
