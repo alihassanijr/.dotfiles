@@ -86,7 +86,7 @@ ensure_rg() {
 # Tmux
 source installer/dependencies/tmux.sh
 ensure_tmux() {
-  if [[ $IS_PERSONAL -eq 1 ]]; then
+  if [[ $IS_PERSONAL -eq 0 ]]; then
     # check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
     check_soft_dependency "tmux"
     configure_dependency "tmux" "configure_tmux"
