@@ -41,7 +41,11 @@ alias df='df -h'
 # Grep to have color, give line number, don't tell me it can't access restricted files (sudo), and don't process binary files (garbage output ):
 alias grep='grep --color=always --line-number --no-messages --binary-files=without-match'
 
-alias ssh='ssh -YC'
+# TODO: remove
+# Hmmm, I don't do X11 forwarding so Idk why I have this?
+# alias ssh='ssh -YC'
+
+alias prs='ps -o uid,user,pid,%cpu,%mem,tt,state,start,time,command'
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # No window manager for mac
