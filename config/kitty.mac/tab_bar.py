@@ -139,9 +139,9 @@ def _draw_right_status(screen: Screen, is_last: bool) -> int:
     global title
     global artist
     cells = []
-    if music_playing:
-        music_status_icon = "" if playing else ""
-        cells.append((MUSIC_FG, MUSIC_BG, False, False, f"   {music_status_icon} {title}  | {artist} "))
+    #if music_playing:
+    #    music_status_icon = "" if playing else ""
+    #    cells.append((MUSIC_FG, MUSIC_BG, False, False, f"   {music_status_icon} {title}  | {artist} "))
     try:
         battery_pct = int(re.split(r'\t+', subprocess.getoutput("pmset -g batt").split("%")[0])[1])
     except:

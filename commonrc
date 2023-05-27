@@ -149,6 +149,11 @@ alias whodat='ps haeo user | sort -u'
 alias lip="hostname -I | cut -d' ' -f1"
 alias gip="curl -s http://ipinfo.io/ip | cut -d'%' -f1"
 
+# Clear out those latex compile files for goodness sake
+cleartex () {
+	rm -f $1.log $1.aux $1.bbl $1.blg $1.out $1.dvi $1.ps $1.ps.gz texput.log $1.synctex.gz $1.fls $1.fdb_latexmk $1.synctex\(busy\)
+}
+
 # My go-to rsync with deletion
 ry () {
     rsync -a -H -x -v --numeric-ids --delete --progress -e "ssh -T -o Compression=no -x" $1 $2
