@@ -31,7 +31,7 @@ export LS_COLORS="$(cat ~/.lscolors)"
 
 # Replace ls with exa
 if [[ -f "$(which exa)" ]]; then
-    alias ls="exa -h --color=auto"
+    alias ls="exa --color=auto"
     alias lc="exa -lh --color=auto"
     alias la='exa -lah -s name --color=auto'
     alias lm='exa -lah -s modified --color=auto'
