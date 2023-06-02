@@ -162,6 +162,27 @@ cleartex () {
   fi
 }
 
+# Wait on PIDs
+# Useful when lazily trying to schedule jobs on a physical node or workstation without a scheduler
+anywait(){
+    if [[ $# -eq 0 ]] || [[ $1 == "--help" ]]; then
+        echo "Block on PIDs (anywait)"
+        echo "usage: anywait [pid]"
+        echo "       anywait [pid1] ... [pidN]"
+        echo ""
+        echo "Waits on all PIDs to finish / die with 10 second intervals."
+    else
+        # Borrowed this from StackOverflow:
+        # https://stackoverflow.com/a/1127675
+        for pid in "$@"; do
+            while kill -0 "$pid"; do
+                # echo "$pid is still alive, waiting..."
+                sleep 10
+            done
+        done
+    fi
+}
+
 # My go-to rsync with deletion
 ry () {
     rsync -a -H -x -v --numeric-ids --delete --progress -e "ssh -T -o Compression=no -x" $1 $2
