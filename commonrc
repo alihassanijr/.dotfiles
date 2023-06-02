@@ -31,8 +31,8 @@ export LS_COLORS="$(cat ~/.lscolors)"
 
 # Replace ls with exa
 if [[ -f "$(which exa)" ]]; then
-    alias ls="exa --color=auto"
-    alias lc="exa -l --color=auto"
+    alias ls="exa -h --color=auto"
+    alias lc="exa -lh --color=auto"
     alias la='exa -lah -s name --color=auto'
     alias lm='exa -lah -s modified --color=auto'
     alias ll='exa -lah -s size --color=auto'
@@ -151,7 +151,15 @@ alias gip="curl -s http://ipinfo.io/ip | cut -d'%' -f1"
 
 # Clear out those latex compile files for goodness sake
 cleartex () {
-	rm -f $1.log $1.aux $1.bbl $1.blg $1.out $1.dvi $1.ps $1.ps.gz texput.log $1.synctex.gz $1.fls $1.fdb_latexmk $1.synctex\(busy\)
+  if [[ $# -eq 1 ]]; then
+      rm -f $1.log $1.aux $1.bbl $1.blg $1.out $1.dvi $1.ps $1.ps.gz \
+          $1.synctex.gz $1.fls $1.fdb_latexmk $1.synctex\(busy\) \
+          $1.bcf $1.run.xml
+      rm -f texput.log
+  else
+      echo "No argument passed! cleartex expects exactly 1 argument: file name."
+      echo "For example: cleartex main will remove latex cache files associated with main."
+  fi
 }
 
 # My go-to rsync with deletion
