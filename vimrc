@@ -243,12 +243,19 @@ if g:os == 'Darwin'
   endfunction
 
   " Enable by default
-  call EnableTermPDF()
+  " call EnableTermPDF()
 
   " Allow toggling TermPDF
   map <leader>lp :call ToggleTermPDF()<cr>
   map <leader>l= :call TermPDFResize(10)<cr>
   map <leader>l- :call TermPDFResize(-10)<cr>
+
+
+  "" Back to VimTex
+  "" Disable matchparen because it slows stuff down
+  let g:vimtex_matchparen_enabled = 0
+  let loaded_matchparen = 1
+
 
   let g:vimtex_compiler_latexmk = {
       \ 'build_dir' : '',
@@ -263,6 +270,21 @@ if g:os == 'Darwin'
       \ ],
         \}
 endif
+
+"" Toggles cursorline -- slow for some reason in certain files (i.e. tex)
+let g:cursorline_enabled = 1
+function! ToggleCursorLine()
+if g:cursorline_enabled
+    let g:cursorline_enabled = 0
+    set nocursorline
+    set nocursorcolumn
+else
+    let g:cursorline_enabled = 1
+    set cursorline
+    set cursorcolumn
+endif
+endfunction
+map <leader>cc :call ToggleCursorLine()<cr>
 
 " Goyo: focus mode
 " \gg
