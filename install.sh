@@ -31,6 +31,7 @@ ensure_git_lfs
 
 # Everyday
 ensure_kitty            # terminal emulator (conditional dependency)
+ensure_alacritty        # might switch soon?
 ensure_tmux             # window manager (conditional soft dependency)
 ensure_vim              # editor
 ensure_vifm             # file browser

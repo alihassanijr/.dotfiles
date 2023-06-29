@@ -3,6 +3,15 @@
 # Author: Ali Hassani (@alihassanijr)
 # NOTE: this should be sourced from ./dotfiles/
 
+# Alacritty
+source installer/dependencies/alacritty.sh
+ensure_alacritty() {
+  if [[ $IS_PERSONAL -eq 1 ]]; then
+    check_and_install_dependency "alacritty" "$(which alacritty)" "install_alacritty"
+    configure_dependency "alacritty" "configure_alacritty"
+  fi
+}
+
 
 # Aria2
 source installer/dependencies/aria2.sh
