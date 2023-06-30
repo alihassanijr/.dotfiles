@@ -1,0 +1,13 @@
+
+
+
+" No more previews -- I'm leaving kitty
+"fileviewer *.pdf,*.xps,*.oxps,*.epub,*.cbz,*.cbr,*.fb2
+"    \ dcat %c --place=%pwx%ph@%pxx%py >/dev/tty </dev/tty %N
+"    \ %pc
+"    \ kitty +kitten icat --clear --silent >/dev/tty </dev/tty %N
+"
+"fileviewer *.png,*.jpg,*.jpeg,*.bmp
+"    \ kitty +kitten icat --silent --transfer-mode=stream --place=%pwx%ph@%pxx%py %c >/dev/tty </dev/tty %N
+"    \ %pc
+"    \ kitty +kitten icat --clear --silent >/dev/tty </dev/tty %N

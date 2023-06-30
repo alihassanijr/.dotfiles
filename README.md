@@ -39,12 +39,6 @@ Hostnames might be a better idea if you only use linux.
 ### Vifm config
 That's under `vifmrc` for linux and `vifmrc.mac` for Mac.
 
-### Kitty config
-I only use kitty on my mac, so there's not much of a linux config for that.
-Both are under `config/`.
-
-![Kitty split screen](assets/kitty.png)
-
 ### Tmux config
 Just the basics: vim key bindings, and a more modern color scheme and setup.
 
@@ -56,9 +50,9 @@ My go-to PDF viewer, especially if I'm writing TeX, because it's awesome and has
 What I wish I could figure out is a way to get it running in-terminal instead of the GTK gui window, 
 but I'm guessing it's a long shot on mac.
 
-That's why by default, VimTex opens a kitty window split and calls a python-based PDF preview script with vim key bindings.
-It is useful  sometimes -- but if I ever need to dig in, zoom in, forward search, stuff like that, I get Zathura back by just 
-doing `<leader>lv`.
+I used to have [VimTex open a kitty window split](deprecated/) and call a python-based PDF preview script with vim key bindings.
+It was useful sometimes -- but it was very limited, buggy, and used to melt my macbook when I left it running in the background.
+On a different note, I'm moving away from kitty, so I'm getting rid of everything that's dependent on it.
 
 
 ### Custom scripts
@@ -69,7 +63,7 @@ These are under [scripts/](scripts/), but the installer links them to `~/.local/
     * It also eliminates the heartache with adding conda init to bashrc.
     * NOTE: to use it, you need to source it: `source cnda`.
 * `sagent` looks for an SSH agent process, and sets one up if it doesn't find any.
-    * I really needed this when I started using tmux. I'd have a bajillion panes and splits, each with their own shell, and each with its own ssh agent spawned. It was just too crazy to deal with, so this is my temp solution that's lasted for about two years.
+    * I really needed this when I started using tmux. I'd have plenty of panes and splits, each with their own shell, and each with its own ssh agent spawned. It was just too crazy to deal with, so this is my temp solution that's lasted for about two years.
     * It gets called at `commonrc` (with exceptions), so I wouldn't have to worry about doing an `eval $(ssh-agent)` every time.
 * `kssh` kills the SSH agent.
 
@@ -86,8 +80,6 @@ I started installing vim from source for a number of reasons, including, but not
 across devices, and I want vim 9.
 So the installer script will try to build vim if you're on either linux or mac.
 
-![Vim with VimTeX and split screen preview](assets/vimtex.png)
-
 ### Vifm
 [Vim file manager](https://github.com/vifm/vifm) is *awesome*.
 That's all I have to say.
@@ -98,8 +90,6 @@ system admin.
 ![Bat is set up to replace cat in vifm previews](assets/vifm-bat.png)
 
 ![Tre is also set up to replace tree views in vifm](assets/vifm-tre.png)
-
-![Vim file manager with previews](assets/vifm-pdf.png)
 
 ### Bat
 Fancy `cat` substitute. Highly recommended.
@@ -186,7 +176,4 @@ I just use the vim plugin manager.
 Plugins I only use on my personal device, because of both dependencies and usage.
 * [VimTex](https://github.com/lervag/vimtex)
     * You need to install a LaTeX engine locally (i.e. `latexmk`)
-    * I also use [termpdf](https://github.com/dsanson/termpdf.py) ([my fork](https://github.com/alihassanijr/termpdf.py)) to
-      preview latex pdf outputs. I managed to get VimTeX to call Kitty's remote control commands and have it split screen and
-      view the pdf. You can toggle it with `<leader>lp`, and you can still get Zathura to open with `<leader>lv`.
 * [vim-markdown-preview](https://github.com/iamcco/markdown-preview.nvim)

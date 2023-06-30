@@ -7,11 +7,11 @@
 source installer/dependencies/alacritty.sh
 ensure_alacritty() {
   if [[ $IS_PERSONAL -eq 1 ]]; then
-    check_and_install_dependency "alacritty" "$(which alacritty)" "install_alacritty"
+    # TODO: find out how to check for alacritty and allow installation
+    #check_and_install_dependency "alacritty" "$(which alacritty)" "install_alacritty"
     configure_dependency "alacritty" "configure_alacritty"
   fi
 }
-
 
 # Aria2
 source installer/dependencies/aria2.sh
@@ -64,15 +64,6 @@ ensure_htop() {
   configure_dependency "htop" "configure_htop"
 }
 
-# Kitty 
-source installer/dependencies/kitty.sh
-ensure_kitty() {
-  if [[ $IS_PERSONAL -eq 1 ]]; then
-    check_and_install_dependency "kitty" "$(which kitty)" "install_kitty"
-    configure_dependency "kitty" "configure_kitty"
-  fi
-}
-
 # Oh-My-ZSH
 source installer/dependencies/oh-my-zsh.sh
 ensure_oh_my_zsh() {
@@ -95,11 +86,11 @@ ensure_rg() {
 # Tmux
 source installer/dependencies/tmux.sh
 ensure_tmux() {
-  if [[ $IS_PERSONAL -eq 0 ]]; then
+  #if [[ $IS_PERSONAL -eq 0 ]]; then
     # check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
     check_soft_dependency "tmux"
     configure_dependency "tmux" "configure_tmux"
-  fi
+  #fi
 }
 
 # Tre

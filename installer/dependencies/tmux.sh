@@ -12,7 +12,11 @@ configure_tmux() {
     # Tmux config files
     if [[ -f "$(which tmux)" ]]; then
         rm $HOMEDIR/.tmux.conf
-        ln -s $THISDIR/tmux.conf $HOMEDIR/.tmux.conf
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            ln -s $THISDIR/tmux.mac.conf $HOMEDIR/.tmux.conf
+        else
+            ln -s $THISDIR/tmux.conf $HOMEDIR/.tmux.conf
+        fi
 
         mkdir -p $HOMEDIR/.config/
         rm -rf $HOMEDIR/.config/tmux

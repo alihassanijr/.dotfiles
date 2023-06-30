@@ -540,18 +540,8 @@ nnoremap <c-u> <c-w>x
 " Open media/docs normally instead of in vim
 filetype *.jpg,*.jpeg,*.png,*.docx,*.pptx,*.xlsx,*.mp4,*.mp3 open
 
-fileviewer *.png,*.jpg,*.jpeg,*.bmp
-    \ kitty +kitten icat --silent --transfer-mode=stream --place=%pwx%ph@%pxx%py %c >/dev/tty </dev/tty %N
-    \ %pc
-    \ kitty +kitten icat --clear --silent >/dev/tty </dev/tty %N
-
 filetype *.pdf,*.xps,*.oxps,*.epub,*.cbz,*.cbr,*.fb2
     \ zathura %c  > /dev/null 2>&1 &
-
-fileviewer *.pdf,*.xps,*.oxps,*.epub,*.cbz,*.cbr,*.fb2
-    \ dcat %c --place=%pwx%ph@%pxx%py >/dev/tty </dev/tty %N
-    \ %pc
-    \ kitty +kitten icat --clear --silent >/dev/tty </dev/tty %N
 
 
 fileviewer *[^/] bat --color=always --style=numbers --wrap never --pager never %c -p
