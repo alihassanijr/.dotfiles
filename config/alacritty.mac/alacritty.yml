@@ -910,7 +910,7 @@ mouse:
   #highlight_damage: false
 key_bindings:
   - { key: Comma,  mods: Command, command: {program: "sh", args: ["-c","open ~/.config/alacritty/alacritty.yml"]}}
-  - { key: N,      mods: Command, action: SpawnNewInstance                           } # New window
+  - { key: N,      mods: Command, action: CreateNewWindow                            } # New window
   - { key: Space,  mods: Alt,     chars: " "                                         } # ?
   - { key: Back,   mods: Super,   chars: "\x15"                                      } # delete word/line
   - { key: Left,   mods: Alt,     chars: "\x1bb"                                     } # one word left
