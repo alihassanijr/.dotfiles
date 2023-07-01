@@ -1,0 +1,33 @@
+
+
+# 100:  # tier 8
+# 90s: 
+# 80s:  # tier 7
+# 70s:  # tier 6
+# 60s: 
+# 50s:  # tier 5
+# 40s:  # tier 4
+# 30s: 
+# 20s:  # tier 3
+# 10s:  # tier 2
+# 00s:  # tier 1
+
+
+#if [ $percentage -ge 95 -o "$percentage" == "" ]; then
+#	# if percentage is empty, assume it's a desktop
+#	printf "$icon_charge_tier8"
+#elif [ $percentage -ge 80 ]; then
+#	printf "$icon_charge_tier7"
+#elif [ $percentage -ge 65 ]; then
+#	printf "$icon_charge_tier6"
+#elif [ $percentage -ge 50 ]; then
+#	printf "$icon_charge_tier5"
+#elif [ $percentage -ge 35 ]; then
+#	printf "$icon_charge_tier4"
+#elif [ $percentage -ge 20 ]; then
+#	printf "$icon_charge_tier3"
+#elif [ $percentage -gt 5 ]; then
+#	printf "$icon_charge_tier2"
+#else
+#	printf "$icon_charge_tier1"
+#fi
