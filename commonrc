@@ -65,9 +65,16 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         zathura "$@" > /dev/null 2>&1 &
     }
 
-    # Kitty icat and clear icat (iclear)
-    alias icat="kitty +kitten icat --silent --transfer-mode=stream"
-    alias iclear="kitty +kitten icat --silent --clear --transfer-mode=stream"
+    # Replace the mac sed with GNU sed:
+    alias sed="gsed"
+    
+    # Alacritty focus mode
+    alias ap="alacritty_widescreen_toggle"
+
+    # No longer using these
+    ## Kitty icat and clear icat (iclear)
+    #alias icat="kitty +kitten icat --silent --transfer-mode=stream"
+    #alias iclear="kitty +kitten icat --silent --clear --transfer-mode=stream"
 
     # GUI applications
     alias zoom="open -a zoom.us"

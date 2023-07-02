@@ -1,0 +1,52 @@
+#!/bin/bash
+# Alacritty widescreen toggle
+# Hacked together by Ali Hassani (@alihassanijr)
+# Increases horizontal padding to make it easier to use the full screen terminal on a wide screen
+
+CONFIG_PATH=${1:-$HOME/.config/alacritty/alacritty.yml}
+
+set_alarcitty_padding() {
+    PAD_X=$1
+    PAD_Y=$2
+    ALACRITTY_PATH=$3
+    CMND="sed"
+    if [[ -f $(which gsed) ]]; then
+        CMND="gsed"
+    fi
+    $CMND -i "/padding:/{n;s/x: .*/x: ${PAD_X}/g;n;s/y: .*/y: ${PAD_Y}/g}" $ALACRITTY_PATH
+}
+
+# I know this is lazy, I'll fix it later
+# TODO: store padding somewhere so we don't have to set default padding here
+DEFAULT_X=5
+DEFAULT_Y=5
+
+PAD_X=255
+PAD_Y=30
+CUTOFF_X=50
+CUTOFF_Y=50
+
+if [[ ! -f $CONFIG_PATH ]]; then
+    echo "Alacritty widescreen toggle failed: Could not find the alacritty config file at $CONFIG_PATH."
+    exit 1
+fi
+
+current_pad_x=$(awk '$1 == "padding:" {getline;print $2; exit}' $CONFIG_PATH)
+current_pad_y=$(awk '$1 == "padding:" {getline;getline;print $2; exit}' $CONFIG_PATH)
+
+num_regex='^[0-9]+$'
+if [[ $current_pad_x =~ $num_regex ]] && [[ $current_pad_y =~ $num_regex ]]; then
+    echo "Current padding recognized: $current_pad_x , $current_pad_y";
+else
+    echo "Invalid current padding: $current_pad_x , $current_pad_y";
+    exit 1
+fi
+
+# Set padding
+if [ $current_pad_x -le $CUTOFF_X ] && [ $current_pad_y -le $CUTOFF_Y ]; then
+    echo "Setting padding to maximum: $PAD_X , $PAD_Y".
+    set_alarcitty_padding $PAD_X $PAD_Y $CONFIG_PATH
+else
+    echo "Setting padding to default: $DEFAULT_X , $DEFAULT_Y".
+    set_alarcitty_padding $DEFAULT_X $DEFAULT_Y $CONFIG_PATH
+fi
