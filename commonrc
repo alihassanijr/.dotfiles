@@ -208,7 +208,7 @@ vicd() {
 
 # SMUX: SSH and then attach to tmux
 smux () {
-    ssh -t ${@} 'bash -c "tmux a"'
+    ssh -t ${@} 'bash -c "tmux a || tmux"'
 }
 
 # OSX-specific env variables
