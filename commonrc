@@ -48,15 +48,10 @@ alias grep='grep --color=always --line-number --no-messages --binary-files=witho
 alias prs='ps -o uid,user,pid,%cpu,%mem,tt,state,start,time,command'
 
 # Tmux
-alias mux="tmux a"
-# I have no idea why I need these. Maybe I don't?
-# Fixes tmux window renaming
-#DISABLE_AUTO_TITLE="true"
-# Unset the autonaming for tmux
-#DISABLE_AUTO_TITLE="true"
-# Tmux doesn't like to recognize 256 coloring, so let's force it
-# -u fixes backspace error thing
-#alias tmux='tmux -2 -u'
+# One command to attach to an existing session, or create one if none exist.
+mux () {
+    tmux attach $@ || tmux
+}
 
 # OSX-specific aliases for my mac
 if [[ "$OSTYPE" == "darwin"* ]]; then
