@@ -7,4 +7,4 @@ install:
 
 deps-ubuntu:
 	sudo apt-get update -y
-	sudo apt-get install zsh tmux autoconf autotools-dev pkg-config -y
+	sudo apt-get install zsh tmux autoconf autotools-dev pkg-config zip unzip -y
