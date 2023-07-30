@@ -17,6 +17,54 @@ Usage example:
 
 --]]
 
+local enable_git = false
+local files_checked = {} -- it's important to use a local key-value pair to cache git status, because it has a lot of overhead
+-- Wut? 
+-- gitStatus is called every time we scroll,
+-- but because running a background job (git status) for each file is slow, we cache it.
+-- When is it cleared? When we change directories.
+
+local function gitStatusHumanReadable(status)
+    status = status:gsub("%s+", "")
+    return status
+end
+
+local function gitStatus(info)
+    local filename = info.entry.name
+    if filename == '..' or filename == '.' then
+        return {text = ''}
+    end
+    -- NOTE: this only works because files are processes in order, so .git will probably come before everything else?
+    -- Right way to do this is to check if there is a .git in the current directory -- but it's unclear whether vifm exposes
+    -- an interface for that.
+    if filename == '.git' then
+        enable_git = true
+        return {text = ''}
+    end
+    if enable_git then
+        local current_stat = files_checked[filename]
+        if current_stat == NOVALUE then
+            local job = vifm.startjob {
+                cmd = string.format('git status -s %q', filename)
+            }
+            local out = ''
+            for line in job:stdout():lines() do
+                out = out .. line
+                break
+            end
+            if job:exitcode() == 0 then
+                files_checked[filename] = gitStatusHumanReadable(out:sub(0, 3))
+            else
+                files_checked[filename] = ''
+            end
+        end
+        return {
+            text = files_checked[filename]
+        }
+    end
+    return {text = ''}
+end
+
 local function nameLink(info)
     local e = info.entry
     local text = e.classify.prefix .. e.name .. e.classify.suffix
@@ -92,6 +140,14 @@ local function lsTime(info)
     else
         return { text = os.date('%b %d  %Y', time) }
     end
+end
+
+local added = vifm.addcolumntype {
+    name = 'GitStatus',
+    handler = gitStatus 
+}
+if not added then
+    vifm.sb.error("Failed to add GitStatus view column")
 end
 
 local added = vifm.addcolumntype {
