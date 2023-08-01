@@ -29,6 +29,17 @@ local function gitStatusHumanReadable(status)
     return status
 end
 
+function mysplit (inputstr, sep)
+        if sep == nil then
+                sep = "%s"
+        end
+        local t={}
+        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+                table.insert(t, str)
+        end
+        return t
+end
+
 local function gitStatus(info)
     local filename = info.entry.name
     if filename == '..' or filename == '.' then
@@ -38,31 +49,45 @@ local function gitStatus(info)
     -- Right way to do this is to check if there is a .git in the current directory -- but it's unclear whether vifm exposes
     -- an interface for that.
     if filename == '.git' then
-        enable_git = true
-        return {text = ''}
-    end
-    if enable_git then
-        local current_stat = files_checked[filename]
-        if current_stat == NOVALUE then
-            local job = vifm.startjob {
-                cmd = string.format('git status -s %q', filename)
-            }
-            local out = ''
-            for line in job:stdout():lines() do
-                out = out .. line
-                break
+    --    enable_git = true
+    --    return {text = ''}
+    --end
+    --if enable_git then
+        local job = vifm.startjob { cmd = 'git status -s' }
+        local out = ''
+        for line in job:stdout():lines() do
+            local fn = ''
+            local st = ''
+            for i, v in ipairs(mysplit(line, " ")) do
+                if i == 1 then
+                    st = v
+                elseif i == 2 then
+                    for j, vv in ipairs(mysplit(v, '/')) do
+                        fn = vv
+                        break
+                    end
+                end
             end
-            if job:exitcode() == 0 then
-                files_checked[filename] = gitStatusHumanReadable(out:sub(0, 3))
-            else
-                files_checked[filename] = ''
+            if fn ~= '' and st ~= '' then
+                files_checked[fn] = st
             end
         end
-        return {
-            text = files_checked[filename]
-        }
+    --    enable_git = false
+        --return {text = out}
     end
-    return {text = ''}
+    local current_stat = files_checked[filename]
+    if current_stat == NOVALUE then
+    --    if job:exitcode() == 0 then
+    --        files_checked[filename] = gitStatusHumanReadable(out:sub(0, 3))
+    --    else
+    --        files_checked[filename] = ''
+    --    end
+    --end
+        return {text = ''}
+    end
+    return {
+        text = files_checked[filename]
+    }
 end
 
 local function nameLink(info)
