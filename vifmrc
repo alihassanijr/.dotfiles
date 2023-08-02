@@ -104,7 +104,7 @@ endif
 " Set custom status line look
 set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
 plugin load
-nnoremap gg :set viewcolumns=-{name},{GitStatus},{size}<cr>
+nnoremap gs :set viewcolumns=-{name},{GitStatus},{size}<cr>
 nnoremap gd :set viewcolumns=-{name},{size}<cr>
 
 " ------------------------------------------------------------------------------
