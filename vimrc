@@ -18,6 +18,10 @@ syntax on                                               " Syntax highlighting
 "let &t_ut=''
 
 " Truecolor support
+" $TERM has to be set for vifm to support true color.
+" Since I typically open vifm inside vim, it needs to be set here.
+" And I of course can't override the environment variable because thne
+" all hell breaks loose.
 let $TERM = "xterm-direct"                              " Uhhhh Vifm!
 let &t_8f = "\e[38:2:%lu:%lu:%lum"
 let &t_8b = "\e[48:2:%lu:%lu:%lum"
@@ -34,7 +38,7 @@ let g:monokai_pro_highlight_active_window = 1           "
 colorscheme monokai-pro                                 " Color Scheme (in ~/.vim/colors)
 
 set mouse=a                                             " Mouse support for people that can't use vim
-set path+=**                                            " Recursive path lookup
+"set path+=**                                           " Recursive path lookup
 
 set nocompatible                                        " Cool stuff in Vim. Makes vi non-compatible 
 set lazyredraw                                          " Faster rendering
@@ -59,8 +63,8 @@ autocmd FileType vim,lua,nginx set shiftwidth=2 softtabstop=2
 autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx,*.hxx set shiftwidth=2 softtabstop=2
 " Makefile forces tabs not spaces
 autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
-" ASM
-autocmd FileType asm set noexpandtab shiftwidth=8 softtabstop=0 syntax=nasm
+" Custom tab width for Markdown
+autocmd BufRead,BufEnter *.md set shiftwidth=2 softtabstop=2
 
 set backspace=indent,eol,start                          " backspace works through indents, end of line, etc
 
@@ -68,8 +72,8 @@ set number ruler                                        " Show line number
 set showmode                                            " Shows mode in bottom left
 
 set scrolloff=5                                         " Keep at lease 5 lines above and below
-set colorcolumn=129                                     " Vertical white bar at 80 chars
-set tw=128                                              " Line wrapping
+set colorcolumn=128                                     " Vertical white bar at 128 chars
+set tw=127                                              " Line wrapping
 
 "Error bells.  All are off
 set noerrorbells                                        " Removes error bells
@@ -80,7 +84,6 @@ set t_vb=                                               " Sets visual bell
 set incsearch                                           " Search command while typing
 set hlsearch                                            " Highlights all misspelled words
 set showmatch                                           " Shows matching brackets
-nnoremap <silent> <Space> :silent noh<Bar>echo<CR>
 set ignorecase                                          " ignore case. Same as /csearchterm
 set smartcase                                           "for searching
 
@@ -92,18 +95,21 @@ set splitbelow                                          " Same but below (split)
 set undofile                                            " Enables persistent undo files
 set undodir=$HOME/.vimfiles/undodir                     " Sets the path to undo files (installer ensures it exists)
 
-"Ctags
-set tags="./.tags,../.tags,~/.tags"
+"" Ctags
+"set tags="./.tags,../.tags,~/.tags"
 
-" MARKDOWN
+" Markdown
 syn match markdownIgnore "\$.*_.*\$"                    " Doesn't highlight _ while in latex
 
 "Spell checking
 " Pressing \ss will toggle and untoggle spell checking
-syntax spell toplevel   " Spell check fixing for tex
+syntax spell toplevel                                   " Spell check fixing for tex
 map <leader>ss :setlocal spell!<cr>
-set spell                     "Turns on Spellcheck
+set spell                                               " Turns on Spellcheck
 set spell spelllang=en_us
+
+" Easy line breaks
+:nnoremap <C-J> i<CR><ESC>
 
 """""""""""""" Plugins """"""""""""""
 
