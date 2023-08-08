@@ -108,8 +108,10 @@ map <leader>ss :setlocal spell!<cr>
 set spell                                               " Turns on Spellcheck
 set spell spelllang=en_us
 
-" Easy line breaks
-:nnoremap <C-J> i<CR><ESC>
+" Line break on Ctrl + J
+nnoremap <C-J> i<CR><ESC>
+" Silence on space
+nnoremap <silent> <Space> :silent noh<Bar>echo<CR>
 
 """""""""""""" Plugins """"""""""""""
 
