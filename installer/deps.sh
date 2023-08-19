@@ -32,6 +32,12 @@ ensure_cmake() {
   check_and_install_dependency "cmake" "$LOCALDIR/bin/cmake" "install_cmake"
 }
 
+# cmatrix
+source installer/dependencies/cmatrix.sh
+ensure_cmatrix() {
+  check_and_install_dependency "cmatrix" "$LOCALDIR/bin/cmatrix" "install_cmatrix"
+}
+
 # Diff-so-fancy
 source installer/dependencies/diff-so-fancy.sh
 ensure_diff_so_fancy() {

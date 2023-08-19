@@ -51,6 +51,8 @@ ensure_tre              # alternative to tree
 ensure_aria2            # download utility
 ensure_fzf              # Fuzzy finder
 
+# Literally entertainment
+ensure_cmatrix
 
 # Do the linking
 

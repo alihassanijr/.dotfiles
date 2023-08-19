@@ -64,3 +64,6 @@
 [submodule "third_party/tmux/tmux-battery"]
 	path = third_party/tmux/tmux-battery
 	url = https://github.com/alihassanijr/tmux-battery
+[submodule "third_party/misc/cmatrix"]
+	path = third_party/misc/cmatrix
+	url = https://github.com/alihassanijr/cmatrix
