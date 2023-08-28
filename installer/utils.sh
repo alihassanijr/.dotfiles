@@ -37,6 +37,25 @@ check_hard_dependency() {
   fi
 }
 
+check_and_install_hard_dependency() {
+  DEP_NAME=$1         # dependency name
+  INSTALL_FUNCTION=$2 # if it doesn't exist, prompt install and call this function if responded yes
+
+  if [[ -f "$(which $DEP_NAME)" ]]; then
+    echo "$DEP_NAME is installed at $(which $DEP_NAME)"
+  else
+      echo "Local $DEP_NAME was not found. It is recommended that you install locally."
+      echo "Note: this does not require sudo; just build tools."
+      read -p "Install $DEP_NAME? [y/n]: " -n 1 -r
+      echo ""
+      if [[ $REPLY =~ ^[Yy]$ ]]
+      then
+          echo "Installing $DEP_NAME"
+          $INSTALL_FUNCTION
+      fi
+  fi
+}
+
 check_and_install_dependency() {
   DEP_NAME=$1         # dependency name
   LOCAL_PATH=$2       # expect to find this path, otherwise we will assume it doesn't exist

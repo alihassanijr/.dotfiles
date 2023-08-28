@@ -22,7 +22,7 @@ ensure_aria2() {
 # Bat
 source installer/dependencies/bat.sh
 ensure_bat() {
-  check_and_install_dependency "bat" "$LOCALDIR/bin/bat" "install_bat"
+  check_and_install_hard_dependency "bat" "install_bat"
   configure_dependency "bat" "configure_bat"
 }
 
@@ -48,7 +48,7 @@ ensure_diff_so_fancy() {
 # Exa
 source installer/dependencies/exa.sh
 ensure_exa() {
-  check_and_install_dependency "exa" "$LOCALDIR/bin/exa" "install_exa"
+  check_and_install_hard_dependency "exa" "install_exa"
 }
 
 # Fzf
@@ -86,7 +86,7 @@ ensure_ncurses() {
 # Ripgrep
 source installer/dependencies/rg.sh
 ensure_rg() {
-  check_and_install_dependency "rg" "$LOCALDIR/bin/rg" "install_rg"
+  check_and_install_hard_dependency "rg" "install_rg"
 }
 
 # Tmux
@@ -102,7 +102,7 @@ ensure_tmux() {
 # Tre
 source installer/dependencies/tre.sh
 ensure_tre() {
-  check_and_install_dependency "tre" "$LOCALDIR/bin/tre" "install_tre"
+  check_and_install_hard_dependency "tre" "install_tre"
 }
 
 # Vim

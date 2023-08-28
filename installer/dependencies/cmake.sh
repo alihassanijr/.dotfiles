@@ -15,7 +15,7 @@ install_cmake() {
     rm -rf $TMPDIR
     mkdir -p $TMPDIR
 
-    if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
         CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-macos-universal.tar.gz"
         CMAKEDIR="cmake*/CMake.app/Contents/"
     elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
