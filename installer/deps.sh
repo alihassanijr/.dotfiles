@@ -45,10 +45,10 @@ ensure_diff_so_fancy() {
   configure_dependency "diff-so-fancy" "configure_diff_so_fancy"
 }
 
-# Exa
-source installer/dependencies/exa.sh
-ensure_exa() {
-  check_and_install_hard_dependency "exa" "install_exa"
+# LSD
+source installer/dependencies/lsd.sh
+ensure_lsd() {
+  check_and_install_hard_dependency "lsd" "install_lsd"
 }
 
 # Fzf

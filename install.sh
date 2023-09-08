@@ -42,7 +42,7 @@ ensure_oh_my_zsh        # extension to zsh
 # Fancy alternatives
 ensure_bat              # alternative to cat
 ensure_diff_so_fancy    # alternative to diff
-ensure_exa              # alternative to ls
+ensure_lsd              # alternative to ls
 ensure_htop             # alternative to top
 ensure_rg               # alternative to grep
 ensure_tre              # alternative to tree

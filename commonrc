@@ -29,8 +29,14 @@ export LS_COLORS="$(cat ~/.lscolors)"
 ##########
 # Add color and make human readable
 
-# Replace ls with exa
-if [[ -f "$(which exa)" ]]; then
+# Replace ls with lsd
+if [[ -f "$(which lsd)" ]]; then
+    alias ls="lsd --group-directories-first --color=auto"
+    alias lc="lsd --group-directories-first -lh --color=auto"
+    alias la='lsd --group-directories-first -lah --color=auto'
+    alias lm='lsd --group-directories-first -lah --sort modified --color=auto'
+    alias ll='lsd --group-directories-first -lah --sort size --color=auto'
+elif [[ -f "$(which exa)" ]]; then
     alias ls="exa --color=auto"
     alias lc="exa -lh --color=auto"
     alias la='exa -lah -s name --color=auto'
