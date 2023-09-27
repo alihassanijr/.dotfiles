@@ -55,6 +55,10 @@ link_custom_scripts() {
   
   # True color vifm
   link_bin "Vifm with truecolor (vif)" "scripts/vif" "vif"
+  
+  # Tmux split shortcuts
+  link_bin "Tmux shortcuts (4w)" "scripts/4w" "4w"
+  link_bin "Tmux shortcuts (4wc)" "scripts/4wc" "4wc"
 
   # SSH Agent Init
   if [[ "$OSTYPE" == "darwin"* ]]; then

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+dirname=$1
+envname=$2
+
+tmux split-window -v -t . && \
+       tmux split-window -h -t .1 \
+       && tmux split-window -h -t .0 \
+       && tmux send-keys -t .1 fancy-smi Space -r Space 1 Enter \
+       && tmux send-keys -t .0 cd Space $dirname Enter conda Space activate Space $envname Enter \
+       && tmux send-keys -t .2 cd Space $dirname Enter conda Space activate Space $envname Enter \
+       && tmux send-keys -t .3 cd Space $dirname Enter conda Space activate Space $envname Enter \
+       && tmux send-keys -t .0 clear Enter \
+       && tmux send-keys -t .2 clear Enter \
+       && tmux send-keys -t .3 clear Enter \
+       && tmux send-keys -t .0 vim Enter \
+       && tmux select-pane -L

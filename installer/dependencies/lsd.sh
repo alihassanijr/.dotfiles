@@ -18,6 +18,9 @@ install_lsd() {
       if [[ $REPLY =~ ^[Yy]$ ]]
       then
           echo "Removing exa..."
+          rm -f $PATHTOEXA
+          rm -f $LOCALDIR/bin/exa
+          rm -f $LOCALDIR/man/*exa*
       fi
     fi
 

@@ -126,6 +126,9 @@ let g:lightline = {
       \ 'component_function': {
       \   'gitbranch': 'gitbranch#name'
       \ },
+      \ 'component': {
+      \   'filename': '%n:%t'
+      \ },
       \ }
 
 " Vifm.vim
