@@ -312,3 +312,66 @@ dget () {
         echo "Invalid option: $@"
     fi
 }
+
+
+# TODO: clean these up and make it conditional
+# The GPU args only make sense when nvidia-container-toolkit is installed.
+
+# Run in docker
+trun () {
+    # Arguments:
+    # 1: image name
+    # 2: command
+
+    UNID="${RANDOM}${RANDOM}${RANDOM}" # random id for temp files
+
+    PREF="$HOME/.tmp/dockerrun/meta/$UNID/" # meta will hold passwd, group, and command script
+    LPREF="$HOME/.tmp/dockerrun/run/$UNID/" # run will hold stdout and stderr log
+    mkdir -p $PREF
+    mkdir -p $LPREF
+    SCR="$LPREF/cmd.sh"
+    LOG="$LPREF/log.txt"
+
+    IMAGE=$1
+    shift
+
+    # Dump chdir and command into script
+    THISDIR=$(pwd)
+    echo "cd $THISDIR" >> $SCR
+    echo "$@" >> $SCR
+    chmod +x ${SCR}
+
+    # Clone group and passwd and ro mount so you run rootless
+    # Opts borrowed from https://github.com/avolkov1/multinode_containers
+    getent group > ${PREF}/group
+    getent passwd > ${PREF}/passwd
+    USEROPT1="-v${PREF}passwd:/etc/passwd:ro"
+    USEROPT2="-v${PREF}group:/etc/group:ro"
+
+    docker run --rm --gpus=all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -u $(id -u):$(id -g) -e HOME=$HOME -e USER=$USER -v /home:/home $USEROPT1 $USEROPT2 ${IMAGE} ${SCR} 2>&1 | tee ${LOG}
+}
+
+# Start interactive terminal in container
+tbash () {
+    # Arguments:
+    # 1: image name
+    UNID="${RANDOM}${RANDOM}${RANDOM}" # random id for temp files
+    PREF="$HOME/.tmp/dockerrun/meta/$UNID/" # meta will hold passwd and group
+    mkdir -p $PREF
+
+    IMAGE=$1
+    shift
+
+    # Command is just bash
+    SCR="/bin/bash"
+
+    # Clone group and passwd and ro mount so you run rootless
+    # Opts borrowed from https://github.com/avolkov1/multinode_containers
+    getent group > ${PREF}/group
+    getent passwd > ${PREF}/passwd
+    USEROPT1="-v${PREF}passwd:/etc/passwd:ro"
+    USEROPT2="-v${PREF}group:/etc/group:ro"
+
+    # Opts borrowed from https://github.com/avolkov1/multinode_containers
+    docker run -it --rm --gpus=all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -u $(id -u):$(id -g) -e HOME=$HOME -e USER=$USER -v /home:/home $USEROPT1 $USEROPT2 ${IMAGE} ${SCR}
+}

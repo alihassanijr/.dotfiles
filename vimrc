@@ -60,7 +60,8 @@ set softtabstop=4
 " Custom tab width for vim/lua/nginx files
 autocmd FileType vim,lua,nginx set shiftwidth=2 softtabstop=2
 " Custom tab width for C/CPP/CUDA
-autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx,*.hxx set shiftwidth=2 softtabstop=2
+autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx,*.hxx,*.metal set shiftwidth=2 softtabstop=2
+autocmd BufRead,BufEnter *.metal set syntax=cpp
 " Makefile forces tabs not spaces
 autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
 " Custom tab width for Markdown
