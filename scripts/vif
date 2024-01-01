@@ -6,4 +6,9 @@
 # Alias wouldn't work because zsh throws warnings when I
 # try and change $TERM.
 
-TERM="xterm-direct" vifm "$@"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  # Not supported on mac with alacritty
+  vifm "$@"
+else
+  TERM="xterm-direct" vifm "$@"
+fi

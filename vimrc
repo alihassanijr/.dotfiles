@@ -11,22 +11,20 @@
 " Color scheme and related settings
 syntax on                                               " Syntax highlighting 
 
-" vim hardcodes background color erase even if the terminfo file does
-" not contain bce. This causes incorrect background rendering when
-" using a color theme with a background color in terminals such as
-" kitty that do not support background color erase.
-"let &t_ut=''
+let g:os = substitute(system('uname'), '\n', '', '')
 
-" Truecolor support
-" $TERM has to be set for vifm to support true color.
-" Since I typically open vifm inside vim, it needs to be set here.
-" And I of course can't override the environment variable because thne
-" all hell breaks loose.
-let $TERM = "xterm-direct"                              " Uhhhh Vifm!
-let &t_8f = "\e[38:2:%lu:%lu:%lum"
-let &t_8b = "\e[48:2:%lu:%lu:%lum"
-let &t_RF = "\e]10;?\e\\"
-let &t_RB = "\e]11;?\e\\"
+if g:os != 'Darwin'
+  " Truecolor support
+  " $TERM has to be set for vifm to support true color.
+  " Since I typically open vifm inside vim, it needs to be set here.
+  " And I of course can't override the environment variable because then
+  " all hell breaks loose.
+  let $TERM = "xterm-direct"                              " Uhhhh Vifm!
+  "let &t_8f = "\e[38:2:%lu:%lu:%lum"
+  "let &t_8b = "\e[48:2:%lu:%lu:%lum"
+  "let &t_RF = "\e]10;?\e\\"
+  "let &t_RB = "\e]11;?\e\\"
+endif
 
 
 set cursorline                                          " Row highlighting
@@ -86,7 +84,8 @@ set incsearch                                           " Search command while t
 set hlsearch                                            " Highlights all misspelled words
 set showmatch                                           " Shows matching brackets
 set ignorecase                                          " ignore case. Same as /csearchterm
-set smartcase                                           "for searching
+set smartcase                                           " for searching
+set matchpairs+=<:>                                     " match angle brackets
 
 "Splitting
 set splitright                                          " Puts new window to right of current (vsplit)
@@ -163,7 +162,6 @@ set rtp+=~/.fzf
 " Plugins I use on mac only
 " macunix won't work because I'm building vim from source without the darwin flag.
 "if has('macunix')
-let g:os = substitute(system('uname'), '\n', '', '')
 if g:os == 'Darwin'
   " Vim Markdown
   packadd vim-markdown-preview

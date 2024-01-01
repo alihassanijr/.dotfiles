@@ -47,11 +47,11 @@ compinit
 
 source ~/.commonrc
 
-# TODO: I really shouldn't be doing this
-# Especially since I want true color
-# I still get true color, but I'm guessing if I get rid of this
-# it'll be way easier
-export TERM=xterm-256color
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    export TERM=alacritty
+else
+    export TERM=xterm-256color
+fi
 
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

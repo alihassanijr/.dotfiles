@@ -70,7 +70,7 @@ link_custom_scripts() {
   # SSH Agent killer
   link_bin "SSH agent killer (kssh)" "scripts/kssh" "kssh"
 
-  if [[ -f "$HOME/.config/alacritty/alacritty.yml" ]]; then
+  if [[ -f "$HOME/.config/alacritty/alacritty.toml" ]]; then
     # Alacritty focus mode
     link_bin "Alacritty focus mode (alacritty_widescreen_toggle)" "scripts/alacritty_widescreen_toggle" "alacritty_widescreen_toggle"
   fi
