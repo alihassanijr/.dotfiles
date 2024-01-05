@@ -7,6 +7,22 @@ if [[ -f $HOME/.base16colors ]]; then
     source $HOME/.base16colors
 fi
 
+# If cuda isn't already loaded
+if [[ "$OSTYPE" == "linux-gnu"* ]] && [[ -f "$(which nvidia-smi)" ]] && [[ ! -f "$(which nvcc)" ]]; then
+    CUDA_PATHS=( 
+        "/usr/local/cuda-12.3"
+        "/usr/local/cuda-12.2"
+        "/usr/local/cuda"
+    )
+    for cuda_path in ${CUDA_PATHS[*]}; do
+        if [[ -d "${cuda_path}" ]] && [[ -f "${cuda_path}/bin/nvcc" ]] && [[ -d "${cuda_path}/lib64" ]]; then
+            export PATH=${cuda_path}/bin${PATH:+:${PATH}}
+            export LD_LIBRARY_PATH=${cuda_path}/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+            break
+        fi
+    done
+fi
+
 # General Exports
 export EDITOR="vim"
 
