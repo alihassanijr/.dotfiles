@@ -3,6 +3,36 @@
 # Author: Ali Hassani (@alihassanijr)
 # NOTE: this should be sourced from ./dotfiles/
 
+# pkg-config
+source installer/dependencies/pkg_config.sh
+ensure_pkg_config() {
+  check_and_install_hard_dependency "pkg-config" "install_pkg_config"
+}
+
+# wget
+source installer/dependencies/wget.sh
+ensure_wget() {
+  check_and_install_hard_dependency "wget" "install_wget"
+}
+
+# M4
+source installer/dependencies/m4.sh
+ensure_m4() {
+  check_and_install_hard_dependency "m4" "install_m4"
+}
+
+# Autoconf
+source installer/dependencies/autoconf.sh
+ensure_autoconf() {
+  check_and_install_hard_dependency "autoconf" "install_autoconf"
+}
+
+# Automake
+source installer/dependencies/automake.sh
+ensure_automake() {
+  check_and_install_hard_dependency "automake" "install_automake"
+}
+
 # Alacritty
 source installer/dependencies/alacritty.sh
 ensure_alacritty() {
@@ -23,6 +53,12 @@ source installer/dependencies/bat.sh
 ensure_bat() {
   check_and_install_hard_dependency "bat" "install_bat"
   configure_dependency "bat" "configure_bat"
+}
+
+# cloudflare
+source installer/dependencies/cloudflare.sh
+ensure_cloudflare() {
+  check_and_install_hard_dependency "cloudflared" "install_cloudflare"
 }
 
 # CMake

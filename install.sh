@@ -24,10 +24,26 @@ ensure_local_exists
 
 echo "Installing my stuff..."
 
-# Build tools and utilities
-ensure_cmake
+# Very basic stuff (usually installed on linux, but
+# not necessarily on mac).
+ensure_pkg_config
+ensure_wget
+
+# Build tools integral to other dependencies
+ensure_m4
+ensure_autoconf
+ensure_automake
+
+# Curses library
 ensure_ncurses
+
+# Utilities
+ensure_cmake
 ensure_git_lfs
+
+# Cloudflare in case we need to tunnel certain
+# ssh connections.
+ensure_cloudflare
 
 # Everyday
 #ensure_kitty            # former terminal emulator (conditional dependency)
