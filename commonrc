@@ -77,6 +77,10 @@ mux () {
 
 # OSX-specific aliases for my mac
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ -d $HOME/.brew ]]; then
+        export PATH="$HOME/.brew/bin:$HOME/.brew/sbin:$PATH"
+    fi
+
     # Zathura in background
     zat () {
         zathura "$@" > /dev/null 2>&1 &

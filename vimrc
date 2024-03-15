@@ -36,7 +36,6 @@ let g:monokai_pro_highlight_active_window = 1           "
 colorscheme monokai-pro                                 " Color Scheme (in ~/.vim/colors)
 
 set mouse=a                                             " Mouse support for people that can't use vim
-"set path+=**                                           " Recursive path lookup
 
 set nocompatible                                        " Cool stuff in Vim. Makes vi non-compatible 
 set lazyredraw                                          " Faster rendering
@@ -63,7 +62,9 @@ autocmd BufRead,BufEnter *.metal set syntax=cpp
 " Makefile forces tabs not spaces
 autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
 " Custom tab width for Markdown
-autocmd BufRead,BufEnter *.md set shiftwidth=2 softtabstop=2
+autocmd BufRead,BufEnter *.md set shiftwidth=2 softtabstop=2 expandtab
+" Disable cursor line and column for .tex files
+autocmd BufRead,BufNewFile *.tex set nocursorline nocursorcolumn
 
 set backspace=indent,eol,start                          " backspace works through indents, end of line, etc
 
