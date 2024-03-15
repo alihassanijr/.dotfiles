@@ -6,9 +6,8 @@
 # Alacritty
 source installer/dependencies/alacritty.sh
 ensure_alacritty() {
-  if [[ $IS_PERSONAL -eq 1 ]]; then
-    # TODO: find out how to check for alacritty and allow installation
-    #check_and_install_dependency "alacritty" "$(which alacritty)" "install_alacritty"
+  if [[ -f "$(which $DEP_NAME)" ]]; then
+    echo "Looks like you have alacritty installed."
     configure_dependency "alacritty" "configure_alacritty"
   fi
 }

@@ -1,0 +1,83 @@
+[colors.cursor]
+cursor = "#7bd88f"
+text = "CellBackground"
+
+[colors.search.focused_match]
+background = "#ab9df2"
+foreground = "#000000"
+
+[colors.search.matches]
+background = "#ffd866"
+foreground = "#000000"
+
+[colors.vi_mode_cursor]
+cursor = "#a9dc76"
+text = "#2d2a2e"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 11.0
+
+[font.bold]
+family = "Hack Nerd Font Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "Hack Nerd Font Mono"
+style = "Bold Italic"
+
+[font.italic]
+family = "Hack Nerd Font Mono"
+style = "Italic"
+
+[font.normal]
+family = "Hack Nerd Font Mono"
+style = "Regular"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u0015"
+key = "Back"
+mods = "Super"
+
+[[keyboard.bindings]]
+chars = "\u001Bb"
+key = "Left"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bf"
+key = "Right"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Escape"
+mods = "Control"
+
+[mouse]
+hide_when_typing = false
+
+[window]
+decorations = "full"
+dynamic_title = true
+opacity = 0.95
+title = "Terminal"
+
+[window.dimensions]
+columns = 200
+lines = 60
+
+[window.padding]
+x = 5
+y = 5
+
+[window.position]
+x = 900
+y = 300

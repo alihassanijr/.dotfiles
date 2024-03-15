@@ -12,6 +12,8 @@ configure_alacritty() {
     rm -rf $HOMEDIR/.config/alacritty
     if [[ "$OSTYPE" == "darwin"* ]]; then
         ln -s $THISDIR/config/alacritty.mac $HOMEDIR/.config/alacritty
+    else
+        ln -s $THISDIR/config/alacritty.linux $HOMEDIR/.config/alacritty
     fi
 
     # No image / pdf viewing in Alacritty on mac yet!
