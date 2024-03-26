@@ -8,7 +8,7 @@ install_autoconf() {
 
     local TMPDIR=$THISDIR/tmp_autoconf
     local PACKAGEURL="https://ftp.gnu.org/gnu/autoconf/autoconf-2.72.tar.gz"
-    local PACKAGETARNAME="https://ftp.gnu.org/gnu/autoconf/autoconf-2.72.tar.gz"
+    local PACKAGETARNAME="autoconf-2.72.tar.gz"
     local PACKAGEDIRNAME="autoconf-2.72"
     
     cd $THISDIR

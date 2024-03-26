@@ -6,9 +6,9 @@ build_openssl() {
     echo "Installing dependency: OpenSSL"
 
     local TMPDIR=$THISDIR/tmp_openssl
-    local PACKAGEURL="https://ftp.gnu.org/gnu/openssl/openssl-2.4.7.tar.xz"
-    local PACKAGETARNAME="openssl-2.4.7.tar.xz"
-    local PACKAGEDIRNAME="openssl-2.4.7"
+    local PACKAGEURL="https://www.openssl.org/source/openssl-3.0.13.tar.gz"
+    local PACKAGETARNAME="openssl-3.0.13.tar.gz"
+    local PACKAGEDIRNAME="openssl-3.0.13"
 
     local OPENSSLTARGET=""
     if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -51,7 +51,7 @@ build_openssl() {
 
     cd $TMPDIR && \
         curl -o $PACKAGETARNAME $PACKAGEURL && \
-        tar -xf $PACKAGETARNAME && \
+        tar -xzf $PACKAGETARNAME && \
         rm $PACKAGETARNAME && \
         cd $PACKAGEDIRNAME && \
         ./Configure \

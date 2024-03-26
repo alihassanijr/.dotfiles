@@ -14,7 +14,7 @@ install_pkg_config() {
     mkdir -p $TMPDIR
 
     cd $TMPDIR && \
-        wget $PACKAGEURL -O $PACKAGETARNAME && \
+        curl -o $PACKAGETARNAME $PACKAGEURL && \
         tar -xzf $PACKAGETARNAME && \
         rm $PACKAGETARNAME
 

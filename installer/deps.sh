@@ -13,12 +13,18 @@ ensure_pkg_config() {
 source installer/dependencies/wget.sh
 ensure_wget() {
   check_and_install_hard_dependency "wget" "install_wget"
+  configure_wget
 }
 
 # M4
 source installer/dependencies/m4.sh
 ensure_m4() {
-  check_and_install_hard_dependency "m4" "install_m4"
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Don't use mac's m4
+    check_and_install_dependency "m4" "$LOCALDIR/bin/m4" "install_m4"
+  else
+    check_and_install_hard_dependency "m4" "install_m4"
+  fi
 }
 
 # Autoconf
@@ -129,7 +135,7 @@ source installer/dependencies/tmux.sh
 ensure_tmux() {
   #if [[ $IS_PERSONAL -eq 0 ]]; then
     # check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
-    check_soft_dependency "tmux"
+    check_and_install_hard_dependency "tmux" "install_tmux"
     configure_dependency "tmux" "configure_tmux"
   #fi
 }

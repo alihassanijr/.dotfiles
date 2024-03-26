@@ -83,7 +83,12 @@ install_tmux_dependencies() {
   if [[ -f "$LOCALDIR/include/event.h" ]]; then
     echo "Libevent is already installed, skipping..."
   else
-    check_and_install_hard_dependency "libtool" "install_libtool" # Required by libevent
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      # Don't use mac's libtool
+    check_and_install_dependency "libtool" "$LOCALDIR/bin/libtool" "install_libtool"
+    else
+      check_and_install_hard_dependency "libtool" "install_libtool" # Required by libevent
+    fi
     install_libevent
   fi
   if [[ -f "$LOCALDIR/include/utf8proc.h" ]]; then
@@ -95,20 +100,29 @@ install_tmux_dependencies() {
 
 build_tmux() {
   local TMPDIR=$THISDIR/tmp_tmux
-  local PACKAGEURL="https://github.com/JuliaStrings/utf8proc/archive/refs/tags/v2.9.0.tar.gz"
-  local PACKAGETARNAME="utf8proc.tar.gz"
-  local PACKAGEDIRNAME="utf8proc-2.9.0/"
+  local PACKAGEURL="https://github.com/tmux/tmux/releases/download/3.4/tmux-3.4.tar.gz"
+  local PACKAGETARNAME="tmux-3.4.tar.gz"
+  local PACKAGEDIRNAME="tmux-3.4/"
   
   cd $THISDIR
   rm -rf $TMPDIR
   mkdir -p $TMPDIR
+
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    ADDITIONAL_TMUX_CONF_ARGS="-with-TERM=screen-256color"
+  fi
   
   cd $TMPDIR && \
     wget $PACKAGEURL -O $PACKAGETARNAME && \
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
-    make install prefix=${LOCALDIR}
+    ./configure \
+      --enable-sixel \
+      --enable-utf8proc \
+      $ADDITIONAL_TMUX_CONF_ARGS \
+      --prefix=${LOCALDIR} && \
+    make install
   cd $THISDIR
   rm -rf $TMPDIR
 }
