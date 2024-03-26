@@ -83,7 +83,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
     # Zathura in background
     zat () {
-        zathura "$@" > /dev/null 2>&1 &
+        zathura --page=1 "$@" > /dev/null 2>&1 &
     }
 
     # Replace the mac sed with GNU sed:
