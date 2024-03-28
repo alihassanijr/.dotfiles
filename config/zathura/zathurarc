@@ -6,7 +6,7 @@ set adjust-open "best-fit"
 set pages-per-row 1
 
 #set zoom-min 1
-#set zoom-max 5
+set zoom-max 10000
 
 set font "Hacker Nerd Font Mono Regular 15"
 
