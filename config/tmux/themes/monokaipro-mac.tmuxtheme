@@ -11,6 +11,7 @@
 #
 
 # Themepack format options
+set -goq @themepack-status-left-area-icon-format "🦅"
 set -goq @themepack-status-left-area-left-format "#S"
 set -goq @themepack-status-left-area-middle-format "#I"
 set -goq @themepack-status-left-area-right-format "#P"
@@ -21,6 +22,8 @@ set -goq @themepack-window-status-current-format "#I:#W#F"
 set -goq @themepack-window-status-format "#I:#W#F"
 
 # Customizable prefixes and suffixes for @themepack-* format options
+set -goq @themepack-status-left-area-icon-prefix " "
+set -goq @themepack-status-left-area-icon-suffix "  "
 set -goq @themepack-status-left-area-left-prefix ""
 set -goq @themepack-status-left-area-left-suffix ""
 set -goq @themepack-status-left-area-middle-prefix ""
@@ -39,6 +42,7 @@ set -goq @themepack-window-status-prefix ""
 set -goq @themepack-window-status-suffix ""
 
 # Apply prefixes and suffixes to @themepack-* format options
+set -gqF @themepack-status-left-area-icon-format "#{@themepack-status-left-area-icon-prefix}#{@themepack-status-left-area-icon-format}#{@themepack-status-left-area-icon-suffix}"
 set -gqF @themepack-status-left-area-left-format "#{@themepack-status-left-area-left-prefix}#{@themepack-status-left-area-left-format}#{@themepack-status-left-area-left-suffix}"
 set -gqF @themepack-status-left-area-middle-format "#{@themepack-status-left-area-middle-prefix}#{@themepack-status-left-area-middle-format}#{@themepack-status-left-area-middle-suffix}"
 set -gqF @themepack-status-left-area-right-format "#{@themepack-status-left-area-right-prefix}#{@themepack-status-left-area-right-format}#{@themepack-status-left-area-right-suffix}"
@@ -58,10 +62,13 @@ set -goq @monokai-red        '#fd5188'
 set -goq @monokai-cyan       '#4adfea'
 set -goq @monokai-lightgrey  '#727072'
 set -goq @monokai-darkgrey   '#2d2a2f'
+set -goq @og-red   '#B31942'
 
 # Powerline options
 set -goqF @powerline-status-bg "#{@monokai-lightgrey}"
 set -goqF @powerline-status-fg "#{@monokai-white}"
+set -goqF @powerline-status-left-area-icon-bg "#{@og-red}"
+set -goqF @powerline-status-left-area-icon-fg "#{@monokai-black}"
 set -goqF @powerline-status-left-area-left-bg "#{@monokai-white}"
 set -goqF @powerline-status-left-area-left-fg "#{@monokai-black}"
 set -goqF @powerline-status-left-area-middle-bg "#{@monokai-yellow}"
@@ -98,7 +105,7 @@ set -goqF @theme-status-bg "#{@powerline-status-bg}"
 set -goqF @theme-status-fg "#{@powerline-status-fg}"
 set -goq  @theme-status-interval 1
 set -goq  @theme-status-justify left
-set -goqF @theme-status-left "#[fg=#{@powerline-status-left-area-left-fg},bg=#{@powerline-status-left-area-left-bg},bold] #{@themepack-status-left-area-left-format} #[fg=#{@powerline-status-left-area-left-bg},bg=#{@powerline-status-left-area-middle-bg},nobold]#[fg=#{@powerline-status-left-area-middle-fg},bg=#{@powerline-status-left-area-middle-bg}] #{@themepack-status-left-area-middle-format} #[fg=#{@powerline-status-left-area-middle-bg},bg=#{@powerline-status-left-area-right-bg}]#[fg=#{@powerline-status-left-area-right-fg},bg=#{@powerline-status-left-area-right-bg}] #{@themepack-status-left-area-right-format} #[fg=#{@powerline-status-left-area-right-bg},bg=#{@theme-status-bg},nobold]#[fg=#{@powerline-status-left-area-right-bg},bg=#{@theme-status-bg},nobold]"
+set -goqF @theme-status-left "#[fg=#{@powerline-status-left-area-icon-fg},bg=#{@powerline-status-left-area-icon-bg},bold] #{@themepack-status-left-area-icon-format}#[fg=#{@powerline-status-left-area-left-fg},bg=#{@powerline-status-left-area-left-bg},bold] #{@themepack-status-left-area-left-format} #[fg=#{@powerline-status-left-area-left-bg},bg=#{@powerline-status-left-area-middle-bg},nobold]#[fg=#{@powerline-status-left-area-middle-fg},bg=#{@powerline-status-left-area-middle-bg}] #{@themepack-status-left-area-middle-format} #[fg=#{@powerline-status-left-area-middle-bg},bg=#{@powerline-status-left-area-right-bg}]#[fg=#{@powerline-status-left-area-right-fg},bg=#{@powerline-status-left-area-right-bg}] #{@themepack-status-left-area-right-format} #[fg=#{@powerline-status-left-area-right-bg},bg=#{@theme-status-bg},nobold]#[fg=#{@powerline-status-left-area-right-bg},bg=#{@theme-status-bg},nobold]"
 set -goqF @theme-status-left-bg "#{@powerline-status-left-bg}"
 set -goqF @theme-status-left-fg "#{@powerline-status-left-fg}"
 set -goq  @theme-status-left-length 40
