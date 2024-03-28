@@ -1,34 +1,13 @@
 #!/bin/bash
 # Tmux
 
-install_libtool() {
-  echo "Installing dependency: libtool"
-  
-  local TMPDIR=$THISDIR/tmp_libtool
-  local PACKAGEURL="https://ftp.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz"
-  local PACKAGETARNAME="libtool-2.4.7.tar.xz"
-  local PACKAGEDIRNAME="libtool-2.4.7"
-  
-  cd $THISDIR
-  rm -rf $TMPDIR
-  mkdir -p $TMPDIR
-  
-  cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
-    tar -xf $PACKAGETARNAME && \
-    rm $PACKAGETARNAME && \
-    cd $PACKAGEDIRNAME && \
-    ./configure \
-      --prefix=${LOCALDIR} \
-      --disable-dependency-tracking \
-      --enable-ltdl-install && \
-    make install
-  
-  cd $THISDIR
-  rm -rf $TMPDIR
-}
-
 install_libevent() {
+
+  # Dependency: libtool
+  source installer/dependencies/libtool.sh
+  check_and_install_dependency "libtool" "$LOCALDIR/bin/libtool" "install_libtool"
+  # check_and_install_hard_dependency "libtool" "install_libtool"
+
   echo "Installing dependency: libevent"
   
   local TMPDIR=$THISDIR/tmp_libevent
@@ -83,12 +62,6 @@ install_tmux_dependencies() {
   if [[ -f "$LOCALDIR/include/event.h" ]]; then
     echo "Libevent is already installed, skipping..."
   else
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-      # Don't use mac's libtool
-    check_and_install_dependency "libtool" "$LOCALDIR/bin/libtool" "install_libtool"
-    else
-      check_and_install_hard_dependency "libtool" "install_libtool" # Required by libevent
-    fi
     install_libevent
   fi
   if [[ -f "$LOCALDIR/include/utf8proc.h" ]]; then

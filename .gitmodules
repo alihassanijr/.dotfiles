@@ -58,9 +58,6 @@
 [submodule "third_party/vim/limelight.vim"]
 	path = third_party/vim/limelight.vim
 	url = https://github.com/junegunn/limelight.vim
-[submodule "third_party/aria2"]
-	path = third_party/aria2
-	url = https://github.com/aria2/aria2
 [submodule "third_party/tmux/tmux-battery"]
 	path = third_party/tmux/tmux-battery
 	url = https://github.com/alihassanijr/tmux-battery
