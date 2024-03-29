@@ -3,6 +3,48 @@
 # Author: Ali Hassani (@alihassanijr)
 # NOTE: this should be sourced from ./dotfiles/
 
+# pkg-config
+source installer/dependencies/pkg_config.sh
+ensure_pkg_config() {
+  check_and_install_hard_dependency "pkg-config" "install_pkg_config"
+}
+
+# wget
+source installer/dependencies/wget.sh
+ensure_wget() {
+  check_and_install_hard_dependency "wget" "install_wget"
+  configure_wget
+}
+
+# M4
+source installer/dependencies/m4.sh
+ensure_m4() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Don't use mac's m4
+    check_and_install_dependency "m4" "$LOCALDIR/bin/m4" "install_m4"
+  else
+    check_and_install_hard_dependency "m4" "install_m4"
+  fi
+}
+
+# Autoconf
+source installer/dependencies/autoconf.sh
+ensure_autoconf() {
+  check_and_install_hard_dependency "autoconf" "install_autoconf"
+}
+
+# Automake
+source installer/dependencies/automake.sh
+ensure_automake() {
+  check_and_install_hard_dependency "automake" "install_automake"
+}
+
+# coreutils
+source installer/dependencies/coreutils.sh
+ensure_coreutils() {
+  check_and_install_dependency "coreutils" "$LOCALDIR/extras/coreutils/bin/cp" "install_coreutils"
+}
+
 # Alacritty
 source installer/dependencies/alacritty.sh
 ensure_alacritty() {
@@ -23,6 +65,12 @@ source installer/dependencies/bat.sh
 ensure_bat() {
   check_and_install_hard_dependency "bat" "install_bat"
   configure_dependency "bat" "configure_bat"
+}
+
+# cloudflare
+source installer/dependencies/cloudflare.sh
+ensure_cloudflare() {
+  check_and_install_hard_dependency "cloudflared" "install_cloudflare"
 }
 
 # CMake
@@ -93,7 +141,7 @@ source installer/dependencies/tmux.sh
 ensure_tmux() {
   #if [[ $IS_PERSONAL -eq 0 ]]; then
     # check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
-    check_soft_dependency "tmux"
+    check_and_install_hard_dependency "tmux" "install_tmux"
     configure_dependency "tmux" "configure_tmux"
   #fi
 }

@@ -36,7 +36,6 @@ let g:monokai_pro_highlight_active_window = 1           "
 colorscheme monokai-pro                                 " Color Scheme (in ~/.vim/colors)
 
 set mouse=a                                             " Mouse support for people that can't use vim
-"set path+=**                                           " Recursive path lookup
 
 set nocompatible                                        " Cool stuff in Vim. Makes vi non-compatible 
 set lazyredraw                                          " Faster rendering
@@ -52,18 +51,21 @@ set indentkeys-=0#
 set wrap                                                " Wraps text
 set expandtab                                           " Spaces and not tabs
 set smarttab                                            " Tries to figure out when to tab
-set shiftwidth=4                                        " Tab width 
-set softtabstop=4
+set shiftwidth=2                                        " Tab width 
+set softtabstop=2
+let g:polyglot_disabled = ["autoindent"]
 
-" Custom tab width for vim/lua/nginx files
-autocmd FileType vim,lua,nginx set shiftwidth=2 softtabstop=2
+"" Custom tab width for vim/lua/nginx files
+"autocmd FileType vim,lua,nginx set shiftwidth=2 softtabstop=2
 " Custom tab width for C/CPP/CUDA
-autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx,*.hxx,*.metal set shiftwidth=2 softtabstop=2
-autocmd BufRead,BufEnter *.metal set syntax=cpp
+"autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx,*.hxx,*.metal set shiftwidth=2 softtabstop=2
+autocmd BufRead,BufEnter,BufNewFile *.metal set syntax=cpp
 " Makefile forces tabs not spaces
 autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
 " Custom tab width for Markdown
-autocmd BufRead,BufEnter *.md set shiftwidth=2 softtabstop=2
+"autocmd BufRead,BufEnter *.md set shiftwidth=2 softtabstop=2 expandtab
+" Disable cursor line and column for .tex files
+autocmd BufRead,BufEnter,BufNewFile *.tex set nocursorline nocursorcolumn
 
 set backspace=indent,eol,start                          " backspace works through indents, end of line, etc
 
@@ -167,7 +169,7 @@ if g:os == 'Darwin'
   packadd vim-markdown-preview
   let vim_markdown_preview_github=1
   let vim_markdown_preview_toggle=1
-  let vim_markdown_preview_browser='Google Chrome'
+  let vim_markdown_preview_browser='Firefox'
 
   " VimTeX
   packadd vimtex
