@@ -28,14 +28,16 @@ export EDITOR="vim"
 
 # Load local binaries
 export PATH=$HOME/.local/bin:$PATH
+export MANPATH=$HOME/.local/man:$MANPATH
 if [[ -d "$HOME/.local/extras/coreutils" ]]; then
   export PATH=$HOME/.local/extras/coreutils/bin:$PATH
+  export MANPATH=$HOME/.local/extras/coreutils/man:$MANPATH
 fi
 
-# "My Binz"
-# Just a bunch of scripts I use daily that I put in a different repository
-# Because some are exclusive to different devices and I want to keep it branched.
-export PATH=~/.binz/:$PATH
+if [[ -d "$HOME/.binz" ]]; then
+  # TODO: Do I even have this anywhere anymore?
+  export PATH=~/.binz/:$PATH
+fi
 
 # Bat config
 export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
