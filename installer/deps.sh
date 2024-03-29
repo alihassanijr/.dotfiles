@@ -39,6 +39,12 @@ ensure_automake() {
   check_and_install_hard_dependency "automake" "install_automake"
 }
 
+# coreutils
+source installer/dependencies/coreutils.sh
+ensure_coreutils() {
+  check_and_install_dependency "coreutils" "$LOCALDIR/extras/coreutils/bin/cp" "install_coreutils"
+}
+
 # Alacritty
 source installer/dependencies/alacritty.sh
 ensure_alacritty() {

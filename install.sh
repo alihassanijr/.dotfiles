@@ -38,6 +38,7 @@ ensure_automake
 ensure_ncurses
 
 # Utilities
+ensure_coreutils
 ensure_cmake
 ensure_git_lfs
 

@@ -27,7 +27,10 @@ fi
 export EDITOR="vim"
 
 # Load local binaries
-export PATH=~/.local/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
+if [[ -d "$HOME/.local/extras/coreutils" ]]; then
+  export PATH=$HOME/.local/extras/coreutils/bin:$PATH
+fi
 
 # "My Binz"
 # Just a bunch of scripts I use daily that I put in a different repository
@@ -86,8 +89,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         zathura --page=1 "$@" > /dev/null 2>&1 &
     }
 
-    # Replace the mac sed with GNU sed:
-    alias sed="gsed"
+    ## Replace the mac sed with GNU sed:
+    #alias sed="gsed"
     
     # Alacritty focus mode
     alias ap="alacritty_widescreen_toggle"
@@ -237,12 +240,12 @@ smux () {
     ssh -t ${@} 'bash -c "tmux a || tmux"'
 }
 
-# OSX-specific env variables
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    # DBUS env variable
-    # This is just so that vimtex can communicate with zathura through dbus
-    export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
-fi
+## OSX-specific env variables
+#if [[ "$OSTYPE" == "darwin"* ]]; then
+#    # DBUS env variable
+#    # This is just so that vimtex can communicate with zathura through dbus
+#    export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
+#fi
 
 # NVIDIA Bug report
 ## Handy function when I want to grab logs related to GPU issues quickly
