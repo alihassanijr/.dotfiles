@@ -36,6 +36,7 @@ ensure_automake
 
 # Curses library
 ensure_ncurses
+ensure_gettext
 
 # Utilities
 ensure_coreutils
@@ -67,6 +68,7 @@ ensure_tre              # alternative to tree
 # Not as frequently used, but nice to have
 ensure_aria2            # download utility
 ensure_fzf              # Fuzzy finder
+ensure_watch            # watch command
 
 # Literally entertainment
 ensure_cmatrix

@@ -3,48 +3,6 @@
 # Author: Ali Hassani (@alihassanijr)
 # NOTE: this should be sourced from ./dotfiles/
 
-# pkg-config
-source installer/dependencies/pkg_config.sh
-ensure_pkg_config() {
-  check_and_install_hard_dependency "pkg-config" "install_pkg_config"
-}
-
-# wget
-source installer/dependencies/wget.sh
-ensure_wget() {
-  check_and_install_hard_dependency "wget" "install_wget"
-  configure_wget
-}
-
-# M4
-source installer/dependencies/m4.sh
-ensure_m4() {
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    # Don't use mac's m4
-    check_and_install_dependency "m4" "$LOCALDIR/bin/m4" "install_m4"
-  else
-    check_and_install_hard_dependency "m4" "install_m4"
-  fi
-}
-
-# Autoconf
-source installer/dependencies/autoconf.sh
-ensure_autoconf() {
-  check_and_install_hard_dependency "autoconf" "install_autoconf"
-}
-
-# Automake
-source installer/dependencies/automake.sh
-ensure_automake() {
-  check_and_install_hard_dependency "automake" "install_automake"
-}
-
-# coreutils
-source installer/dependencies/coreutils.sh
-ensure_coreutils() {
-  check_and_install_dependency "coreutils" "$LOCALDIR/extras/coreutils/bin/cp" "install_coreutils"
-}
-
 # Alacritty
 source installer/dependencies/alacritty.sh
 ensure_alacritty() {
@@ -58,6 +16,18 @@ ensure_alacritty() {
 source installer/dependencies/aria2.sh
 ensure_aria2() {
   check_and_install_dependency "aria2" "$LOCALDIR/bin/aria2c" "install_aria2"
+}
+
+# Autoconf
+source installer/dependencies/autoconf.sh
+ensure_autoconf() {
+  check_and_install_hard_dependency "autoconf" "install_autoconf"
+}
+
+# Automake
+source installer/dependencies/automake.sh
+ensure_automake() {
+  check_and_install_hard_dependency "automake" "install_automake"
 }
 
 # Bat
@@ -85,6 +55,12 @@ ensure_cmatrix() {
   check_and_install_dependency "cmatrix" "$LOCALDIR/bin/cmatrix" "install_cmatrix"
 }
 
+# coreutils
+source installer/dependencies/coreutils.sh
+ensure_coreutils() {
+  check_and_install_dependency "coreutils" "$LOCALDIR/extras/coreutils/bin/cp" "install_coreutils"
+}
+
 # Diff-so-fancy
 source installer/dependencies/diff-so-fancy.sh
 ensure_diff_so_fancy() {
@@ -92,16 +68,18 @@ ensure_diff_so_fancy() {
   configure_dependency "diff-so-fancy" "configure_diff_so_fancy"
 }
 
-# LSD
-source installer/dependencies/lsd.sh
-ensure_lsd() {
-  check_and_install_hard_dependency "lsd" "install_lsd"
-}
-
 # Fzf
 source installer/dependencies/fzf.sh
 ensure_fzf() {
   check_and_install_dependency "fzf" "$HOMEDIR/.fzf/bin/fzf" "install_fzf"
+}
+
+# gettext
+source installer/dependencies/gettext.sh
+ensure_gettext() {
+  # Don't trust OS's gettext, because it may not have autopoint.
+  # check_and_install_hard_dependency "gettext" "install_gettext"
+  check_and_install_dependency "gettext" "$LOCALDIR/bin/gettext" "install_gettext"
 }
 
 # Git-lfs
@@ -117,6 +95,29 @@ ensure_htop() {
   configure_dependency "htop" "configure_htop"
 }
 
+# LSD
+source installer/dependencies/lsd.sh
+ensure_lsd() {
+  check_and_install_hard_dependency "lsd" "install_lsd"
+}
+
+# M4
+source installer/dependencies/m4.sh
+ensure_m4() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Don't use mac's m4
+    check_and_install_dependency "m4" "$LOCALDIR/bin/m4" "install_m4"
+  else
+    check_and_install_hard_dependency "m4" "install_m4"
+  fi
+}
+
+# NCurses
+source installer/dependencies/ncurses.sh
+ensure_ncurses() {
+  check_and_install_dependency "ncurses" "$NCDIR/bin/ncursesw6-config" "install_ncurses"
+}
+
 # Oh-My-ZSH
 source installer/dependencies/oh-my-zsh.sh
 ensure_oh_my_zsh() {
@@ -124,10 +125,10 @@ ensure_oh_my_zsh() {
   configure_dependency "oh_my_zsh" "configure_oh_my_zsh"
 }
 
-# NCurses
-source installer/dependencies/ncurses.sh
-ensure_ncurses() {
-  check_and_install_dependency "ncurses" "$NCDIR/bin/ncursesw6-config" "install_ncurses"
+# pkg-config
+source installer/dependencies/pkg_config.sh
+ensure_pkg_config() {
+  check_and_install_hard_dependency "pkg-config" "install_pkg_config"
 }
 
 # Ripgrep
@@ -164,6 +165,19 @@ source installer/dependencies/vifm.sh
 ensure_vifm() {
   check_and_install_dependency "vifm" "$LOCALDIR/bin/vifm" "install_vifm"
   configure_dependency "vifm" "configure_vifm"
+}
+
+# watch
+source installer/dependencies/watch.sh
+ensure_watch() {
+  check_and_install_hard_dependency "watch" "install_watch"
+}
+
+# wget
+source installer/dependencies/wget.sh
+ensure_wget() {
+  check_and_install_hard_dependency "wget" "install_wget"
+  configure_wget
 }
 
 # Zathura

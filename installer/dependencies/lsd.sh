@@ -44,7 +44,7 @@ install_lsd() {
             tar -xzf lsd*.tar.gz && \
             rm lsd*.tar.gz && \
             mv lsd*/lsd $LOCALDIR/bin/lsd && \
-            mv lsd*/lsd.1 $LOCALDIR/man/
+            mv lsd*/lsd.1 $LOCALDIR/man/man1/
     else
         echo "Failed to install static LSD. Please install it manually before proceeding."
         echo "arch: $arch"
