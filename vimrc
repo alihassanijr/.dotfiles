@@ -165,11 +165,11 @@ set rtp+=~/.fzf
 " macunix won't work because I'm building vim from source without the darwin flag.
 "if has('macunix')
 if g:os == 'Darwin'
-  " Vim Markdown
-  packadd vim-markdown-preview
-  let vim_markdown_preview_github=1
-  let vim_markdown_preview_toggle=1
-  let vim_markdown_preview_browser='Firefox'
+  " " Vim Markdown
+  " packadd vim-markdown-preview
+  " let vim_markdown_preview_github=1
+  " let vim_markdown_preview_toggle=1
+  " let vim_markdown_preview_browser='Firefox'
 
   " VimTeX
   packadd vimtex

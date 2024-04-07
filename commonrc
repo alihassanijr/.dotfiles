@@ -94,19 +94,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     ## Replace the mac sed with GNU sed:
     #alias sed="gsed"
     
-    # Alacritty focus mode
-    alias ap="alacritty_widescreen_toggle"
-
-    # No longer using these
-    ## Kitty icat and clear icat (iclear)
-    #alias icat="kitty +kitten icat --silent --transfer-mode=stream"
-    #alias iclear="kitty +kitten icat --silent --clear --transfer-mode=stream"
-
     # GUI applications
     alias zoom="open -a zoom.us"
     alias spotify="open -a Spotify"
     alias slack="open -a Slack"
-    alias overleaf="open -a Overleaf"
     alias settings="open -a System\ Settings"
     alias amph="open -a Amphetamine -g"
     alias finder="open ~/Documents"

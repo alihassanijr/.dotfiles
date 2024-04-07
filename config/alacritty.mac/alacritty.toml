@@ -47,6 +47,11 @@ key = "Space"
 mods = "Alt"
 
 [[keyboard.bindings]]
+chars = " "
+key = "T"
+mods = "Command"
+
+[[keyboard.bindings]]
 chars = "\u0015"
 key = "Back"
 mods = "Super"
@@ -83,19 +88,19 @@ hide_when_typing = false
 
 [window]
 decorations = "full"
-dynamic_title = true
+dynamic_title = false
 opacity = 0.95
 option_as_alt = "None"
-title = "Terminal"
+title = "Alacritty"
 
 [window.dimensions]
-columns = 200
-lines = 60
+columns = 255
+lines = 75
 
 [window.padding]
 x = 5
 y = 5
 
 [window.position]
-x = 900
-y = 300
+x = 600
+y = 0

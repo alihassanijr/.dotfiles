@@ -66,9 +66,10 @@ hide_when_typing = false
 
 [window]
 decorations = "full"
-dynamic_title = true
+dynamic_title = false
 opacity = 0.95
-title = "Terminal"
+option_as_alt = "None"
+title = "Alacritty"
 
 [window.dimensions]
 columns = 200

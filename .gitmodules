@@ -34,9 +34,6 @@
 [submodule "third_party/htop"]
 	path = third_party/htop
 	url = https://github.com/htop-dev/htop
-[submodule "third_party/vim/vim-markdown-preview"]
-	path = third_party/vim/vim-markdown-preview
-	url = https://github.com/JamshedVesuna/vim-markdown-preview
 [submodule "third_party/zsh/zsh-syntax-highlighting"]
 	path = third_party/zsh/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting
