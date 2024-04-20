@@ -80,6 +80,13 @@ mux () {
     tmux attach $@ || tmux
 }
 
+# Show nvidia gpus, their archtag, and memory
+if [[ -f "$(which nvidia-smi)" ]]; then
+    nv-arch () {
+        nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
+    }
+fi
+
 # OSX-specific aliases for my mac
 if [[ "$OSTYPE" == "darwin"* ]]; then
     if [[ -d $HOME/.brew ]]; then
