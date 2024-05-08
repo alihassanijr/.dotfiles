@@ -146,6 +146,12 @@ ensure_oh_my_zsh() {
   configure_dependency "oh_my_zsh" "configure_oh_my_zsh"
 }
 
+# perl
+source installer/dependencies/perl.sh
+ensure_perl() {
+  check_and_install_dependency "perl" "$LOCALDIR/bin/perl" "install_perl"
+}
+
 # pkg-config
 source installer/dependencies/pkg_config.sh
 ensure_pkg_config() {
@@ -162,8 +168,8 @@ ensure_rg() {
 source installer/dependencies/tmux.sh
 ensure_tmux() {
   #if [[ $IS_PERSONAL -eq 0 ]]; then
-    # check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
-    check_and_install_hard_dependency "tmux" "install_tmux"
+    check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
+    # check_and_install_hard_dependency "tmux" "install_tmux"
     configure_dependency "tmux" "configure_tmux"
   #fi
 }
@@ -213,6 +219,7 @@ ensure_zathura() {
 # ZSH
 source installer/dependencies/zsh.sh
 ensure_zsh() {
-  check_hard_dependency "zsh"
+  #check_hard_dependency "zsh"
+  check_and_install_dependency "zsh" "$LOCALDIR/bin/zsh" "install_zsh"
   configure_dependency "zsh" "configure_zsh"
 }

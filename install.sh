@@ -33,6 +33,7 @@ ensure_wget
 ensure_m4
 ensure_autoconf
 ensure_automake
+ensure_perl
 
 # Curses library
 ensure_ncurses

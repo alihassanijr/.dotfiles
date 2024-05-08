@@ -90,7 +90,8 @@ build_tmux() {
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
-    ./configure \
+    PKG_CONFIG_PATH="$LOCALDIR/lib/pkgconfig:$PKG_CONFIG_PATH" ./configure \
+      CFLAGS="-I$LOCALDIR/include -I$NCDIR/include -I$NCDIR/include/ncursesw" LDFLAGS="-L$LOCALDIR/lib -L$NCDIR/lib" \
       --enable-sixel \
       --enable-utf8proc \
       $ADDITIONAL_TMUX_CONF_ARGS \

@@ -34,6 +34,13 @@ if [[ -d "$HOME/.local/extras/coreutils" ]]; then
   export MANPATH=$HOME/.local/extras/coreutils/man:$MANPATH
 fi
 
+if [[ -d "$HOME/.local/lib/perl5/" ]]; then
+  export PERL5LIB=$HOME/.local/lib/perl5/
+fi
+
+export LD_LIBRARY_PATH=$HOME/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
 if [[ -d "$HOME/.binz" ]]; then
   # TODO: Do I even have this anywhere anymore?
   export PATH=~/.binz/:$PATH
