@@ -18,9 +18,9 @@ install_tre() {
         TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-aarch64-apple-darwin.tar.gz"
     elif [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
         TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-x86_64-apple-darwin.tar.gz"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
         TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-x86_64-unknown-linux-musl.tar.gz"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
         TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-arm-unknown-linux-gnueabihf.tar.gz"
     fi
     if [[ "$TREURL" != "" ]]; then

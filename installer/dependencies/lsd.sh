@@ -32,9 +32,9 @@ install_lsd() {
         LSDURL="https://github.com/lsd-rs/lsd/releases/download/$LSDVER/lsd-$LSDVER-aarch64-apple-darwin.tar.gz"
     elif [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
         LSDURL="https://github.com/lsd-rs/lsd/releases/download/$LSDVER/lsd-$LSDVER-x86_64-apple-darwin.tar.gz"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
         LSDURL="https://github.com/lsd-rs/lsd/releases/download/$LSDVER/lsd-$LSDVER-x86_64-unknown-linux-gnu.tar.gz"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
         LSDURL="https://github.com/lsd-rs/lsd/releases/download/$LSDVER/lsd-$LSDVER-arm-unknown-linux-gnueabihf.tar.gz"
     fi
     if [[ "$LSDURL" != "" ]]; then

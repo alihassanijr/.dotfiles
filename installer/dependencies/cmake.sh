@@ -18,9 +18,9 @@ install_cmake() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-macos-universal.tar.gz"
         CMAKEDIR="cmake*/CMake.app/Contents/"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
         CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-linux-x86_64.tar.gz"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "aarch64" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "aarch64" ]]; then
         CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-linux-aarch64.tar.gz"
     fi
     if [[ "$CMAKEURL" != "" ]]; then

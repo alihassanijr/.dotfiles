@@ -17,9 +17,9 @@ install_rg() {
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-aarch64-apple-darwin.tar.gz"
     elif [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-x86_64-apple-darwin.tar.gz"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-x86_64-unknown-linux-musl.tar.gz"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-arm-unknown-linux-gnueabihf.tar.gz"
     fi
     if [[ "$RGURL" != "" ]]; then

@@ -16,11 +16,11 @@ install_git_lfs() {
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-darwin-amd64-v$GITLFSVER.zip"
     elif [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "arm64" ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-darwin-arm64-v$GITLFSVER.zip"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-amd64-v$GITLFSVER.tar.gz"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-arm-v$GITLFSVER.tar.gz"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm64" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm64" ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-arm64-v$GITLFSVER.tar.gz"
     fi
     if [[ "$GITLFSURL" != "" ]]; then

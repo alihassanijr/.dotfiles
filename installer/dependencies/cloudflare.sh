@@ -12,9 +12,9 @@ install_go() {
     GOURL="https://storage.googleapis.com/golang/go${GO_VERSION}.darwin-arm64.tar.gz"
   elif [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
     GOURL="https://storage.googleapis.com/golang/go${GO_VERSION}.darwin-amd64.tar.gz"
-  elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+  elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
     GOURL="https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz"
-  elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+  elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
     GOURL="https://storage.googleapis.com/golang/go${GO_VERSION}.linux-arm64.tar.gz"
 	fi
 

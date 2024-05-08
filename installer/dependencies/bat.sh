@@ -35,11 +35,11 @@ install_bat() {
     else
         if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
             BATURL="https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-v$BATVER-x86_64-apple-darwin.tar.gz"
-        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "x86_64" ]]; then
+        elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
             BATURL="https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-v$BATVER-x86_64-unknown-linux-gnu.tar.gz"
-        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "i686" ]]; then
+        elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "i686" ]]; then
             BATURL="https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-v$BATVER-i686-unknown-linux-gnu.tar.gz"
-        elif [[ "$OSTYPE" == "linux-gnu"* ]] && [[ "$arch" == "arm" ]]; then
+        elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
             BATURL="https://github.com/sharkdp/bat/releases/download/v$BATVER/bat-v$BATVER-arm-unknown-linux-gnueabihf.tar.gz"
         fi
         if [[ "$BATURL" != "" ]]; then

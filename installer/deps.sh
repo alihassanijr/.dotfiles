@@ -82,6 +82,20 @@ ensure_gettext() {
   check_and_install_dependency "gettext" "$LOCALDIR/bin/gettext" "install_gettext"
 }
 
+# Git
+source installer/dependencies/git.sh
+ensure_git() {
+  if [[ "$OSTYPE" != "darwin"* ]]; then
+    # Apparently there is such a thing as an old git build
+    # I.e. they don't automatically add your ssh ids to agent.
+    # I'm not worried about mac, because git has always been
+    # up to date. But I'm more worried about all of git's build
+    # dependencies, and dealing with those on mac is like carving
+    # a glazed ham with a plastic knife.
+    check_and_install_dependency "git" "$LOCALDIR/bin/git" "install_git"
+  fi
+}
+
 # Git-lfs
 source installer/dependencies/git-lfs.sh
 ensure_git_lfs() {
@@ -99,6 +113,13 @@ ensure_htop() {
 source installer/dependencies/lsd.sh
 ensure_lsd() {
   check_and_install_hard_dependency "lsd" "install_lsd"
+}
+
+# Make
+source installer/dependencies/make.sh
+ensure_make() {
+  # Because if it's too old, things like building git from source might fail
+  check_and_install_dependency "make" "$LOCALDIR/bin/make" "install_make"
 }
 
 # M4

@@ -73,8 +73,8 @@ set number ruler                                        " Show line number
 set showmode                                            " Shows mode in bottom left
 
 set scrolloff=5                                         " Keep at lease 5 lines above and below
-set colorcolumn=128                                     " Vertical white bar at 128 chars
-set tw=127                                              " Line wrapping
+set colorcolumn=100                                     " Vertical white bar at 100 chars
+set tw=100                                              " Line wrapping
 
 "Error bells.  All are off
 set noerrorbells                                        " Removes error bells
@@ -114,6 +114,12 @@ set spell spelllang=en_us
 nnoremap <C-J> i<CR><ESC>
 " Silence on space
 nnoremap <silent> <Space> :silent noh<Bar>echo<CR>
+
+"""""""""""""" Helpers """""""""""""
+:command -nargs=* Tabnew tabnew <args>
+:command -nargs=* Tabm tabm <args>
+:command -nargs=* Bd bd <args>
+:command -nargs=* Vsp vsp <args>
 
 """""""""""""" Plugins """"""""""""""
 

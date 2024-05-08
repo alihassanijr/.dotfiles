@@ -16,4 +16,7 @@ configure_oh_my_zsh() {
     # Overlay Agnoster theme and Syntax highlighting with monokai colors
     rm -rf $HOMEDIR/.config/zsh
     ln -s $THISDIR/config/zsh $HOMEDIR/.config/zsh
+
+    # Fix permisssions
+    chmod -R 700 $HOMEDIR/.oh-my-zsh
 }

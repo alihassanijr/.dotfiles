@@ -40,7 +40,9 @@ ensure_gettext
 
 # Utilities
 ensure_coreutils
+ensure_make
 ensure_cmake
+ensure_git
 ensure_git_lfs
 
 # Cloudflare in case we need to tunnel certain
@@ -82,5 +84,9 @@ link_commonrc
 link_bashrc
 
 link_custom_scripts
+
+# Fix permissions
+chmod -R 700 $LOCALDIR
+chmod -R 700 $NCDIR
 
 echo "Installation complete."
