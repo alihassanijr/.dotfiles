@@ -33,7 +33,7 @@ ensure_wget
 ensure_m4
 ensure_autoconf
 ensure_automake
-ensure_perl
+#ensure_perl
 
 # Curses library
 ensure_ncurses
@@ -41,7 +41,7 @@ ensure_gettext
 
 # Utilities
 ensure_coreutils
-ensure_make
+#ensure_make
 ensure_cmake
 ensure_git
 ensure_git_lfs

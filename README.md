@@ -1,4 +1,5 @@
 # Ali's .dotfiles
+Disclaimer: this README is very much outdated.
 
 I started off [Steven's .dotfiles](https://github.com/stevenwalton/.dotfiles), and changed these as I went.
 After almost two years, it became really cluttered, so I cleaned up and reset the commit history since that just

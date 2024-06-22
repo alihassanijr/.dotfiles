@@ -16,7 +16,7 @@
 
 # Look for conda
 usr=$(whoami)
-paths=("/home/${usr}/anaconda3" "/home/users/${usr}/anaconda3" "/workspace/${usr}/anaconda3" "/Users/${usr}/opt/anaconda3")
+paths=("/${HOME}/anaconda3" "/workspace/${usr}/anaconda3")
 found=false
 for pth in ${paths[@]}
 do
