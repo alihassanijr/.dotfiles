@@ -139,13 +139,6 @@ ensure_ncurses() {
   check_and_install_dependency "ncurses" "$NCDIR/bin/ncursesw6-config" "install_ncurses"
 }
 
-# Oh-My-ZSH
-source installer/dependencies/oh-my-zsh.sh
-ensure_oh_my_zsh() {
-  check_and_install_dependency "Oh My ZSH" "$HOMEDIR/.oh-my-zsh/oh-my-zsh.sh" "install_oh_my_zsh"
-  configure_dependency "oh_my_zsh" "configure_oh_my_zsh"
-}
-
 # perl
 source installer/dependencies/perl.sh
 ensure_perl() {

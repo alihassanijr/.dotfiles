@@ -58,7 +58,6 @@ ensure_vim              # editor
 ensure_vifm             # file browser
 ensure_zathura          # document viewer (conditional dependency)
 ensure_zsh              # shell
-ensure_oh_my_zsh        # extension to zsh
 
 # Fancy alternatives
 ensure_bat              # alternative to cat
