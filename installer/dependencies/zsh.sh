@@ -58,6 +58,4 @@ configure_zsh() {
       echo "Linking zsh binary (because you opted out of building it)."
       ln -s $(which zsh) $LOCALDIR/bin/zsh
     fi
-
-    ln -s $THISDIR/config/zsh $HOMEDIR/.config/zsh
 }
