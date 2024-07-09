@@ -32,8 +32,7 @@ set cursorcolumn                                        " Column highlighting
 set background=dark                                     " Dark mode
 set t_Co=256
 set termguicolors
-let g:monokai_pro_highlight_active_window = 1           "
-colorscheme monokai-pro                                 " Color Scheme (in ~/.vim/colors)
+colorscheme ghdark                                       " Color Scheme (in ~/.vim/colors)
 
 set mouse=a                                             " Mouse support for people that can't use vim
 
@@ -126,7 +125,7 @@ nnoremap <silent> <Space> :silent noh<Bar>echo<CR>
 " Lightline
 set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'monokai_pro',
+      \ 'colorscheme': 'ghdark',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]

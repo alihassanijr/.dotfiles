@@ -6,30 +6,28 @@
 # Monokai scheme by Wimer Hazenberg (http://www.monokai.nl)
 # Modified by Ali Hassani (@alihassanijr)
 
-color00="2d/2a/2e" # Base 00 - Black
-color01="ff/61/88" # Base 08 - Red
-color02="a9/dc/76" # Base 0B - Green
-color03="ff/d8/66" # Base 0A - Yellow
-color04="fc/98/67" # Base 0D - Blue
-color05="ab/9d/f2" # Base 0E - Magenta
-color06="78/dc/e8" # Base 0C - Cyan
-color07="fc/fc/fa" # Base 05 - White
-color08="72/70/72" # Base 03 - Bright Black
+color00="00/06/0f" # Base 00 - Black
+color01="fa/79/70" # Base 08 - Red
+color02="7c/e3/8b" # Base 0B - Green
+color03="fa/a3/56" # Base 0A - Yellow
+color04="77/bd/fb" # Base 0D - Blue
+color05="ce/a5/fb" # Base 0E - Magenta
+color06="a2/d2/fb" # Base 0C - Cyan
+color07="ec/f2/f8" # Base 05 - White
+color08="89/92/9b" # Base 03 - Bright Black
 color09=$color01 # Base 08 - Bright Red
 color10=$color02 # Base 0B - Bright Green
 color11=$color03 # Base 0A - Bright Yellow
 color12=$color04 # Base 0D - Bright Blue
 color13=$color05 # Base 0E - Bright Magenta
 color14=$color06 # Base 0C - Bright Cyan
-color15="fc/fc/fa" # Base 07 - Bright White
-color16="fd/97/1f" # Base 09
-color17="cc/66/33" # Base 0F
-color18="38/38/30" # Base 01
-color19="49/48/3e" # Base 02
-color20="a5/9f/85" # Base 04
-color21="f5/f4/f1" # Base 06
-color_foreground="fc/fc/fa" # Base 05
-color_background="2d/2a/2e" # Base 00
+color15="ec/f2/f8" # Base 07 - Bright White
+#color16="fd/97/1f" # Base 09
+#color17="cc/66/33" # Base 0F
+#color18="38/38/30" # Base 01
+#color19="49/48/3e" # Base 02
+#color20="a5/9f/85" # Base 04
+#color21="f5/f4/f1" # Base 06
 
 if [ -n "$TMUX" ]; then
   # Tell tmux to pass the escape sequences through
@@ -70,34 +68,44 @@ put_template 13 $color13
 put_template 14 $color14
 put_template 15 $color15
 
-# 256 color space
-put_template 16 $color16
-put_template 17 $color17
-put_template 18 $color18
-put_template 19 $color19
-put_template 20 $color20
-put_template 21 $color21
+# Github dark colors
+put_template 233 "0d/11/17"
+put_template 235 "16/1b/22"
+put_template 237 "21/26/2d"
+put_template 243 "89/92/9b"
+put_template 249 "c6/cd/d5"
+put_template 252 "ec/f2/f8"
+put_template 210 "fa/79/70"
+put_template 178 "fa/a3/56"
+put_template 114 "7c/e3/8b"
+put_template 153 "a2/d2/fb"
+put_template 75  "77/bd/fb"
+put_template 27  "08/87/f7"
+put_template 183 "ce/a5/fb"
+put_template 54  "96/3c/f6"
+
+color_foreground="ec/f2/f8"
+color_background="0d/11/17"
+
+# Custom
+put_template 218 "fc/b1/ab"
+put_template 186 "d7/d7/87"
+put_template 228 "e2/d1/39"
+
+## 256 color space
+#put_template 16 $color16
+#put_template 17 $color17
+#put_template 18 $color18
+#put_template 19 $color19
+#put_template 20 $color20
+#put_template 21 $color21
 
 # foreground / background / cursor color
-if [ -n "$ITERM_SESSION_ID" ]; then
-  # iTerm2 proprietary escape codes
-  put_template_custom Pg f8f8f2 # foreground
-  put_template_custom Ph 272822 # background
-  put_template_custom Pi f8f8f2 # bold color
-  put_template_custom Pj 49483e # selection color
-  put_template_custom Pk f8f8f2 # selected text color
-  put_template_custom Pl f8f8f2 # cursor
-  put_template_custom Pm 272822 # cursor text
-else
-  put_template_var 10 $color_foreground
-  if [ "$BASE16_SHELL_SET_BACKGROUND" != false ]; then
-    put_template_var 11 $color_background
-    if [ "${TERM%%-*}" = "rxvt" ]; then
-      put_template_var 708 $color_background # internal border (rxvt)
-    fi
-  fi
-  put_template_custom 12 ";7" # cursor (reverse video)
+put_template_var 10 $color_foreground
+if [ "$BASE16_SHELL_SET_BACKGROUND" != false ]; then
+  put_template_var 11 $color_background
 fi
+put_template_custom 12 ";7" # cursor (reverse video)
 
 # clean up
 unset -f put_template

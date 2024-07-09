@@ -220,7 +220,7 @@ colors:
   # affected cell, or hexadecimal colors like #ff00ff.
   cursor:
     text: CellBackground
-    cursor: '#7bd88f'
+    cursor: '#77bdfb'
 
   # Vi mode cursor colors
   #
@@ -229,8 +229,8 @@ colors:
   # Allowed values are CellForeground/CellBackground, which reference the
   # affected cell, or hexadecimal colors like #ff00ff.
   vi_mode_cursor:
-    text: "#2d2a2e"
-    cursor: "#a9dc76"
+    text: "#161b22"
+    cursor: "#a2d2fb"
 
   # Search colors
   #
@@ -240,10 +240,10 @@ colors:
     # affected cell, or hexadecimal colors like #ff00ff.
     matches:
       foreground: '#000000'
-      background: '#ffd866'
+      background: '#7ce38b'
     focused_match:
       foreground: '#000000'
-      background: '#ab9df2'
+      background: '#cea5fb'
 
   # Keyboard hints
   #hints:

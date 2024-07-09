@@ -1,0 +1,47 @@
+" My attempt at recreating Github-Dark
+" Including its LSCOLORS
+
+" Reset all styles first
+highlight clear
+
+highlight Border      cterm=none  ctermfg=243  ctermbg=233    guifg=#89929b     guibg=#0d1117
+
+highlight TopLine     cterm=none  ctermfg=0    ctermbg=243    guifg=#000000     guibg=#89929b
+highlight TopLineSel  cterm=bold  ctermfg=0    ctermbg=243    guifg=#000000     guibg=#89929b
+
+highlight Win         cterm=none  ctermfg=231  ctermbg=233    guifg=#fcfcfa     guibg=#0d1117
+highlight Directory   cterm=none  ctermfg=114  ctermbg=233    guifg=#7ce38b     guibg=#0d1117
+
+highlight CurrLine    cterm=none  ctermfg=0    ctermbg=231    guifg=#000000     guibg=#fcfcfa
+highlight OtherLine   cterm=none  ctermfg=249  ctermbg=233    guifg=#727072     guibg=#0d1117
+highlight Selected    cterm=none  ctermfg=210  ctermbg=238    guifg=#fa7970     guibg=#403e41
+
+highlight JobLine     cterm=bold  ctermfg=237  ctermbg=238    guifg=#21262d     guibg=#4a484b
+highlight StatusLine  cterm=bold  ctermfg=178  ctermbg=235    guifg=#faa356     guibg=#161b22
+highlight ErrorMsg    cterm=bold  ctermfg=210  ctermbg=233    guifg=#fa7970     guibg=#0d1117
+highlight WildMenu    cterm=bold  ctermfg=243  ctermbg=178    guifg=#89929b     guibg=#faa356
+highlight CmdLine     cterm=none  ctermfg=178  ctermbg=233    guifg=#faa356     guibg=#0d1117
+
+highlight Executable  cterm=none  ctermfg=218  ctermbg=233    guifg=#fcb1ab     guibg=#0d1117
+highlight Link        cterm=none  ctermfg=218  ctermbg=233    guifg=#fcb1ab     guibg=#0d1117
+highlight BrokenLink  cterm=none  ctermfg=231  ctermbg=54     guifg=#ffffff     guibg=#963cf6
+highlight Device      cterm=none  ctermfg=178  ctermbg=233    guifg=#faa356     guibg=#0d1117
+highlight Fifo        cterm=none  ctermfg=153  ctermbg=233    guifg=#a2d2fb     guibg=#0d1117
+highlight Socket      cterm=none  ctermfg=153  ctermbg=233    guifg=#a2d2fb     guibg=#0d1117
+
+highlight {LICENSE}     cterm=none      ctermfg=243     ctermbg=233    guifg=#89929b     guibg=#0d1117
+highlight {*.txt,*.md}  cterm=none      ctermfg=228     ctermbg=233    guifg=#fbef83     guibg=#0d1117
+highlight {*.sh,*.bash} cterm=none      ctermfg=75      ctermbg=233    guifg=#77bdfb     guibg=#0d1117
+highlight {*.go,*.py}   cterm=none      ctermfg=75      ctermbg=233    guifg=#77bdfb     guibg=#0d1117
+highlight {*.vim,*.zsh} cterm=none      ctermfg=75      ctermbg=233    guifg=#77bdfb     guibg=#0d1117
+highlight {*.tex}       cterm=none      ctermfg=27      ctermbg=233    guifg=#0887f7     guibg=#0d1117
+highlight {*.css,*.lua} cterm=none      ctermfg=27      ctermbg=233    guifg=#0887f7     guibg=#0d1117
+highlight {*README*}    cterm=none      ctermfg=0       ctermbg=178    guifg=#000000     guibg=#faa356
+highlight {.*,*.conf}   cterm=none      ctermfg=183     ctermbg=233    guifg=#cea5fb     guibg=#0d1117
+highlight {*.bst,*.bib} cterm=none      ctermfg=183     ctermbg=233    guifg=#cea5fb     guibg=#0d1117
+highlight {*.sty}       cterm=none      ctermfg=178     ctermbg=233    guifg=#faa356     guibg=#0d1117
+highlight {*.zip,*.rar,*.tar,*.gz,*.bz2,*.iso} cterm=underline ctermfg=54 ctermbg=233    guifg=#963cf6     guibg=#0d1117
+highlight {*.ini,*.yml,*.json,*.desktop} cterm=none      ctermfg=183     ctermbg=233    guifg=#cea5fb     guibg=#0d1117
+highlight {*.mov,*.mp4,*.gif,*.mpeg,*.mpg,*.flv,*.avi,*.png,*.bmp,*.jpg,*.jpeg,*.pnm,*.svg,*.ico} cterm=none ctermfg=178 ctermbg=233    guifg=#faa356     guibg=#0d1117
+highlight {*.c,*.h,*.cxx,*.hxx,*.cpp,*.hpp,*.cu,*.cuh,*.cu.h,*.cs}   cterm=none      ctermfg=75      ctermbg=233    guifg=#77bdfb     guibg=#0d1117
+highlight {*.pdf,*.doc,*.docx,*.xls,*.xlsx,*.ppt,*.pptx,*.csv} cterm=none      ctermfg=186     ctermbg=233    guifg=#d7d787     guibg=#0d1117

@@ -5,8 +5,8 @@ prompt_context() {
   local user=`whoami`
 
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment "#fd5188" black "%(!.%{%F{#ffd866}%}.)$user"
-    prompt_segment "#a9dc76" black "%(!.%{%F{#ffd866}%}.)%m"
+    prompt_segment "#21262d" white "%(!.%{%F{#ecf2f8}%}.)$user"
+    prompt_segment "#77bdfb" black "%(!.%{%F{#77bdfb}%}.)%m"
   fi
 }
 # Git: branch/detached head, dirty status
@@ -17,7 +17,7 @@ prompt_git() {
     dirty=$(parse_git_dirty)
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
     if [[ -n $dirty ]]; then
-      prompt_segment "#ffd866" black
+      prompt_segment "#faa356" "#161b22"
     else
       prompt_segment white black
     fi
@@ -25,5 +25,5 @@ prompt_git() {
   fi
 }
 prompt_dir() {
-  prompt_segment "#fe925b" black '%~'
+  prompt_segment "#fa7970" black '%~'
 }
