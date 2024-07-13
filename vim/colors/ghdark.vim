@@ -26,6 +26,7 @@ let g:github_colors = {
   \ "darkgreen"    : ["#1e4839", 28],
   \ "grey"         : ["#525960", 241],
   \ "verydarkblue" : ["#033663", 18],
+  \ "darkred"      : ["#7b0c04", 52],
   \ "none"         : ["NONE", "NONE"]
   \ }
 
@@ -173,7 +174,8 @@ call s:ghhl("CursorLineNr", "lightblue", "base2")
 call s:ghhl("ErrorMsg", "red", "base1")
 call s:ghhl("Error", "none", "red")
 call s:ghhl("Folded", "blue", "base1")
-call s:ghhl("MatchParen", "none", "base3")
+call s:ghhl("FoldColumn", "green", "base3")
+call s:ghhl("MatchParen", "darkgreen", "base4", "underline")
 call s:ghhl("Normal", "base5", "base0")
 call s:ghhl("Pmenu", "base4", "base1")
 call s:ghhl("PmenuSel", "base4", "base2")
@@ -182,7 +184,7 @@ call s:ghhl("CurSearch", "white", "darkpurp", "bold")
 call s:ghhl("SignColumn", "none", "base0")
 call s:ghhl("StatusLine", "base5", "base2")
 call s:ghhl("StatusLineNC", "base3", "base1")
-call s:ghhl("Todo", "base4", "base0")
+call s:ghhl("Todo", "white", "orange", "bold")
 call s:ghhl("VertSplit", "base1", "base1")
 call s:ghhl("Visual", "none", "base0", "reverse")
 call s:ghhl("WarningMsg", "orange", "base1")
@@ -198,12 +200,13 @@ call s:ghhl("DiffAdd", "none", "darkgreen")
 
 call s:ghhl("DiffDelete", "none", "red")
 
-call s:ghhl("diffAdded", "none", "purp")
-call s:ghhl("diffRemoved", "none", "orange", "none")
-call s:ghhl("diffFile", "none", "green", "bold")
-call s:ghhl("diffLine", "none", "lightblue", "bold")
-call s:ghhl("diffIndexLine", "none", "purp", "bold")
-call s:ghhl("diffSubname", "none", "white", "none")
+call s:ghhl("diffAdded", "none", "darkgreen")
+call s:ghhl("diffRemoved", "none", "darkred")
+call s:ghhl("diffLine", "none", "base2", "bold")
+call s:ghhl("diffIndexLine", "none", "darkpurp", "bold")
+
+call s:ghhl("diffFile", "none", "darkred", "bold")
+call s:ghhl("diffSubname", "none", "darkpurp", "bold")
 
 "########################################
 " links

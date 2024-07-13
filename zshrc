@@ -24,7 +24,13 @@ source ~/.config/zsh/zsh-syntax-highlighting-custom-colors.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
-HISTFILE=~/.histfile
+
+if [[ -n $HISTFILE_OVERRIDE ]]; then
+  HISTFILE=$HISTFILE_OVERRIDE
+else
+  HISTFILE=~/.histfile
+fi
+
 HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory autocd
