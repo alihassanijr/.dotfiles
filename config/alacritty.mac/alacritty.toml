@@ -91,7 +91,7 @@ decorations = "full"
 dynamic_title = false
 opacity = 0.95
 option_as_alt = "None"
-title = "Alacritty"
+title = "Terminal"
 
 [window.dimensions]
 columns = 255

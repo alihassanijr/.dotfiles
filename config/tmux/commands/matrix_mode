@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ $1 = "kill" ]]; then
+  tmux send-keys -t .0 C-c C-d && \
+         tmux send-keys -t .2 C-c C-d
+else
+  tmux split-window -d -h -t .0 -l 15% && \
+         tmux split-window -d -hb -t .0 -l 18% && \
+         tmux send-keys -t .0 cmatrix Enter && \
+         tmux send-keys -t .2 cmatrix Enter
+fi
