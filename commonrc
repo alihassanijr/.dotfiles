@@ -122,44 +122,33 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     }
 fi
 
-
 # SSH-Agent (from scripts/)
 alias sagent='source sagent'
-#source sagent
-if [[ $(hostname) != *"hyperplane"* ]] && [[ $(hostname) != *"scalar"* ]]; then
-    # Don't start ssh agent on compute nodes
+
+# Login vs compute node rules
+# Login nodes should automatically try and set up an ssh agent; compute nodes shouldn't.
+# Compute nodes should try and find conda and other such tools, not login nodes.
+if [[ -z $SLURM_JOB_ID ]]; then
+    # Start/attach to existing ssh agent
     source sagent
+else
+  # Attempt to load anaconda on compute nodes only
+  source cnda
 fi
 
-# Anaconda initializer (from scripts/)
-if [[ "$OSTYPE" == "linux-gnu"* ]] && [[ $(hostname) != *"login"* ]]; then
-    # I only use anaconda on linux compute nodes.
-    source cnda
-fi
-
-# Modules (cluster only)
-###if [[ $(hostname) == "lambda-"* ]]; then
-### Checking based on availability
-### Hostname is a terrible way of doing that, because even lambda test drive
-### machines are named lambda-xxx.
+# Modules
 if [[ -f /etc/profile.d/modules.sh ]]; then
     source /etc/profile.d/modules.sh
     # Slurm
     if [[ "$(module avail)" == *"slurm"* ]]; then
         module load slurm
     fi
-    # CUDA
-    if [[ "$(module avail)" == *"cuda11.7"* ]]; then
-        module load cuda11.7
-    fi 
+
     # Bright cluster manager shell
     if [[ "$(module avail)" == *"cmsh"* ]]; then
         module load cmsh
     fi
 fi
-
-# Force NCCL to use IPV4
-# export NCCL_SOCKET_FAMILY="AF_INET"
 
 # Custom wandb tmp directory
 MY_WANDB_DIR="$HOME/.tmp/wandb/"
