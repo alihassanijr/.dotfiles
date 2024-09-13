@@ -7,15 +7,8 @@ source ~/.config/zsh/mini-omz/mini-omz.sh
 
 # (Customized) Agnoster theme
 source ~/.config/zsh/mini-omz/themes/agnoster.zsh-theme
-if [[ "$OSTYPE" == "linux-gnu"* ]] && [[ -f "$(which nvidia-smi)" ]]; then
+if [[ $HAS_NV_SMI = 1 ]]; then
   # Show GPU name in prompt line when on compute node
-  gpu_name () {
-    full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
-    name0=${full_name/NVIDIA/}
-    name1=${name0/ /}
-    name_final=${name1:0:8}
-    echo $name_final
-  }
   source ~/.config/zsh/zsh-agnoster-compute-node.sh
 else
   source ~/.config/zsh/zsh-agnoster-custom.sh

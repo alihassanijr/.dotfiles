@@ -51,7 +51,6 @@ export LS_COLORS="$(cat ~/.lscolors)"
 ##########
 # Aliases
 ##########
-# Add color and make human readable
 
 # Replace ls with lsd
 if [[ -f "$(which lsd)" ]]; then
@@ -67,6 +66,8 @@ elif [[ -f "$(which exa)" ]]; then
     alias lm='exa -lah -s modified --color=auto'
     alias ll='exa -lah -s size --color=auto'
 fi
+
+# Add color and make human readable
 alias df='df -h'
 # Grep to have color, give line number, don't tell me it can't access restricted files (sudo), and don't process binary files (garbage output ):
 alias grep='grep --color=always --line-number --no-messages --binary-files=without-match'
@@ -82,9 +83,17 @@ mux () {
 
 # Show nvidia gpus, their archtag, and memory
 if [[ -f "$(which nvidia-smi)" ]]; then
-    nv-arch () {
-        nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
-    }
+  nv-arch () {
+      nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
+  }
+
+  nv-name () {
+    full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
+    name0=${full_name/NVIDIA/}
+    name1=${name0/ /}
+    name_final=${name1:0:8}
+    echo $name_final
+  }
 fi
 
 # OSX-specific aliases for my mac
@@ -228,13 +237,6 @@ vicd() {
 smux () {
     ssh -t ${@} 'bash -c "tmux a || tmux"'
 }
-
-## OSX-specific env variables
-#if [[ "$OSTYPE" == "darwin"* ]]; then
-#    # DBUS env variable
-#    # This is just so that vimtex can communicate with zathura through dbus
-#    export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
-#fi
 
 # NVIDIA Bug report
 ## Handy function when I want to grab logs related to GPU issues quickly

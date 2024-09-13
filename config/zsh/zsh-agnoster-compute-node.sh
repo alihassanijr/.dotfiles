@@ -3,7 +3,7 @@
 # Custom colors for agnoster theme
 prompt_context() {
   local user=`whoami`
-  local gpu=`gpu_name`
+  local gpu=`nv-name`
 
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
     prompt_segment "#21262d" white "%(!.%{%F{#ecf2f8}%}.)$user"
