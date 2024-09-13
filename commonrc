@@ -89,11 +89,17 @@ if [[ -f "$(which nvidia-smi)" ]]; then
 
   nv-name () {
     full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
-    name0=${full_name/NVIDIA/}
-    name1=${name0/ /}
-    name_final=${name1:0:8}
+    name_tmp=${full_name//NVIDIA/}
+    name_tmp=${name_tmp//Tesla/}
+    name_tmp=${name_tmp//Ampere/}
+    name_tmp=${name_tmp//GeForce/}
+    name_tmp=${name_tmp//RTX/}
+    name_tmp=${name_tmp// /}
+    name_final=${name_tmp:0:8}
     echo $name_final
   }
+
+  export HAS_NV_SMI=1
 fi
 
 # OSX-specific aliases for my mac

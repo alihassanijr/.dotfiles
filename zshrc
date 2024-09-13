@@ -2,6 +2,8 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+source ~/.commonrc
+
 # Mini oh my zsh
 source ~/.config/zsh/mini-omz/mini-omz.sh
 
@@ -55,8 +57,6 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
-
-source ~/.commonrc
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     export TERM=alacritty
