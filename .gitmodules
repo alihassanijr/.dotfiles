@@ -1,12 +1,6 @@
 [submodule "third_party/vim/vifm.vim"]
 	path = third_party/vim/vifm.vim
 	url = https://github.com/vifm/vifm.vim
-[submodule "third_party/zsh/ohmyzsh"]
-	path = third_party/zsh/ohmyzsh
-	url = https://github.com/ohmyzsh/ohmyzsh
-[submodule "third_party/zsh/zsh-autosuggestions"]
-	path = third_party/zsh/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule "third_party/vifm"]
 	path = third_party/vifm
 	url = https://github.com/vifm/vifm
@@ -34,9 +28,6 @@
 [submodule "third_party/htop"]
 	path = third_party/htop
 	url = https://github.com/htop-dev/htop
-[submodule "third_party/zsh/zsh-syntax-highlighting"]
-	path = third_party/zsh/zsh-syntax-highlighting
-	url = https://github.com/zsh-users/zsh-syntax-highlighting
 [submodule "third_party/vim9"]
 	path = third_party/vim9
 	url = https://github.com/vim/vim

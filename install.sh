@@ -33,6 +33,7 @@ ensure_wget
 ensure_m4
 ensure_autoconf
 ensure_automake
+#ensure_perl
 
 # Curses library
 ensure_ncurses
@@ -40,9 +41,9 @@ ensure_gettext
 
 # Utilities
 ensure_coreutils
-ensure_make
+#ensure_make
 ensure_cmake
-ensure_git
+#ensure_git
 ensure_git_lfs
 
 # Cloudflare in case we need to tunnel certain
@@ -57,7 +58,7 @@ ensure_vim              # editor
 ensure_vifm             # file browser
 ensure_zathura          # document viewer (conditional dependency)
 ensure_zsh              # shell
-ensure_oh_my_zsh        # extension to zsh
+ensure_fzf              # Fuzzy finder
 
 # Fancy alternatives
 ensure_bat              # alternative to cat
@@ -69,7 +70,6 @@ ensure_tre              # alternative to tree
 
 # Not as frequently used, but nice to have
 ensure_aria2            # download utility
-ensure_fzf              # Fuzzy finder
 ensure_watch            # watch command
 
 # Literally entertainment

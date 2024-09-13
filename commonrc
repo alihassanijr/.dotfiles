@@ -34,10 +34,13 @@ if [[ -d "$HOME/.local/extras/coreutils" ]]; then
   export MANPATH=$HOME/.local/extras/coreutils/man:$MANPATH
 fi
 
-if [[ -d "$HOME/.binz" ]]; then
-  # TODO: Do I even have this anywhere anymore?
-  export PATH=~/.binz/:$PATH
+# TODO: the perl build is buggy
+if [[ -d "$HOME/.local/lib/perl5/" ]]; then
+  export PERL5LIB=$HOME/.local/lib/perl5/
 fi
+
+export LD_LIBRARY_PATH=$HOME/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
 # Bat config
 export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
@@ -48,7 +51,6 @@ export LS_COLORS="$(cat ~/.lscolors)"
 ##########
 # Aliases
 ##########
-# Add color and make human readable
 
 # Replace ls with lsd
 if [[ -f "$(which lsd)" ]]; then
@@ -64,13 +66,12 @@ elif [[ -f "$(which exa)" ]]; then
     alias lm='exa -lah -s modified --color=auto'
     alias ll='exa -lah -s size --color=auto'
 fi
+
+# Add color and make human readable
 alias df='df -h'
 # Grep to have color, give line number, don't tell me it can't access restricted files (sudo), and don't process binary files (garbage output ):
 alias grep='grep --color=always --line-number --no-messages --binary-files=without-match'
 
-# TODO: remove
-# Hmmm, I don't do X11 forwarding so Idk why I have this?
-# alias ssh='ssh -YC'
 
 alias prs='ps -o uid,user,pid,%cpu,%mem,tt,state,start,time,command'
 
@@ -82,9 +83,23 @@ mux () {
 
 # Show nvidia gpus, their archtag, and memory
 if [[ -f "$(which nvidia-smi)" ]]; then
-    nv-arch () {
-        nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
-    }
+  nv-arch () {
+      nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
+  }
+
+  nv-name () {
+    full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
+    name_tmp=${full_name//NVIDIA/}
+    name_tmp=${name_tmp//Tesla/}
+    name_tmp=${name_tmp//Ampere/}
+    name_tmp=${name_tmp//GeForce/}
+    name_tmp=${name_tmp//RTX/}
+    name_tmp=${name_tmp// /}
+    name_final=${name_tmp:0:8}
+    echo $name_final
+  }
+
+  export HAS_NV_SMI=1
 fi
 
 # OSX-specific aliases for my mac
@@ -122,44 +137,33 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     }
 fi
 
-
 # SSH-Agent (from scripts/)
 alias sagent='source sagent'
-#source sagent
-if [[ $(hostname) != *"hyperplane"* ]] && [[ $(hostname) != *"scalar"* ]]; then
-    # Don't start ssh agent on compute nodes
+
+# Login vs compute node rules
+# Login nodes should automatically try and set up an ssh agent; compute nodes shouldn't.
+# Compute nodes should try and find conda and other such tools, not login nodes.
+if [[ -z $SLURM_JOB_ID ]]; then
+    # Start/attach to existing ssh agent
     source sagent
+else
+  # Attempt to load anaconda on compute nodes only
+  source cnda
 fi
 
-# Anaconda initializer (from scripts/)
-if [[ "$OSTYPE" == "linux-gnu"* ]] && [[ $(hostname) != *"login"* ]]; then
-    # I only use anaconda on linux compute nodes.
-    source cnda
-fi
-
-# Modules (cluster only)
-###if [[ $(hostname) == "lambda-"* ]]; then
-### Checking based on availability
-### Hostname is a terrible way of doing that, because even lambda test drive
-### machines are named lambda-xxx.
+# Modules
 if [[ -f /etc/profile.d/modules.sh ]]; then
     source /etc/profile.d/modules.sh
     # Slurm
     if [[ "$(module avail)" == *"slurm"* ]]; then
         module load slurm
     fi
-    # CUDA
-    if [[ "$(module avail)" == *"cuda11.7"* ]]; then
-        module load cuda11.7
-    fi 
+
     # Bright cluster manager shell
     if [[ "$(module avail)" == *"cmsh"* ]]; then
         module load cmsh
     fi
 fi
-
-# Force NCCL to use IPV4
-# export NCCL_SOCKET_FAMILY="AF_INET"
 
 # Custom wandb tmp directory
 MY_WANDB_DIR="$HOME/.tmp/wandb/"
@@ -239,13 +243,6 @@ vicd() {
 smux () {
     ssh -t ${@} 'bash -c "tmux a || tmux"'
 }
-
-## OSX-specific env variables
-#if [[ "$OSTYPE" == "darwin"* ]]; then
-#    # DBUS env variable
-#    # This is just so that vimtex can communicate with zathura through dbus
-#    export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
-#fi
 
 # NVIDIA Bug report
 ## Handy function when I want to grab logs related to GPU issues quickly

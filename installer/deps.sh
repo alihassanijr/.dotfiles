@@ -85,15 +85,18 @@ ensure_gettext() {
 # Git
 source installer/dependencies/git.sh
 ensure_git() {
-  if [[ "$OSTYPE" != "darwin"* ]]; then
-    # Apparently there is such a thing as an old git build
-    # I.e. they don't automatically add your ssh ids to agent.
-    # I'm not worried about mac, because git has always been
-    # up to date. But I'm more worried about all of git's build
-    # dependencies, and dealing with those on mac is like carving
-    # a glazed ham with a plastic knife.
-    check_and_install_dependency "git" "$LOCALDIR/bin/git" "install_git"
-  fi
+  # Don't build git from source yet;
+  # TODO: figure out HTTPS remote cloning issue
+  check_hard_dependency "git"
+  #if [[ "$OSTYPE" != "darwin"* ]]; then
+  #  # Apparently there is such a thing as an old git build
+  #  # I.e. they don't automatically add your ssh ids to agent.
+  #  # I'm not worried about mac, because git has always been
+  #  # up to date. But I'm more worried about all of git's build
+  #  # dependencies, and dealing with those on mac is like carving
+  #  # a glazed ham with a plastic knife.
+  #  check_and_install_dependency "git" "$LOCALDIR/bin/git" "install_git"
+  #fi
 }
 
 # Git-lfs
@@ -139,11 +142,10 @@ ensure_ncurses() {
   check_and_install_dependency "ncurses" "$NCDIR/bin/ncursesw6-config" "install_ncurses"
 }
 
-# Oh-My-ZSH
-source installer/dependencies/oh-my-zsh.sh
-ensure_oh_my_zsh() {
-  check_and_install_dependency "Oh My ZSH" "$HOMEDIR/.oh-my-zsh/oh-my-zsh.sh" "install_oh_my_zsh"
-  configure_dependency "oh_my_zsh" "configure_oh_my_zsh"
+# perl
+source installer/dependencies/perl.sh
+ensure_perl() {
+  check_and_install_dependency "perl" "$LOCALDIR/bin/perl" "install_perl"
 }
 
 # pkg-config
@@ -162,8 +164,8 @@ ensure_rg() {
 source installer/dependencies/tmux.sh
 ensure_tmux() {
   #if [[ $IS_PERSONAL -eq 0 ]]; then
-    # check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
-    check_and_install_hard_dependency "tmux" "install_tmux"
+    check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
+    # check_and_install_hard_dependency "tmux" "install_tmux"
     configure_dependency "tmux" "configure_tmux"
   #fi
 }
@@ -213,6 +215,11 @@ ensure_zathura() {
 # ZSH
 source installer/dependencies/zsh.sh
 ensure_zsh() {
-  check_hard_dependency "zsh"
-  configure_dependency "zsh" "configure_zsh"
+  # TODO: zsh builds on mac, but it just hangs.
+  if [[ $IS_PERSONAL -eq 0 ]]; then
+    #check_hard_dependency "zsh"
+    echo "WARNING: try to build ZSH ONLY if your system ZSH is too old for this config."
+    check_and_install_dependency "zsh" "$LOCALDIR/bin/zsh" "install_zsh"
+    configure_dependency "zsh" "configure_zsh"
+  fi
 }

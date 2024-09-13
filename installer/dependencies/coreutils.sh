@@ -13,6 +13,9 @@ install_coreutils() {
   rm -rf $TMPDIR
   mkdir -p $TMPDIR
   
+  if [[ -d "$LOCALDIR/lib/perl5/" ]]; then
+    export PERL5LIB=$LOCALDIR/lib/perl5/
+  fi
   cd $TMPDIR && \
     wget $PACKAGEURL -O $PACKAGETARNAME && \
     tar -xf $PACKAGETARNAME && \

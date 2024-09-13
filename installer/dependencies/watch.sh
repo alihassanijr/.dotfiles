@@ -14,7 +14,7 @@ install_watch() {
 
   cd $TMPDIR && \
       wget $PACKAGEURL -O $PACKAGETARNAME && \
-      tar -xzf $PACKAGETARNAME && \
+      tar -xf $PACKAGETARNAME && \
       rm $PACKAGETARNAME && \
       cd $PACKAGEDIRNAME && \
       ./configure \

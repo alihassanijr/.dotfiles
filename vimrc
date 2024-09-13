@@ -32,8 +32,7 @@ set cursorcolumn                                        " Column highlighting
 set background=dark                                     " Dark mode
 set t_Co=256
 set termguicolors
-let g:monokai_pro_highlight_active_window = 1           "
-colorscheme monokai-pro                                 " Color Scheme (in ~/.vim/colors)
+colorscheme ghdark                                       " Color Scheme (in ~/.vim/colors)
 
 set mouse=a                                             " Mouse support for people that can't use vim
 
@@ -59,13 +58,13 @@ let g:polyglot_disabled = ["autoindent"]
 "autocmd FileType vim,lua,nginx set shiftwidth=2 softtabstop=2
 " Custom tab width for C/CPP/CUDA
 "autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx,*.hxx,*.metal set shiftwidth=2 softtabstop=2
-autocmd BufRead,BufEnter,BufNewFile *.metal set syntax=cpp
+"autocmd BufRead,BufEnter,BufNewFile *.metal set syntax=cpp
 " Makefile forces tabs not spaces
-autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
+autocmd FileType makefile setlocal noexpandtab
 " Custom tab width for Markdown
 "autocmd BufRead,BufEnter *.md set shiftwidth=2 softtabstop=2 expandtab
 " Disable cursor line and column for .tex files
-autocmd BufRead,BufEnter,BufNewFile *.tex set nocursorline nocursorcolumn
+"autocmd BufRead,BufEnter,BufNewFile *.tex set nocursorline nocursorcolumn
 
 set backspace=indent,eol,start                          " backspace works through indents, end of line, etc
 
@@ -116,7 +115,10 @@ nnoremap <C-J> i<CR><ESC>
 nnoremap <silent> <Space> :silent noh<Bar>echo<CR>
 
 """""""""""""" Helpers """""""""""""
+:command -nargs=* Q q <args>
+:command -nargs=* Qall qall <args>
 :command -nargs=* Tabnew tabnew <args>
+:command -nargs=* Tab tab <args>
 :command -nargs=* Tabm tabm <args>
 :command -nargs=* Bd bd <args>
 :command -nargs=* Vsp vsp <args>
@@ -126,7 +128,7 @@ nnoremap <silent> <Space> :silent noh<Bar>echo<CR>
 " Lightline
 set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'monokai_pro',
+      \ 'colorscheme': 'ghdark',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]

@@ -1,18 +1,18 @@
 [colors.cursor]
-cursor = "#7bd88f"
+cursor = "#77bdfb"
 text = "CellBackground"
 
 [colors.search.focused_match]
-background = "#ab9df2"
+background = "#cea5fb"
 foreground = "#000000"
 
 [colors.search.matches]
-background = "#ffd866"
+background = "#7ce38b"
 foreground = "#000000"
 
 [colors.vi_mode_cursor]
-cursor = "#a9dc76"
-text = "#2d2a2e"
+cursor = "#a2d2fb"
+text = "#161b22"
 
 [env]
 TERM = "xterm-256color"
@@ -91,7 +91,7 @@ decorations = "full"
 dynamic_title = false
 opacity = 0.95
 option_as_alt = "None"
-title = "Alacritty"
+title = "Terminal"
 
 [window.dimensions]
 columns = 255

@@ -2,42 +2,55 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="agnoster"
+source ~/.commonrc
 
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+# Mini oh my zsh
+source ~/.config/zsh/mini-omz/mini-omz.sh
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    # Mac
-    plugins=(history-substring-search colored-man-pages macos zsh-autosuggestions zsh-syntax-highlighting)
+# (Customized) Agnoster theme
+source ~/.config/zsh/mini-omz/themes/agnoster.zsh-theme
+if [[ $HAS_NV_SMI = 1 ]]; then
+  # Show GPU name in prompt line when on compute node
+  source ~/.config/zsh/zsh-agnoster-compute-node.sh
 else
-    # Linux Plugins
-    plugins=(history-substring-search colored-man-pages zsh-autosuggestions zsh-syntax-highlighting)
+  source ~/.config/zsh/zsh-agnoster-custom.sh
 fi
 
+# Plugins
+source ~/.config/zsh/mini-omz/plugins/colored-man-pages/colored-man-pages.plugin.zsh
 
-source $ZSH/oh-my-zsh.sh
+source ~/.config/zsh/mini-omz/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+source ~/.config/zsh/mini-omz/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+source ~/.config/zsh/mini-omz/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.config/zsh/zsh-syntax-highlighting-custom-colors.sh
+
+# FZF
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
-HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
+
+if [[ -n $HISTFILE_OVERRIDE ]]; then
+  HISTFILE=$HISTFILE_OVERRIDE
+else
+  HISTFILE=~/.histfile
+fi
+
+HISTSIZE=10000
+SAVEHIST=10000
 setopt appendhistory autocd
 #bindkey -v
+
 # Enable history search with up/down keys
 autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 [[ -n "$key[Up]" ]] && bindkey -- "$key[Up]" up-line-or-beginning-search
 [[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
-# End of lines configured by zsh-newuser-install
+
+# TODO: unused?
 # The following lines were added by compinstall
 zstyle :compinstall filename "$HOME/.zshrc"
 autoload -Uz compinit
@@ -45,17 +58,8 @@ compinit
 # End of lines added by compinstall
 
 
-source ~/.commonrc
-
 if [[ "$OSTYPE" == "darwin"* ]]; then
     export TERM=alacritty
 else
     export TERM=xterm-256color
 fi
-
-# FZF
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# Syntax colors
-source ~/.config/zsh/zsh-syntax-highlighting.sh
-source ~/.config/zsh/zsh-agnoster-custom.sh
