@@ -2,19 +2,8 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-source ~/.commonrc
-
 # Mini oh my zsh
 source ~/.config/zsh/mini-omz/mini-omz.sh
-
-# (Customized) Agnoster theme
-source ~/.config/zsh/mini-omz/themes/agnoster.zsh-theme
-if [[ $HAS_NV_SMI = 1 ]]; then
-  # Show GPU name in prompt line when on compute node
-  source ~/.config/zsh/zsh-agnoster-compute-node.sh
-else
-  source ~/.config/zsh/zsh-agnoster-custom.sh
-fi
 
 # Plugins
 source ~/.config/zsh/mini-omz/plugins/colored-man-pages/colored-man-pages.plugin.zsh
@@ -57,6 +46,17 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
+
+source ~/.commonrc
+
+# (Customized) Agnoster theme
+source ~/.config/zsh/mini-omz/themes/agnoster.zsh-theme
+if [[ $HAS_NV_SMI = 1 ]]; then
+  # Show GPU name in prompt line when on compute node
+  source ~/.config/zsh/zsh-agnoster-compute-node.sh
+else
+  source ~/.config/zsh/zsh-agnoster-custom.sh
+fi
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     export TERM=alacritty
