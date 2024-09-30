@@ -146,8 +146,9 @@ alias sagent='source sagent'
 if [[ -z $SLURM_JOB_ID ]]; then
     # Start/attach to existing ssh agent
     source sagent
-else
-  # Attempt to load anaconda on compute nodes only
+fi
+# Attempt to load anaconda on compute nodes only
+if [[ $HAS_NV_SMI = 1 ]]; then
   source cnda
 fi
 
