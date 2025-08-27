@@ -51,4 +51,7 @@ configure_vim() {
 
     # Separate directory to hold persistent undo history
     mkdir -p $HOMEDIR/.vimfiles/undodir
+
+    # Swap dir
+    mkdir -p $HOMEDIR/.vimfiles/swapdir
 }

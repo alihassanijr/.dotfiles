@@ -2,10 +2,6 @@
 """""""""""""""""""""""""""""" Ali's Vim Config """""""""""""""""""""""""""""""
 """"""""" Started off https://github.com/stevenwalton/.dotfiles """""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"set langmenu=en_US
-"let $LANG = 'en_US'
-"set encoding=utf-8  " The encoding displayed.
-"set fileencoding=utf-8  " The encoding written to file.
 
 
 " Color scheme and related settings
@@ -20,10 +16,6 @@ if g:os != 'Darwin'
   " And I of course can't override the environment variable because then
   " all hell breaks loose.
   let $TERM = "xterm-direct"                              " Uhhhh Vifm!
-  "let &t_8f = "\e[38:2:%lu:%lu:%lum"
-  "let &t_8b = "\e[48:2:%lu:%lu:%lum"
-  "let &t_RF = "\e]10;?\e\\"
-  "let &t_RB = "\e]11;?\e\\"
 endif
 
 
@@ -32,7 +24,7 @@ set cursorcolumn                                        " Column highlighting
 set background=dark                                     " Dark mode
 set t_Co=256
 set termguicolors
-colorscheme ghdark                                       " Color Scheme (in ~/.vim/colors)
+colorscheme ghdark                                      " Color Scheme (in ~/.vim/colors)
 
 set mouse=a                                             " Mouse support for people that can't use vim
 
@@ -43,6 +35,7 @@ set wildmenu                                            " wildmenu buffer, auto 
 
 " Indenting
 set autoindent                                          " Auto indent
+
 " No indenting on # mark 
 set cindent                                             " Uses C indenting rules (spaces)
 set cinkeys-=0#
@@ -52,19 +45,9 @@ set expandtab                                           " Spaces and not tabs
 set smarttab                                            " Tries to figure out when to tab
 set shiftwidth=2                                        " Tab width 
 set softtabstop=2
-let g:polyglot_disabled = ["autoindent"]
 
-"" Custom tab width for vim/lua/nginx files
-"autocmd FileType vim,lua,nginx set shiftwidth=2 softtabstop=2
-" Custom tab width for C/CPP/CUDA
-"autocmd BufRead,BufEnter *.c,*.h,*.cpp,*.hpp,*.cu,*.cuh,*.cxx,*.hxx,*.metal set shiftwidth=2 softtabstop=2
-"autocmd BufRead,BufEnter,BufNewFile *.metal set syntax=cpp
 " Makefile forces tabs not spaces
 autocmd FileType makefile setlocal noexpandtab
-" Custom tab width for Markdown
-"autocmd BufRead,BufEnter *.md set shiftwidth=2 softtabstop=2 expandtab
-" Disable cursor line and column for .tex files
-"autocmd BufRead,BufEnter,BufNewFile *.tex set nocursorline nocursorcolumn
 
 set backspace=indent,eol,start                          " backspace works through indents, end of line, etc
 
@@ -75,12 +58,12 @@ set scrolloff=5                                         " Keep at lease 5 lines 
 set colorcolumn=100                                     " Vertical white bar at 100 chars
 set tw=100                                              " Line wrapping
 
-"Error bells.  All are off
+" Disable all error bells
 set noerrorbells                                        " Removes error bells
 set novisualbell                                        " Removes visual bells
 set t_vb=                                               " Sets visual bell
 
-"searching
+" Searching
 set incsearch                                           " Search command while typing
 set hlsearch                                            " Highlights all misspelled words
 set showmatch                                           " Shows matching brackets
@@ -88,21 +71,21 @@ set ignorecase                                          " ignore case. Same as /
 set smartcase                                           " for searching
 set matchpairs+=<:>                                     " match angle brackets
 
-"Splitting
+" Splitting
 set splitright                                          " Puts new window to right of current (vsplit)
 set splitbelow                                          " Same but below (split)
 
-" Undo history
+" Persistent undo history
 set undofile                                            " Enables persistent undo files
 set undodir=$HOME/.vimfiles/undodir                     " Sets the path to undo files (installer ensures it exists)
 
-"" Ctags
-"set tags="./.tags,../.tags,~/.tags"
+" Swap dir
+set directory=$HOME/.vimfiles/swapdir//                 " Sets swap directory path
 
 " Markdown
 syn match markdownIgnore "\$.*_.*\$"                    " Doesn't highlight _ while in latex
 
-"Spell checking
+" Spell checking
 " Pressing \ss will toggle and untoggle spell checking
 syntax spell toplevel                                   " Spell check fixing for tex
 map <leader>ss :setlocal spell!<cr>
@@ -111,10 +94,13 @@ set spell spelllang=en_us
 
 " Line break on Ctrl + J
 nnoremap <C-J> i<CR><ESC>
+
 " Silence on space
 nnoremap <silent> <Space> :silent noh<Bar>echo<CR>
 
-"""""""""""""" Helpers """""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""
+""" shift delay helpers
+"""""""""""""""""""""""""""""""""""""""""""""""""
 :command -nargs=* Q q <args>
 :command -nargs=* Qall qall <args>
 :command -nargs=* Tabnew tabnew <args>
@@ -123,9 +109,21 @@ nnoremap <silent> <Space> :silent noh<Bar>echo<CR>
 :command -nargs=* Bd bd <args>
 :command -nargs=* Vsp vsp <args>
 
-"""""""""""""" Plugins """"""""""""""
 
+""""""""""""""""""""""""""""""""""" PLUGINS AND THEIR SETTINGS """"""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+""" Polyglot: extended syntax highlighting
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" Polyglot's auto-indent breaks a lot of things for me; vim + formatting tools is enough!
+" CSV formatting is also disabled; it is ANNOYING!!!
+let g:polyglot_disabled = ["autoindent", "csv"]
+"-------------------------------------------------
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
 " Lightline
+"""""""""""""""""""""""""""""""""""""""""""""""""
 set laststatus=2
 let g:lightline = {
       \ 'colorscheme': 'ghdark',
@@ -140,55 +138,63 @@ let g:lightline = {
       \   'filename': '%n:%t'
       \ },
       \ }
+"-------------------------------------------------
 
-" Vifm.vim
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" Vifm: vim file manager
+"""""""""""""""""""""""""""""""""""""""""""""""""
 map <leader>vv :Vifm .<cr>
 map <leader>vs :VsplitVifm .<cr>
 map <leader>sp :SplitVifm .<cr>
 map <leader>dv :DiffVifm .<cr>
 map <leader>tv :TabVifm .<cr>
+"-------------------------------------------------
 
-" Terminal
-map <leader>vt :vert term<cr>
-map <leader>st :term<cr>
-
-" Vim wiki
-set nocompatible
-filetype plugin on
-let g:vimwiki_list = [{'path': '~/.aliswiki/', 
-    \ 'name': 'Ali`s Wiki', 
-    \ 'path_html': '~/wiki/', 
-    \ 'auto_export': 1, 
-    \ 'auto_toc': 1}]
-map <leader>we :VimwikiTOC<cr>
-
+"""""""""""""""""""""""""""""""""""""""""""""""""
 " Git gutter
+"""""""""""""""""""""""""""""""""""""""""""""""""
 set updatetime=100
+"-------------------------------------------------
 
-" FZF
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" FZF: Fuzzy finder
+"""""""""""""""""""""""""""""""""""""""""""""""""
 set rtp+=~/.fzf
+"-------------------------------------------------
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+""" Goyo: focus mode
+"""""""""""""""""""""""""""""""""""""""""""""""""
+let g:goyo_linenr = 1
+let g:goyo_width = "60%"
+let g:goyo_height = "100%"
+
+map <leader>gg :Goyo<cr>
+
+"-------------------------------------------------
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" Limelight: enhanced focus
+"""""""""""""""""""""""""""""""""""""""""""""""""
+let g:limelight_default_coefficient = 0.7
+
+map <leader>ge :Limelight!!<cr>
+"-------------------------------------------------
 
 
-" Plugins I use on mac only
-" macunix won't work because I'm building vim from source without the darwin flag.
-"if has('macunix')
+"""""""""""""""""""""""""""""""""" MAC / PERSONAL DEVICE PLUGINS """"""""""""""""""""""""""""""""""
+
 if g:os == 'Darwin'
-  " " Vim Markdown
-  " packadd vim-markdown-preview
-  " let vim_markdown_preview_github=1
-  " let vim_markdown_preview_toggle=1
-  " let vim_markdown_preview_browser='Firefox'
-
+  """""""""""""""""""""""""""""""""""""""""""""""""
   " VimTeX
+  """""""""""""""""""""""""""""""""""""""""""""""""
   packadd vimtex
   filetype plugin indent on
   let g:vimtex_view_method = 'zathura'
 
-  "" Back to VimTex
-  "" Disable matchparen because it slows stuff down
+  " Disable matchparen because it slows stuff down
   let g:vimtex_matchparen_enabled = 0
   let loaded_matchparen = 1
-
 
   let g:vimtex_compiler_latexmk = {
       \ 'build_dir' : '',
@@ -199,35 +205,65 @@ if g:os == 'Darwin'
       \ 'options' : [
       \   '-verbose',
       \   '-file-line-error',
+      \   '-shell-escape',
       \   '-synctex=1',
       \ ],
         \}
+  "-------------------------------------------------
 endif
 
-"" Toggles cursorline -- slow for some reason in certain files (i.e. tex)
+
+"""""""""""""""""""""""""""""""""" NON-PLUGIN / PERSONAL SETTINGS """"""""""""""""""""""""""""""""""
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+""" Cursor line toggle
+"""""""""""""""""""""""""""""""""""""""""""""""""
+""" Poor connections, slow system, and many other reasons why
+""" I sometimes need to disable the cursor line highlights.
+""" It can get annoying because the setting is not global.
+"""
+""" Solution: use a global variable, g:cursorline_enabled, to
+""" track, when <leader>cc, toggle, and on WinEnter/BufEnter,
+""" check the global variable and apply the appropriate settings.
+
 let g:cursorline_enabled = 1
+
+" Toggle cursorlines for the CURRENT buffer, and set global variable
 function! ToggleCursorLine()
 if g:cursorline_enabled
     let g:cursorline_enabled = 0
+
+    set nocursorline
+    set nocursorcolumn
+
+    echom "Cursor line is DISABLED"
+else
+    let g:cursorline_enabled = 1
+
+    set cursorline
+    set cursorcolumn
+
+    echom "Cursor line is ENABLED"
+
+endif
+endfunction
+
+" Check global variable and apply the appropriate settings
+function! CheckCursorLineStatus()
+if !g:cursorline_enabled
     set nocursorline
     set nocursorcolumn
 else
-    let g:cursorline_enabled = 1
     set cursorline
     set cursorcolumn
 endif
 endfunction
+
+" On switching windows/buffers, CheckCursorLineStatus
+autocmd WinEnter,BufEnter * call CheckCursorLineStatus()
+
+" Key mapping: \cc
 map <leader>cc :call ToggleCursorLine()<cr>
 
-" Goyo: focus mode
-" \gg
-let g:goyo_linenr = 1
-let g:goyo_width = "60%"
-let g:goyo_height = "100%"
-map <leader>gg :Goyo<cr>
-
-" Limelight
-" Enhanced focus
-" \gl
-let g:limelight_default_coefficient = 0.7
-map <leader>ge :Limelight!!<cr>
+"-------------------------------------------------

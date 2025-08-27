@@ -7,9 +7,21 @@ if [[ -f $HOME/.base16colors ]]; then
     source $HOME/.base16colors
 fi
 
-# If cuda isn't already loaded
-if [[ "$OSTYPE" == "linux-gnu"* ]] && [[ -f "$(which nvidia-smi)" ]] && [[ ! -f "$(which nvcc)" ]]; then
+# Checks if a command / program exists
+function command_exists() {
+  command -v $1 >/dev/null 2>&1
+}
+
+# Try to look for CTK on linux devices
+if [[ "$OSTYPE" == "linux-gnu"* ]] && ! command_exists nvidia-smi && ! command_exists nvcc; then
     CUDA_PATHS=( 
+        "/usr/local/cuda-13.0"
+        "/usr/local/cuda-12.9"
+        "/usr/local/cuda-12.8"
+        "/usr/local/cuda-12.7"
+        "/usr/local/cuda-12.6"
+        "/usr/local/cuda-12.5"
+        "/usr/local/cuda-12.4"
         "/usr/local/cuda-12.3"
         "/usr/local/cuda-12.2"
         "/usr/local/cuda"
@@ -53,13 +65,13 @@ export LS_COLORS="$(cat ~/.lscolors)"
 ##########
 
 # Replace ls with lsd
-if [[ -f "$(which lsd)" ]]; then
+if command_exists lsd ; then
     alias ls="lsd --group-directories-first --color=auto"
     alias lc="lsd --group-directories-first -lh --color=auto"
     alias la='lsd --group-directories-first -lah --color=auto'
     alias lm='lsd --group-directories-first -lah --sort modified --color=auto'
     alias ll='lsd --group-directories-first -lah --sort size --color=auto'
-elif [[ -f "$(which exa)" ]]; then
+elif command_exists exa ; then
     alias ls="exa --color=auto"
     alias lc="exa -lh --color=auto"
     alias la='exa -lah -s name --color=auto'
@@ -82,9 +94,10 @@ mux () {
 }
 
 # Show nvidia gpus, their archtag, and memory
-if [[ -f "$(which nvidia-smi)" ]]; then
+if command_exists nvidia-smi ; then
+
   nv-arch () {
-      nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
+    nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
   }
 
   nv-name () {
@@ -102,20 +115,19 @@ if [[ -f "$(which nvidia-smi)" ]]; then
   export HAS_NV_SMI=1
 fi
 
+# Load homebrew (if available)
+if [[ -d $HOME/.brew ]]; then
+  export PATH="$HOME/.brew/bin:$HOME/.brew/sbin:$PATH"
+fi
+
 # OSX-specific aliases for my mac
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    if [[ -d $HOME/.brew ]]; then
-        export PATH="$HOME/.brew/bin:$HOME/.brew/sbin:$PATH"
-    fi
 
-    # Zathura in background
+    # Zathura, without taking over the terminal
     zat () {
-        zathura --page=1 "$@" > /dev/null 2>&1 &
+      zathura --page=1 "$@" > /dev/null 2>&1 &
     }
 
-    ## Replace the mac sed with GNU sed:
-    #alias sed="gsed"
-    
     # GUI applications
     alias zoom="open -a zoom.us"
     alias spotify="open -a Spotify"
@@ -124,17 +136,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     alias amph="open -a Amphetamine -g"
     alias finder="open ~/Documents"
 
-    # Vimwiki markdown to original markdown converter
-    w2md () {
-        if [[ -f ~/.vimwiki2md ]]; then
-            srcf=$1
-            srcfmd=$(echo $srcf|sed -e "s/\.wiki$/.md/")
-            destf=${2:-srcfmd}
-            sed -f ~/.vimwiki2md $srcf > $destf
-        else
-            echo "Conversion from vimwiki markdown to md failed! ~/.vimwiki2md not found."
-        fi
-    }
 fi
 
 # SSH-Agent (from scripts/)
@@ -218,12 +219,12 @@ anywait(){
     fi
 }
 
-# My go-to rsync with deletion
+# My go-to rsync with replacement
 ry () {
     rsync -a -H -x -v --numeric-ids --delete --progress -e "ssh -T -o Compression=no -x" $1 $2
 }
 
-# My go-to rsync WITHOUT deletion
+# My go-to rsync WITHOUT replacement
 rys () {
     rsync -a -H -x -v --numeric-ids --ignore-existing --progress -e "ssh -T -o Compression=no -x" $1 $2
 }
@@ -246,8 +247,7 @@ smux () {
 }
 
 # NVIDIA Bug report
-## Handy function when I want to grab logs related to GPU issues quickly
-## and send over to Lambda.
+## Handy function when I want to grab logs related to GPU issues quickly.
 if [[ -f /usr/bin/nvidia-bug-report.sh ]]; then
     nvb () {
         dts=$(date +"%Y%m%d-%H%M%S")
@@ -264,77 +264,7 @@ diffs () {
     diff -u $1 $2 | diff-so-fancy | less
 }
 
-# Google Drive downloader
-# Download locally and rsync to remote no more!
-# Thanks Minchul!
-dget () {
-    drive_url_to_id () {
-        local URL=$1
-        local FILE_ID=${URL#*google.com/}
-        FILE_ID=${FILE_ID#*file\/d\/}
-        FILE_ID=${FILE_ID#*file\/}
-        FILE_ID=${FILE_ID#*files\/}
-        FILE_ID=${FILE_ID#*\?id=}
-        FILE_ID=${FILE_ID/\/view/}
-        echo $FILE_ID
-    }
-    download_from_gdrive() {
-        curl -H "Authorization: Bearer $2" \
-        "https://www.googleapis.com/drive/v3/files/$1?alt=media" -o $3
-    }
-    # Args:
-    if [[ $# -eq 0 ]] || [[ $1 == "--help" ]]; then
-        echo "Google Drive Get (dget)"
-        echo "usage: dget [url | id]"
-        echo "       dget [url | id] [access key]"
-        echo "       dget [url | id] [access key] [output file name]"
-        echo ""
-        echo "       dget https://drive.google.com/file/d/XXXXXX/view"
-        echo ""
-        echo "To get access key, go to https://developers.google.com/oauthplayground/"
-        echo "  and select Drive API v3, then select"
-        echo " \`https://www.googleapis.com/auth/drive.readonly\` and then click "
-        echo " \`Authorize APIs\`, and get to Step 2. Once in step 2, click the blue button"
-        echo " \`Exchange authorization code for tokens\` and you should see your access token"
-        echo " in the JSON shown on the right hand side view."
-    elif [[ $# -eq 1 ]]; then
-        DRIVE_URL=$1
-        FILE_ID=$(drive_url_to_id $DRIVE_URL)
-        echo "Downloading Google Drive file: $DRIVE_URL"
-        echo "ID: $FILE_ID"
-        echo ""
-        echo "Open https://developers.google.com/oauthplayground/"
-        echo "  and select Drive API v3, then select"
-        echo " \`https://www.googleapis.com/auth/drive.readonly\` and then click "
-        echo " \`Authorize APIs\`, and get to Step 2. Once in step 2, click the blue button"
-        echo " \`Exchange authorization code for tokens\` and you should see your access token"
-        echo " in the JSON shown on the right hand side view."
-        echo ""
-        echo "Enter access key: "
-        read DRIVE_ACCESS_KEY
-        echo ""
-        echo "Enter output file name (e.g. file.zip): "
-        read DRIVE_FILENAME
-        download_from_gdrive $FILE_ID $DRIVE_ACCESS_KEY $DRIVE_FILENAME
-    elif [[ $# -eq 1 ]]; then
-        DRIVE_URL=$1
-        FILE_ID=$(drive_url_to_id $DRIVE_URL)
-        DRIVE_ACCESS_KEY=$2
-        echo "Enter output file name (e.g. file.zip): "
-        read DRIVE_FILENAME
-        download_from_gdrive $FILE_ID $DRIVE_ACCESS_KEY $DRIVE_FILENAME
-    elif [[ $# -eq 3 ]]; then
-        DRIVE_URL=$1
-        FILE_ID=$(drive_url_to_id $DRIVE_URL)
-        DRIVE_ACCESS_KEY=$2
-        DRIVE_FILENAME=$3
-        download_from_gdrive $FILE_ID $DRIVE_ACCESS_KEY $DRIVE_FILENAME
-    else
-        echo "Invalid option: $@"
-    fi
-}
-
-
+# TODO: don't assume the system passwd and group files have records of the current user.
 # TODO: clean these up and make it conditional
 # The GPU args only make sense when nvidia-container-toolkit is installed.
 

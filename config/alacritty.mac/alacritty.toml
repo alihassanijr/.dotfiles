@@ -89,12 +89,12 @@ hide_when_typing = false
 [window]
 decorations = "full"
 dynamic_title = false
-opacity = 0.95
+opacity = 0.975
 option_as_alt = "None"
 title = "Terminal"
 
 [window.dimensions]
-columns = 255
+columns = 256
 lines = 75
 
 [window.padding]
