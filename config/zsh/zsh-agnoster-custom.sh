@@ -5,8 +5,8 @@ prompt_context() {
   local user=`whoami`
 
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment "#21262d" white "%(!.%{%F{#ecf2f8}%}.)$user"
-    prompt_segment "#77bdfb" black "%(!.%{%F{#77bdfb}%}.)%m"
+    prompt_segment "#21262d" white "%(!.%{%F{#ffffff}%}.)$user"
+    prompt_segment "#77bdfb" black "%(!.%{%F{#000000}%}.)%m"
   fi
 }
 # Git: branch/detached head, dirty status

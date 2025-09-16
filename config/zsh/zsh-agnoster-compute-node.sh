@@ -6,9 +6,9 @@ prompt_context() {
   local gpu=`nv-name`
 
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment "#21262d" white "%(!.%{%F{#ecf2f8}%}.)$user"
-    prompt_segment "#77bdfb" black "%(!.%{%F{#77bdfb}%}.)%m"
-    prompt_segment "#1e4839" white "%(!.%{%F{#ecf2f8}%}.)$gpu"
+    prompt_segment "#21262d" white "%(!.%{%F{#ffffff}%}.)$user"
+    prompt_segment "#77bdfb" black "%(!.%{%F{#000000}%}.)%m"
+    prompt_segment "#1e4839" white "%(!.%{%F{#ffffff}%}.)$gpu"
   fi
 }
 # Git: branch/detached head, dirty status
