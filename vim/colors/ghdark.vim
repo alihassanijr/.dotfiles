@@ -140,6 +140,8 @@ let s:t_Co = exists('&t_Co') && !empty(&t_Co) && &t_Co > 1 ? &t_Co : 2
 "########################################
 " set the colors
 "
+call s:ghhl("BadSpell", "red", "white", "underline")
+
 call s:ghhl("GhBase0", "base0")
 call s:ghhl("GhBase1", "base1")
 call s:ghhl("GhBase2", "base2")
@@ -278,7 +280,7 @@ hi! link Type GhRed
 """ alih:
 """ Underscore misspelled words, don't ever highlight
 hi! clear SpellBad
-hi! link SpellBad GhRed
+hi! link SpellBad BadSpell
 hi! link SpellCap GhRed
 hi! link SpellLocal GhOrange
 hi! link SpellRare GhOrange

@@ -86,6 +86,14 @@ set directory=$HOME/.vimfiles/swapdir//                 " Sets swap directory pa
 syn match markdownIgnore "\$.*_.*\$"                    " Doesn't highlight _ while in latex
 
 " Spell checking
+
+if filereadable("./vim/spell/en.utf-8.add")
+  set spellfile+=./vim/spell/en.utf-8.add
+  silent! echo "Custom dictionary loaded."
+else
+  silent! echo "No custom dictionary found."
+endif
+
 " Pressing \ss will toggle and untoggle spell checking
 syntax spell toplevel                                   " Spell check fixing for tex
 map <leader>ss :setlocal spell!<cr>
@@ -95,8 +103,10 @@ set spell spelllang=en_us
 " Line break on Ctrl + J
 nnoremap <C-J> i<CR><ESC>
 
-" Silence on space
+" Silence search on space
 nnoremap <silent> <Space> :silent noh<Bar>echo<CR>
+" Clear search on leader + space
+nnoremap <silent> <Leader><Space> :let @/ = "/\b\B"<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""
 """ shift delay helpers
