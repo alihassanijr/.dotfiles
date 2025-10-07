@@ -220,6 +220,6 @@ ensure_zsh() {
     #check_hard_dependency "zsh"
     echo "WARNING: try to build ZSH ONLY if your system ZSH is too old for this config."
     check_and_install_dependency "zsh" "$LOCALDIR/bin/zsh" "install_zsh"
-    configure_dependency "zsh" "configure_zsh"
   fi
+  configure_dependency "zsh" "configure_zsh"
 }
