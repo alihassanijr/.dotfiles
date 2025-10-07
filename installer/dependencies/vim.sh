@@ -24,14 +24,14 @@ install_vim() {
             --with-features=huge                      \
             --enable-terminal                         \
             --enable-multibyte                        \
-            --enable-pythoninterp=dynamic             \
-            --enable-python3interp=dynamic            \
+            --enable-python3interp                    \
             --with-tlib=ncursesw                      \
             --disable-darwin                          \
             --disable-selinux                         \
             --disable-gui                             \
             --disable-netbeans                        \
             --enable-cscope                           \
+            --with-compiledby="Ali Hassani"           \
             --prefix=${LOCALDIR} &&                   \
             make && make install && make clean
         cd $THISDIR
