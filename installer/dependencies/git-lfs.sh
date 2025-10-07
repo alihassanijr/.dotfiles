@@ -1,7 +1,7 @@
 #!/bin/bash
 # Git-lfs installer
 
-GITLFSVER="3.3.0"
+GITLFSVER="3.7.0"
 
 install_git_lfs() {
     local TMPDIR=$THISDIR/tmp
@@ -20,7 +20,7 @@ install_git_lfs() {
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-amd64-v$GITLFSVER.tar.gz"
     elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-arm-v$GITLFSVER.tar.gz"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm64" ]]; then
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-arm64-v$GITLFSVER.tar.gz"
     fi
     if [[ "$GITLFSURL" != "" ]]; then

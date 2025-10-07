@@ -2,7 +2,7 @@
 # Ripgrep (rg) installer
 # RIP, grep!
 
-RGVER="14.1.0"
+RGVER="14.1.1"
 
 install_rg() {
     local TMPDIR=$THISDIR/tmp
@@ -21,6 +21,8 @@ install_rg() {
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-x86_64-unknown-linux-musl.tar.gz"
     elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-arm-unknown-linux-gnueabihf.tar.gz"
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
+        RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-aarch64-unknown-linux-gnu.tar.gz"
     fi
     if [[ "$RGURL" != "" ]]; then
         echo "Fetching static ripgrep"

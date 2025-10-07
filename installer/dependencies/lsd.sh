@@ -2,7 +2,7 @@
 # RIP EXA -- LSD installer
 # Why ls when you can LSD?
 
-LSDVER="v1.0.0"
+LSDVER="v1.1.5"
 
 install_lsd() {
     local TMPDIR=$THISDIR/tmp
@@ -36,6 +36,8 @@ install_lsd() {
         LSDURL="https://github.com/lsd-rs/lsd/releases/download/$LSDVER/lsd-$LSDVER-x86_64-unknown-linux-gnu.tar.gz"
     elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
         LSDURL="https://github.com/lsd-rs/lsd/releases/download/$LSDVER/lsd-$LSDVER-arm-unknown-linux-gnueabihf.tar.gz"
+    elif [[ "$OSTYPE" == "linux"* ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
+        LSDURL="https://github.com/lsd-rs/lsd/releases/download/$LSDVER/lsd-$LSDVER-aarch64-unknown-linux-gnu.tar.gz"
     fi
     if [[ "$LSDURL" != "" ]]; then
         echo "Fetching static LSD binaries"
