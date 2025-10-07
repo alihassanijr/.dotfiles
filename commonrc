@@ -96,23 +96,28 @@ mux () {
 # Show nvidia gpus, their archtag, and memory
 if command_exists nvidia-smi ; then
 
-  nv-arch () {
-    nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
-  }
+  # TODO: figure out a permanent solution for this
+  # apparently some new clusters can have the nvidia-smi binary in the login node
+  if [[ $(hostname) != *"login"* ]]; then
 
-  nv-name () {
-    full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
-    name_tmp=${full_name//NVIDIA/}
-    name_tmp=${name_tmp//Tesla/}
-    name_tmp=${name_tmp//Ampere/}
-    name_tmp=${name_tmp//GeForce/}
-    name_tmp=${name_tmp//RTX/}
-    name_tmp=${name_tmp// /}
-    name_final=${name_tmp:0:8}
-    echo $name_final
-  }
+    nv-arch () {
+      nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
+    }
 
-  export HAS_NV_SMI=1
+    nv-name () {
+      full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
+      name_tmp=${full_name//NVIDIA/}
+      name_tmp=${name_tmp//Tesla/}
+      name_tmp=${name_tmp//Ampere/}
+      name_tmp=${name_tmp//GeForce/}
+      name_tmp=${name_tmp//RTX/}
+      name_tmp=${name_tmp// /}
+      name_final=${name_tmp:0:8}
+      echo $name_final
+    }
+
+    export HAS_NV_SMI=1
+  fi
 fi
 
 # Load homebrew (if available)
