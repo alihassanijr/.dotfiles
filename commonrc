@@ -1,6 +1,11 @@
 # Common rc
 # Things I want in both bash and zsh, because I don't necessarily use zsh all the time.
 
+
+#####################
+# Paths and rules
+#####################
+
 # Base16 colors
 # Credit: https://github.com/chriskempson/base16-shell
 if [[ -f $HOME/.base16colors ]]; then
@@ -46,6 +51,11 @@ if [[ -d "$HOME/.local/extras/coreutils" ]]; then
   export MANPATH=$HOME/.local/extras/coreutils/man:$MANPATH
 fi
 
+# Load homebrew (if available)
+if [[ -d $HOME/.brew ]]; then
+  export PATH="$HOME/.brew/bin:$HOME/.brew/sbin:$PATH"
+fi
+
 # TODO: the perl build is buggy
 if [[ -d "$HOME/.local/lib/perl5/" ]]; then
   export PERL5LIB=$HOME/.local/lib/perl5/
@@ -60,9 +70,26 @@ export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
 # ls color scheme
 export LS_COLORS="$(cat ~/.lscolors)"
 
-##########
+# Login vs compute node rules
+# Login nodes should automatically try and set up an ssh agent; compute nodes shouldn't.
+# Compute nodes should try and find conda and other such tools, not login nodes.
+if [[ -z $SLURM_JOB_ID ]]; then
+    # Start/attach to existing ssh agent
+    source sagent
+fi
+
+# Modules
+if [[ -f /etc/profile.d/modules.sh ]]; then
+    source /etc/profile.d/modules.sh
+    # Slurm
+    if [[ "$(module avail)" == *"slurm"* ]]; then
+        module load slurm
+    fi
+fi
+
+#####################
 # Aliases
-##########
+#####################
 
 # Replace ls with lsd
 if command_exists lsd ; then
@@ -83,9 +110,22 @@ fi
 alias df='df -h'
 # Grep to have color, give line number, don't tell me it can't access restricted files (sudo), and don't process binary files (garbage output ):
 alias grep='grep --color=always --line-number --no-messages --binary-files=without-match'
-
-
+#?
 alias prs='ps -o uid,user,pid,%cpu,%mem,tt,state,start,time,command'
+
+# Who has processes?
+alias whodat='ps haeo user | sort -u'
+
+# IP address lookup
+alias lip="hostname -I | cut -d' ' -f1"
+alias gip="curl -s http://ipinfo.io/ip | cut -d'%' -f1"
+
+# SSH-Agent (from scripts/)
+alias sagent='source sagent'
+
+#####################
+# Functions
+#####################
 
 # Tmux
 # One command to attach to an existing session, or create one if none exist.
@@ -93,9 +133,8 @@ mux () {
     tmux attach $@ || tmux
 }
 
-# Show nvidia gpus, their archtag, and memory
+# NVIDIA driver shortcuts
 if command_exists nvidia-smi ; then
-
   # TODO: figure out a permanent solution for this
   # apparently some new clusters can have the nvidia-smi binary in the login node
   if [[ $(hostname) != *"login"* ]]; then
@@ -120,75 +159,12 @@ if command_exists nvidia-smi ; then
   fi
 fi
 
-# Load homebrew (if available)
-if [[ -d $HOME/.brew ]]; then
-  export PATH="$HOME/.brew/bin:$HOME/.brew/sbin:$PATH"
-fi
-
-# OSX-specific aliases for my mac
-if [[ "$OSTYPE" == "darwin"* ]]; then
-
-    # Zathura, without taking over the terminal
+# Zathura (pdf viewer) shortcut, and without taking over the terminal
+if command_exists zathura ; then
     zat () {
       zathura --page=1 "$@" > /dev/null 2>&1 &
     }
-
-    # GUI applications
-    alias zoom="open -a zoom.us"
-    alias spotify="open -a Spotify"
-    alias slack="open -a Slack"
-    alias settings="open -a System\ Settings"
-    alias amph="open -a Amphetamine -g"
-    alias finder="open ~/Documents"
-
 fi
-
-# SSH-Agent (from scripts/)
-alias sagent='source sagent'
-
-# Login vs compute node rules
-# Login nodes should automatically try and set up an ssh agent; compute nodes shouldn't.
-# Compute nodes should try and find conda and other such tools, not login nodes.
-if [[ -z $SLURM_JOB_ID ]]; then
-    # Start/attach to existing ssh agent
-    source sagent
-fi
-# Attempt to load anaconda on compute nodes only
-if [[ $HAS_NV_SMI = 1 ]]; then
-  source cnda
-fi
-
-# Modules
-if [[ -f /etc/profile.d/modules.sh ]]; then
-    source /etc/profile.d/modules.sh
-    # Slurm
-    if [[ "$(module avail)" == *"slurm"* ]]; then
-        module load slurm
-    fi
-
-    # Bright cluster manager shell
-    if [[ "$(module avail)" == *"cmsh"* ]]; then
-        module load cmsh
-    fi
-fi
-
-# Custom wandb tmp directory
-MY_WANDB_DIR="$HOME/.tmp/wandb/"
-[ ! -d "$MY_WANDB_DIR" ] && mkdir -p $MY_WANDB_DIR
-export WANDB_DIR="$MY_WANDB_DIR"
-
-# Custom ENROOT config path
-MY_ENROOT="$HOME/.enroot"
-export ENROOT_CONFIG_PATH="$MY_ENROOT"
-
-# My functions
-
-# Who has processes?
-alias whodat='ps haeo user | sort -u'
-
-# IP address lookup
-alias lip="hostname -I | cut -d' ' -f1"
-alias gip="curl -s http://ipinfo.io/ip | cut -d'%' -f1"
 
 # Clear out those latex compile files for goodness sake
 cleartex () {
@@ -224,19 +200,17 @@ anywait(){
     fi
 }
 
-# My go-to rsync with replacement
+# Rsync shortcut; with replacement
 ry () {
     rsync -a -H -x -v --numeric-ids --delete --progress -e "ssh -T -o Compression=no -x" $1 $2
 }
 
-# My go-to rsync WITHOUT replacement
+# Rsync shortcut; WITHOUT replacement
 rys () {
     rsync -a -H -x -v --numeric-ids --ignore-existing --progress -e "ssh -T -o Compression=no -x" $1 $2
 }
 
-# I have a custom "vif" to force it to support true color
-# without upsetting zsh
-# Opens vifm and cds into the directory you :q from.
+# Open Vifm, and chdir to where it's closed
 vicd() {
     local dst="$(command vif --choose-dir - "$@")"
     if [ -z "$dst" ]; then
@@ -249,6 +223,11 @@ vicd() {
 # SMUX: SSH and then attach to tmux
 smux () {
     ssh -t ${@} 'bash -c "tmux a || tmux"'
+}
+
+# Diff so fancy shortcut
+diffs () {
+    diff -u $1 $2 | diff-so-fancy | less
 }
 
 # NVIDIA Bug report
@@ -264,15 +243,9 @@ if [[ -f /usr/bin/nvidia-bug-report.sh ]]; then
     }
 fi
 
-# Diff so fancy
-diffs () {
-    diff -u $1 $2 | diff-so-fancy | less
-}
-
 # TODO: don't assume the system passwd and group files have records of the current user.
 # TODO: clean these up and make it conditional
 # The GPU args only make sense when nvidia-container-toolkit is installed.
-
 # Run in docker
 trun () {
     # Arguments:

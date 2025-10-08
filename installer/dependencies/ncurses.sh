@@ -23,6 +23,17 @@ install_ncurses() {
             CFLAGS="-I$NCDIR/include" \
             LIBS="-L$NCDIR/lib" && \
         make && make install
+
+    if [[ "$OSTYPE" != "darwin"* ]]; then
+      # libtinfo is provided by ncurses and has the same api.
+      # Some linux builds fail if they don't resolve libtinfo.so.5
+      # https://bugs.centos.org/view.php?id=11423
+      # https://bugs.launchpad.net/ubuntu/+source/ncurses/+bug/259139
+      # https://github.com/Homebrew/homebrew-core/blob/de082970c864349afb94745a771698c429d89fbf/Formula/n/ncurses.rb#L71C7-L74C70
+      ln -s $NCDIR/lib/libncursesw.so $NCDIR/lib/libtinfo.so
+      ln -s $NCDIR/lib/libtinfo.so $NCDIR/lib/libtinfo.so.5
+    fi
+
     cd $THISDIR
     rm -rf $TMPDIR
 }
