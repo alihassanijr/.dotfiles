@@ -3,7 +3,7 @@
 # Fetches the expected build and dumps it
 # I am tired of the old cmakes and having to use conda whenever I need cutlass.
 
-CMAKEVER="3.25.3"
+CMAKEVER="4.1.0"
 
 install_cmake() {
     local TMPDIR=$THISDIR/tmp

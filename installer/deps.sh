@@ -37,10 +37,10 @@ ensure_bat() {
   configure_dependency "bat" "configure_bat"
 }
 
-# cloudflare
-source installer/dependencies/cloudflare.sh
-ensure_cloudflare() {
-  check_and_install_hard_dependency "cloudflared" "install_cloudflare"
+# clang-format
+source installer/dependencies/clang-format.sh
+ensure_clang_format() {
+  check_and_install_dependency "clang-format" "$LOCALDIR/bin/clang-format" "install_clang_format"
 }
 
 # CMake
@@ -140,12 +140,6 @@ ensure_m4() {
 source installer/dependencies/ncurses.sh
 ensure_ncurses() {
   check_and_install_dependency "ncurses" "$NCDIR/bin/ncursesw6-config" "install_ncurses"
-}
-
-# perl
-source installer/dependencies/perl.sh
-ensure_perl() {
-  check_and_install_dependency "perl" "$LOCALDIR/bin/perl" "install_perl"
 }
 
 # pkg-config
