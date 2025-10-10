@@ -46,7 +46,6 @@ ensure_wget
 ensure_m4
 ensure_autoconf
 ensure_automake
-#ensure_perl
 
 # Curses library
 ensure_ncurses
@@ -58,10 +57,6 @@ ensure_coreutils
 ensure_cmake
 #ensure_git
 ensure_git_lfs
-
-# Cloudflare in case we need to tunnel certain
-# ssh connections.
-ensure_cloudflare
 
 # Everyday
 ensure_clang_format     # formatting
