@@ -43,6 +43,12 @@ ensure_cloudflare() {
   check_and_install_hard_dependency "cloudflared" "install_cloudflare"
 }
 
+# clang-format
+source installer/dependencies/clang-format.sh
+ensure_clang_format() {
+  check_and_install_dependency "clang-format" "$LOCALDIR/bin/clang-format" "install_clang_format"
+}
+
 # CMake
 source installer/dependencies/cmake.sh
 ensure_cmake() {

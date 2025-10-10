@@ -1,9 +1,11 @@
 .PHONY=install
 
+WORKERS ?= 1
+
 all: install
 
 install:
-	./install.sh
+	@NUM_WORKERS=$(WORKERS) ./install.sh
 
 deps-ubuntu:
 	sudo apt-get update -y

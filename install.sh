@@ -2,6 +2,19 @@
 # Installer script
 # Author: Ali Hassani (@alihassanijr)
 
+echo "#====================#"
+echo "#   Ali's dotfiles   #"
+echo "#====================#"
+
+echo "Building dotfiles with $NUM_WORKERS workers"
+
+MAX_JOBS=$(nproc)
+
+if [[ $NUM_WORKERS -gt $MAX_JOBS ]]; then
+  echo "You're exceeding nproc: $NUM_WORKERS > $MAX_JOBS."
+  exit 1
+fi
+
 # Load functions
 source installer/prolog.sh
 if [[ $IS_PERSONAL -eq 1 ]]; then
@@ -51,7 +64,7 @@ ensure_git_lfs
 ensure_cloudflare
 
 # Everyday
-#ensure_kitty            # former terminal emulator (conditional dependency)
+ensure_clang_format     # formatting
 ensure_alacritty        # terminal emulator (conditional dependency)
 ensure_tmux             # window manager (conditional soft dependency)
 ensure_vim              # editor
