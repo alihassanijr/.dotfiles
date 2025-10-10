@@ -1,17 +1,129 @@
-~*
-*.swp
-*.swo
-vim/bundle*
-!vim/bundle/Vundle.vim
-vim/undodir/*
+
+###########################################################################
+# BEGIN ignore patterns for:
+#                                   cmake
+#
+###########################################################################
+
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+#Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+CMakeUserPresets.json
+
+###########################################################################
+# END ignore patterns for:
+#                                   cmake
+#
+###########################################################################
+
+
+###########################################################################
+# BEGIN ignore patterns for:
+#                                    vim
+#
+###########################################################################
+
+# Swap
+[._]*.s[a-v][a-z]
+# comment out the next line if you don't need vector files
+!*.svg
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Session
+Session.vim
+Sessionx.vim
+
+# Temporary
 .netrwhist
-*/.netrwhist
+*~
+# Auto-generated tag files
 tags
-vifm/vifminfo.json
-local/
+# Persistent undo
+[._]*.un~
 
+###########################################################################
+# END ignore patterns for:
+#                                    vim
+#
+###########################################################################
+
+
+###########################################################################
+# BEGIN ignore patterns for:
+#                                   macOS
+#
+###########################################################################
+
+# General
 .DS_Store
+.AppleDouble
+.LSOverride
+Icon[
+]
 
-vim/colors/vim-monokai-tasty.vim
-vim/pack/plugins/start/lightline/autoload/lightline/colorscheme/monokai_tasty.vim
-third_party/vim/lightline/autoload/lightline/colorscheme/monokai_tasty.vim
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+###########################################################################
+# END ignore patterns for:
+#                                   macOS
+#
+###########################################################################
+
+
+###########################################################################
+# BEGIN ignore patterns for:
+#                                   Linux
+#
+###########################################################################
+
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# Metadata left by Dolphin file manager, which comes with KDE Plasma
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+# Log files created by default by the nohup command
+nohup.out
+
+###########################################################################
+# END ignore patterns for:
+#                                   Linux
+#
+###########################################################################
