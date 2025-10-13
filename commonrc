@@ -224,3 +224,8 @@ diffs () {
     diff -u $1 $2 | diff-so-fancy | less
 }
 
+# Last slurm job id
+lsjid() {
+  echo $(sacct -X --format "jobid%50" | tail -n1 | xargs)
+}
+
