@@ -1,6 +1,7 @@
 # Common rc
-# Things I want in both bash and zsh, because I don't necessarily use zsh all the time.
+# Things I want in all shells (specifically bash and zsh)
 
+export LANG=en_US.UTF-8
 
 #####################
 # Paths and rules
@@ -56,11 +57,6 @@ if [[ -d $HOME/.brew ]]; then
   export PATH="$HOME/.brew/bin:$HOME/.brew/sbin:$PATH"
 fi
 
-# TODO: the perl build is buggy
-if [[ -d "$HOME/.local/lib/perl5/" ]]; then
-  export PERL5LIB=$HOME/.local/lib/perl5/
-fi
-
 export LD_LIBRARY_PATH=$HOME/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
@@ -72,7 +68,6 @@ export LS_COLORS="$(cat ~/.lscolors)"
 
 # Login vs compute node rules
 # Login nodes should automatically try and set up an ssh agent; compute nodes shouldn't.
-# Compute nodes should try and find conda and other such tools, not login nodes.
 if [[ -z $SLURM_JOB_ID ]]; then
     # Start/attach to existing ssh agent
     source sagent
@@ -135,27 +130,26 @@ mux () {
 
 # NVIDIA driver shortcuts
 if command_exists nvidia-smi ; then
-  # TODO: figure out a permanent solution for this
-  # apparently some new clusters can have the nvidia-smi binary in the login node
-  if [[ $(hostname) != *"login"* ]]; then
+  nv-arch () {
+    nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
+  }
 
-    nv-arch () {
-      nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
-    }
+  nv-name () {
+    full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
+    name_tmp=${full_name//NVIDIA/}
+    name_tmp=${name_tmp//Tesla/}
+    name_tmp=${name_tmp//Ampere/}
+    name_tmp=${name_tmp//GeForce/}
+    name_tmp=${name_tmp//RTX/}
+    name_tmp=${name_tmp// /}
+    name_final=${name_tmp:0:8}
+    echo $name_final
+  }
 
-    nv-name () {
-      full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
-      name_tmp=${full_name//NVIDIA/}
-      name_tmp=${name_tmp//Tesla/}
-      name_tmp=${name_tmp//Ampere/}
-      name_tmp=${name_tmp//GeForce/}
-      name_tmp=${name_tmp//RTX/}
-      name_tmp=${name_tmp// /}
-      name_final=${name_tmp:0:8}
-      echo $name_final
-    }
-
-    export HAS_NV_SMI=1
+  timeout 1s nvidia-smi --version 2>&1 >> /dev/null
+  export HAS_NV_SMI=$([ "$?" -eq 0 ] && echo 1 || echo 0)
+  if [[ $HAS_NV_SMI = 1 ]]; then
+    export NV_NAME=$(nv-name)
   fi
 fi
 
@@ -230,77 +224,8 @@ diffs () {
     diff -u $1 $2 | diff-so-fancy | less
 }
 
-# NVIDIA Bug report
-## Handy function when I want to grab logs related to GPU issues quickly.
-if [[ -f /usr/bin/nvidia-bug-report.sh ]]; then
-    nvb () {
-        dts=$(date +"%Y%m%d-%H%M%S")
-        nvb_filename="nvidia-bug-report-${dts}.gz"
-        ipmi_filename="ipmitool-${dts}.txt"
-        echo "Storing logs in $nvb_filename and $ipmi_filename"
-        sudo /usr/bin/nvidia-bug-report.sh --output-file $nvb_filename "$@"
-        sudo ipmitool sel elist >> $ipmi_filename
-    }
-fi
-
-# TODO: don't assume the system passwd and group files have records of the current user.
-# TODO: clean these up and make it conditional
-# The GPU args only make sense when nvidia-container-toolkit is installed.
-# Run in docker
-trun () {
-    # Arguments:
-    # 1: image name
-    # 2: command
-
-    UNID="${RANDOM}${RANDOM}${RANDOM}" # random id for temp files
-
-    PREF="$HOME/.tmp/dockerrun/meta/$UNID/" # meta will hold passwd, group, and command script
-    LPREF="$HOME/.tmp/dockerrun/run/$UNID/" # run will hold stdout and stderr log
-    mkdir -p $PREF
-    mkdir -p $LPREF
-    SCR="$LPREF/cmd.sh"
-    LOG="$LPREF/log.txt"
-
-    IMAGE=$1
-    shift
-
-    # Dump chdir and command into script
-    THISDIR=$(pwd)
-    echo "cd $THISDIR" >> $SCR
-    echo "$@" >> $SCR
-    chmod +x ${SCR}
-
-    # Clone group and passwd and ro mount so you run rootless
-    # Opts borrowed from https://github.com/avolkov1/multinode_containers
-    getent group > ${PREF}/group
-    getent passwd > ${PREF}/passwd
-    USEROPT1="-v${PREF}passwd:/etc/passwd:ro"
-    USEROPT2="-v${PREF}group:/etc/group:ro"
-
-    docker run --rm --gpus=all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -u $(id -u):$(id -g) -e HOME=$HOME -e USER=$USER -v /home:/home $USEROPT1 $USEROPT2 ${IMAGE} ${SCR} 2>&1 | tee ${LOG}
+# Last slurm job id
+lsjid() {
+  echo $(sacct -X --format "jobid%50" | tail -n1 | xargs)
 }
 
-# Start interactive terminal in container
-tbash () {
-    # Arguments:
-    # 1: image name
-    UNID="${RANDOM}${RANDOM}${RANDOM}" # random id for temp files
-    PREF="$HOME/.tmp/dockerrun/meta/$UNID/" # meta will hold passwd and group
-    mkdir -p $PREF
-
-    IMAGE=$1
-    shift
-
-    # Command is just bash
-    SCR="/bin/bash"
-
-    # Clone group and passwd and ro mount so you run rootless
-    # Opts borrowed from https://github.com/avolkov1/multinode_containers
-    getent group > ${PREF}/group
-    getent passwd > ${PREF}/passwd
-    USEROPT1="-v${PREF}passwd:/etc/passwd:ro"
-    USEROPT2="-v${PREF}group:/etc/group:ro"
-
-    # Opts borrowed from https://github.com/avolkov1/multinode_containers
-    docker run -it --rm --gpus=all --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 -u $(id -u):$(id -g) -e HOME=$HOME -e USER=$USER -v /home:/home $USEROPT1 $USEROPT2 ${IMAGE} ${SCR}
-}

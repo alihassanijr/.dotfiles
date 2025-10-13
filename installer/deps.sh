@@ -12,12 +12,6 @@ ensure_alacritty() {
   fi
 }
 
-# Aria2
-source installer/dependencies/aria2.sh
-ensure_aria2() {
-  check_and_install_dependency "aria2" "$LOCALDIR/bin/aria2c" "install_aria2"
-}
-
 # Autoconf
 source installer/dependencies/autoconf.sh
 ensure_autoconf() {

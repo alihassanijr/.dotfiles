@@ -46,7 +46,7 @@ check_and_install_hard_dependency() {
   else
       echo "Local $DEP_NAME was not found. It is recommended that you install locally."
       echo "Note: this does not require sudo; just build tools."
-      read -p "Install $DEP_NAME? [y/n]: " -n 1 -r
+      read -p "Install $DEP_NAME? [y/n]: " -r
       echo ""
       if [[ $REPLY =~ ^[Yy]$ ]]
       then
@@ -66,7 +66,7 @@ check_and_install_dependency() {
   else
       echo "Local $DEP_NAME was not found. It is recommended that you install locally."
       echo "Note: this does not require sudo; just build tools."
-      read -p "Install $DEP_NAME? [y/n]: " -n 1 -r
+      read -p "Install $DEP_NAME? [y/n]: " -r
       echo ""
       if [[ $REPLY =~ ^[Yy]$ ]]
       then

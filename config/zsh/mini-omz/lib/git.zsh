@@ -6,7 +6,10 @@
 # We wrap in a local function instead of exporting the variable directly in
 # order to avoid interfering with manually-run git commands by the user.
 function __git_prompt_git() {
-  GIT_OPTIONAL_LOCKS=0 command git "$@"
+  # (ali): timeout limit on ALL git-related stuff
+  # no more slow prompts!
+  OMZ_GIT_TIMEOUT=${OMZ_GIT_TIMEOUT:-1}
+  GIT_OPTIONAL_LOCKS=0 command timeout ${OMZ_GIT_TIMEOUT}s git "$@"
 }
 
 function git_prompt_info() {
@@ -52,7 +55,13 @@ function parse_git_dirty() {
         FLAGS+="--ignore-submodules=${GIT_STATUS_IGNORE_SUBMODULES:-dirty}"
         ;;
     esac
-    STATUS=$(__git_prompt_git status ${FLAGS} 2> /dev/null | tail -n 1)
+    # Grab timeout return code, if timed out, fail early and signal dirty check failed
+    STATUS_p=$(__git_prompt_git status ${FLAGS} 2> /dev/null)
+    exit_status=$?
+    STATUS=$(echo $STATUS_p | tail -n 1)
+    if [[ $exit_status -ne 0 ]]; then
+      return 1
+    fi
   fi
   if [[ -n $STATUS ]]; then
     echo "$ZSH_THEME_GIT_PROMPT_DIRTY"

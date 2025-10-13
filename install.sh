@@ -18,11 +18,12 @@ fi
 # Load functions
 source installer/prolog.sh
 if [[ $IS_PERSONAL -eq 1 ]]; then
-  echo "This is a personal device, is that right? (will attempt to install terminal emulator and pdf viewer.)"
+  echo "This is a GUI device, is that right? (will attempt to install terminal emulator and pdf viewer.)"
 else
-  echo "This is NOT a personal device, is that right? (will skip installing terminal emulator and pdf viewer.)"
+  echo "This is NOT a GUI device, is that right? (will skip installing terminal emulator and pdf viewer.)"
 fi
 read
+
 source installer/utils.sh
 source installer/deps.sh
 source installer/configs.sh
@@ -53,6 +54,7 @@ ensure_gettext
 
 # Utilities
 ensure_coreutils
+ensure_watch            # watch command
 #ensure_make
 ensure_cmake
 #ensure_git
@@ -76,15 +78,10 @@ ensure_htop             # alternative to top
 ensure_rg               # alternative to grep
 ensure_tre              # alternative to tree
 
-# Not as frequently used, but nice to have
-ensure_aria2            # download utility
-ensure_watch            # watch command
-
-# Literally entertainment
+# Entertainment
 ensure_cmatrix
 
-# Do the linking
-
+# Link configs and whatnot
 link_base16colors
 link_lscolors
 link_inputrc
@@ -96,5 +93,8 @@ link_custom_scripts
 # Fix permissions
 chmod -R 700 $LOCALDIR
 chmod -R 700 $NCDIR
+
+# Just for being safe
+chmod -R 700 $HOME/.ssh
 
 echo "Installation complete."
