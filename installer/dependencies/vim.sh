@@ -33,7 +33,9 @@ install_vim() {
             --enable-cscope                           \
             --with-compiledby="Ali Hassani"           \
             --prefix=${LOCALDIR} &&                   \
-            make && make install && make clean
+            make -j$NUM_WORKERS VERBOSE=1 && \
+            make install && \
+            make clean
         cd $THISDIR
     else
         echo "ncurses not found! Vim requires ncurses!"

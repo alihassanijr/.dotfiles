@@ -22,7 +22,8 @@ install_ncurses() {
             --prefix=$NCDIR \
             CFLAGS="-I$NCDIR/include" \
             LIBS="-L$NCDIR/lib" && \
-        make && make install
+        make -j$NUM_WORKERS VERBOSE=1 && \
+        make install
 
     if [[ "$OSTYPE" != "darwin"* ]]; then
       # libtinfo is provided by ncurses and has the same api.

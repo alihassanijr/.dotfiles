@@ -40,8 +40,7 @@ prompt_git() {
 
     # Ref / head name
     ref=$(timeout ${OMZ_GIT_TIMEOUT}s git symbolic-ref HEAD 2> /dev/null) || 
-      ref="➦ $(timeout ${OMZ_GIT_TIMEOUT}s sh -c
-          'git show-ref --head -s --abbrev | head -n1' 2> /dev/null)"
+      ref="➦ $(timeout ${OMZ_GIT_TIMEOUT}s sh -c 'git show-ref --head -s --abbrev | head -n1' 2> /dev/null)"
     exit_status_ref=$?
 
     if [ "$exit_status_ref" -ne 0 ]; then

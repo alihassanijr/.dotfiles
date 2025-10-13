@@ -6,7 +6,11 @@
 install_vifm() {
     if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
         NCARG="--with-curses=$NCDIR --with-curses-name=ncursesw"
-        cd $THISDIR/third_party/vifm/ && autoreconf -f -i && ./configure --prefix=$LOCALDIR $NCARG && make && make install
+        cd $THISDIR/third_party/vifm/ && \
+          autoreconf -f -i && \
+          ./configure --prefix=$LOCALDIR $NCARG && \
+          make -j$NUM_WORKERS VERBOSE=1 && \
+          make install
         cd $THISDIR
     else
         echo "ncurses not found! Vifm requires ncurses!"

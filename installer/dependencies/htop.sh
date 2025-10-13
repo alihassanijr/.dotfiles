@@ -10,8 +10,9 @@ install_htop() {
             LDFLAGS="-L$NCDIR/lib" \
             CPPFLAGS="-I$NCDIR/include" \
             CFLAGS="-I$NCDIR/include" \
-            ./configure --prefix=$LOCALDIR \
-                    && make && make install
+            ./configure --prefix=$LOCALDIR && \
+              make -j$NUM_WORKERS VERBOSE=1 && \
+              make install
         cd $THISDIR
     else
         echo "ncurses not found! Vifm requires ncurses!"
