@@ -1,6 +1,7 @@
 # Common rc
-# Things I want in both bash and zsh, because I don't necessarily use zsh all the time.
+# Things I want in all shells (specifically bash and zsh)
 
+export LANG=en_US.UTF-8
 
 #####################
 # Paths and rules
@@ -129,27 +130,26 @@ mux () {
 
 # NVIDIA driver shortcuts
 if command_exists nvidia-smi ; then
-  # TODO: figure out a permanent solution for this
-  # apparently some new clusters can have the nvidia-smi binary in the login node
-  if [[ $(hostname) != *"login"* ]]; then
+  nv-arch () {
+    nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
+  }
 
-    nv-arch () {
-      nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
-    }
+  nv-name () {
+    full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
+    name_tmp=${full_name//NVIDIA/}
+    name_tmp=${name_tmp//Tesla/}
+    name_tmp=${name_tmp//Ampere/}
+    name_tmp=${name_tmp//GeForce/}
+    name_tmp=${name_tmp//RTX/}
+    name_tmp=${name_tmp// /}
+    name_final=${name_tmp:0:8}
+    echo $name_final
+  }
 
-    nv-name () {
-      full_name=$(nvidia-smi -i 0 --query-gpu=gpu_name --format=csv,noheader)
-      name_tmp=${full_name//NVIDIA/}
-      name_tmp=${name_tmp//Tesla/}
-      name_tmp=${name_tmp//Ampere/}
-      name_tmp=${name_tmp//GeForce/}
-      name_tmp=${name_tmp//RTX/}
-      name_tmp=${name_tmp// /}
-      name_final=${name_tmp:0:8}
-      echo $name_final
-    }
-
-    export HAS_NV_SMI=1
+  timeout 1s nvidia-smi --version 2>&1 >> /dev/null
+  export HAS_NV_SMI=$([ "$?" -eq 0 ] && echo 1 || echo 0)
+  if [[ $HAS_NV_SMI = 1 ]]; then
+    export NV_NAME=$(nv-name)
   fi
 fi
 
