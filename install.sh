@@ -91,10 +91,10 @@ link_bashrc
 link_custom_scripts
 
 # Fix permissions
-chmod -R 700 $LOCALDIR
-chmod -R 700 $NCDIR
+chmod 700 $LOCALDIR
+chmod 700 $NCDIR
 
 # Just for being safe
-chmod -R 700 $HOME/.ssh
+chmod 700 $HOME/.ssh
 
 echo "Installation complete."

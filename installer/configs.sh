@@ -7,6 +7,8 @@
 # Commonrc: things I want in both zsh and bash 
 link_commonrc() {
   link_to_home "Commonrc" "commonrc" ".commonrc"
+
+  link_to_home "Commonrc Extra" "commonrc-extra" ".commonrc-extra"
 }
 
 # Bashrc

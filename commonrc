@@ -82,6 +82,9 @@ if [[ -f /etc/profile.d/modules.sh ]]; then
     fi
 fi
 
+# Extra commonrc
+[ -f $HOME/.commonrc-extra ] && source $HOME/.commonrc-extra
+
 #####################
 # Aliases
 #####################

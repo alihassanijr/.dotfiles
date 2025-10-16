@@ -87,10 +87,13 @@ link_to_home() {
   RC_NAME=$1          # Name
   PATH_IN_DOTFILES=$2 # File name in .dotfiles
   PATH_IN_HOME=$3     # Target in $HOME
-  echo "Linking $RC_NAME. Symlink $PATH_IN_DOTFILES to ~/$PATH_IN_HOME"
-  rm $HOMEDIR/$PATH_IN_HOME
-  ln -s $THISDIR/$PATH_IN_DOTFILES $HOMEDIR/$PATH_IN_HOME
-
+  local SRC_PATH="$THISDIR/$PATH_IN_DOTFILES"
+  local DST_PATH="$HOMEDIR/$PATH_IN_HOME"
+  if [[ -f $SRC_PATH ]]; then
+    echo "Linking $RC_NAME. Symlink $PATH_IN_DOTFILES to ~/$PATH_IN_HOME"
+    [ -f "$DST_PATH" ] && rm $DST_PATH
+    ln -s $SRC_PATH $DST_PATH
+  fi
 }
 
 link_bin() {
