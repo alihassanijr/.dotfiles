@@ -140,7 +140,10 @@ let s:t_Co = exists('&t_Co') && !empty(&t_Co) && &t_Co > 1 ? &t_Co : 2
 "########################################
 " set the colors
 "
-call s:ghhl("BadSpell", "red", "white", "underline")
+" white bg is HIGHLY annoying for everyday stuff.
+" call s:ghhl("BadSpell", "red", "white", "underline")
+" TODO: make a key bind for this?
+call s:ghhl("BadSpell", "red", "none", "underline")
 
 call s:ghhl("GhBase0", "base0")
 call s:ghhl("GhBase1", "base1")
