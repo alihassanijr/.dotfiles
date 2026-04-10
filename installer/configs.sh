@@ -54,6 +54,12 @@ link_git_config() {
   link_to_home "Git config" "gitconfig" ".gitconfig"
 }
 
+link_agentfiles() {
+  mkdir -p $HOME/.claude
+  link_to_home "Claude config" "agentfiles/claude/settings.json" ".claude/settings.json"
+  link_to_home "Claude prompt" "agentfiles/claude/CLAUDE.md" ".claude/CLAUDE.md"
+}
+
 # Custom scripts
 link_custom_scripts() {
   # Conda init
