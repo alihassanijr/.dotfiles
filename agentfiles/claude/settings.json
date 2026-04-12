@@ -4,7 +4,10 @@
       "Read",
       "Glob",
       "Grep",
+      "Bash(git diff)",
       "Bash(git diff:*)",
+      "Bash(git diff*)",
+      "Bash(git log)",
       "Bash(git log:*)",
       "Bash(git show:*)",
       "Bash(git status:*)",
@@ -12,13 +15,12 @@
       "Bash(ls:*)",
       "Bash(ls -:*)",
       "Bash(wc:*)",
-      "Bash(wc -:*)",
-      "Bash(find:*)",
-      "Bash(find -:*)"
+      "Bash(wc -:*)"
     ],
     "deny": [
       "Bash(rm -rf:*)",
       "Bash(rm -fr:*)",
+      "Bash(git push)",
       "Bash(git push:*)",
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
