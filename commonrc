@@ -427,3 +427,13 @@ psg() {
   fi
   echo "$bot"
 }
+
+# Git with retry: 10s timeout, up to 100 retries
+ggit() {
+  for i in $(seq 1 100); do
+    timeout 10 git "$@" && return 0
+    echo "ggit: attempt $i failed, retrying..."
+  done
+  echo "ggit: all 100 attempts failed"
+  return 1
+}
