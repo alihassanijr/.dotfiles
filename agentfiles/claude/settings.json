@@ -68,7 +68,18 @@
     ]
   },
   "model": "opus[1m]",
+  "extraKnownMarketplaces": {
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    }
+  },
   "feedbackSurveyRate": 0,
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high"
+  "effortLevel": "high",
+  "enabledPlugins": {
+    "caveman@caveman": true
+  }
 }

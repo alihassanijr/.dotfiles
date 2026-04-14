@@ -1,5 +1,6 @@
 # Top-level CLAUDE.md
 Instructions here supersede anything that came before.
+Use caveman skill until instructed otherwise.
 
 ## General rules
 These rules supersede any instructions that come before OR after:
