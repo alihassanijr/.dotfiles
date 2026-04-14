@@ -352,3 +352,78 @@ ctr() {
 
     return "$exit_code"
 }
+
+# Process search with formatted table output
+# Usage: psg <pattern> [user]
+# No user = all users (shows USER/UID columns)
+psg() {
+  if [[ "$1" == "-h" || "$1" == "--help" || -z "$1" ]]; then
+    echo "Usage: psg <pattern> [user]"
+    echo "  pattern  Process name to search"
+    echo "  user     Username (default: all users, shows user/uid)"
+    return 0
+  fi
+
+  local grep_path
+  if [[ -n "$ZSH_VERSION" ]]; then
+    grep_path=$(whence -p grep 2>/dev/null)
+  elif [[ -n "$BASH_VERSION" ]]; then
+    grep_path=$(which --skip-alias grep 2>/dev/null || which grep 2>/dev/null)
+  fi
+  [[ -z "$grep_path" ]] && { echo "grep not found"; return 1; }
+  if ! "$grep_path" --version 2>&1 | "$grep_path" -q "GNU"; then
+    echo "GNU grep required"; return 1
+  fi
+
+  local pattern="$1"
+  local ps_args=(-e)
+  local show_user=1
+  if [[ -n "$2" ]]; then
+    ps_args=(-u "$2")
+    show_user=0
+  fi
+
+  local cols=$(tput cols)
+  local inner=$((cols - 4))
+  local extra=0
+  [[ $show_user -eq 1 ]] && extra=$((16 + 8 + 6))
+  local cmd_w=$((inner - 16 - 24 - 12 - 9 - extra))
+
+  local top="┌$(printf '─%.0s' $(seq 1 $((cols - 2))))┐"
+  local mid="├$(printf '─%.0s' $(seq 1 $((cols - 2))))┤"
+  local bot="└$(printf '─%.0s' $(seq 1 $((cols - 2))))┘"
+
+  echo "$top"
+  if [[ $show_user -eq 1 ]]; then
+    printf "│ %-16s │ %-8s │ %-16s │ %-24s │ %-12s │ %-${cmd_w}s │\n" \
+      "USER" "UID" "PID" "START" "ELAPSED" "COMMAND"
+  else
+    printf "│ %-16s │ %-24s │ %-12s │ %-${cmd_w}s │\n" \
+      "PID" "START" "ELAPSED" "COMMAND"
+  fi
+  echo "$mid"
+
+  if [[ $show_user -eq 1 ]]; then
+    ps "${ps_args[@]}" -o user,uid,pid,lstart,etime,args --no-headers \
+      | "$grep_path" -ih "[${pattern:0:1}]${pattern:1}" \
+      | sed 's/^ *//' \
+      | awk -v cw="$cmd_w" '{
+          user=substr($1,1,16); uid=substr($2,1,8); pid=substr($3,1,16)
+          start=$4" "$5" "$6" "$7" "$8; etime=substr($9,1,12)
+          cmd=""; for(i=10;i<=NF;i++) cmd=cmd (i>10?" ":"") $i
+          printf "│ %-16s │ %-8s │ %-16s │ %-24s │ %-12s │ %-"cw"s │\n",
+            user, uid, pid, start, etime, substr(cmd,1,cw)
+        }'
+  else
+    ps "${ps_args[@]}" -o pid,lstart,etime,args --no-headers \
+      | "$grep_path" -ih "[${pattern:0:1}]${pattern:1}" \
+      | sed 's/^ *//' \
+      | awk -v cw="$cmd_w" '{
+          pid=substr($1,1,16); start=$2" "$3" "$4" "$5" "$6; etime=substr($7,1,12)
+          cmd=""; for(i=8;i<=NF;i++) cmd=cmd (i>8?" ":"") $i
+          printf "│ %-16s │ %-24s │ %-12s │ %-"cw"s │\n",
+            pid, start, etime, substr(cmd,1,cw)
+        }'
+  fi
+  echo "$bot"
+}
