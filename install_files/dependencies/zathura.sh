@@ -32,6 +32,6 @@ install_zathura() {
 configure_zathura() {
     # Zathura config
     rm -rf $HOMEDIR/.config/zathura
-    ln -s $THISDIR/config/zathura $HOMEDIR/.config/zathura
+    ln -s $THISDIR/configs/zathura $HOMEDIR/.config/zathura
 }
 

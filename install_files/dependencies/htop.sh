@@ -23,5 +23,5 @@ install_htop() {
 configure_htop() {
     # Htop config
     rm -rf $HOMEDIR/.config/htop
-    ln -s $THISDIR/config/htop $HOMEDIR/.config/htop
+    ln -s $THISDIR/configs/htop $HOMEDIR/.config/htop
 }

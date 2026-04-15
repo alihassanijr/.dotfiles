@@ -22,9 +22,9 @@ configure_vifm() {
     # Replace the vifm files
     echo "Linking vifm files..."
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        VIFMRC=$THISDIR/vifmrc.mac
+        VIFMRC=$THISDIR/rc_files/vifmrc.mac
     else
-        VIFMRC=$THISDIR/vifmrc
+        VIFMRC=$THISDIR/rc_files/vifmrc
     fi
     # Don't go removing my vifm
     # rm -rf $HOMEDIR/.vifm
@@ -39,6 +39,6 @@ configure_vifm() {
     for vifmfile in ${VIFMFILES[*]};do
         echo "Linking $vifmfile";
         rm -rf $HOMEDIR/.vifm/$vifmfile
-        ln -s $THISDIR/vifm/$vifmfile $HOMEDIR/.vifm/$vifmfile
+        ln -s $THISDIR/rc_files/vifm/$vifmfile $HOMEDIR/.vifm/$vifmfile
     done;
 }

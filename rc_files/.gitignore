@@ -1,0 +1,5 @@
+# Ignore the personal commonrc-extra (the .example template is tracked)
+commonrc-extra
+
+# Vim compiled spell file (the .add source is tracked)
+vim/spell/*.spl

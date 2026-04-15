@@ -4,7 +4,7 @@
 # NOTE: this should be sourced from ./dotfiles/
 
 # Alacritty
-source installer/dependencies/alacritty.sh
+source install_files/dependencies/alacritty.sh
 ensure_alacritty() {
   if [[ -f "$(which $DEP_NAME)" ]]; then
     echo "Looks like you have alacritty installed."
@@ -13,63 +13,63 @@ ensure_alacritty() {
 }
 
 # Autoconf
-source installer/dependencies/autoconf.sh
+source install_files/dependencies/autoconf.sh
 ensure_autoconf() {
   check_and_install_hard_dependency "autoconf" "install_autoconf"
 }
 
 # Automake
-source installer/dependencies/automake.sh
+source install_files/dependencies/automake.sh
 ensure_automake() {
   check_and_install_hard_dependency "automake" "install_automake"
 }
 
 # Bat
-source installer/dependencies/bat.sh
+source install_files/dependencies/bat.sh
 ensure_bat() {
   check_and_install_hard_dependency "bat" "install_bat"
   configure_dependency "bat" "configure_bat"
 }
 
 # clang-format
-source installer/dependencies/clang-format.sh
+source install_files/dependencies/clang-format.sh
 ensure_clang_format() {
   check_and_install_dependency "clang-format" "$LOCALDIR/bin/clang-format" "install_clang_format"
 }
 
 # CMake
-source installer/dependencies/cmake.sh
+source install_files/dependencies/cmake.sh
 ensure_cmake() {
   check_and_install_dependency "cmake" "$LOCALDIR/bin/cmake" "install_cmake"
 }
 
 # cmatrix
-source installer/dependencies/cmatrix.sh
+source install_files/dependencies/cmatrix.sh
 ensure_cmatrix() {
   check_and_install_dependency "cmatrix" "$LOCALDIR/bin/cmatrix" "install_cmatrix"
 }
 
 # coreutils
-source installer/dependencies/coreutils.sh
+source install_files/dependencies/coreutils.sh
 ensure_coreutils() {
   check_and_install_dependency "coreutils" "$LOCALDIR/extras/coreutils/bin/cp" "install_coreutils"
 }
 
 # Diff-so-fancy
-source installer/dependencies/diff-so-fancy.sh
+source install_files/dependencies/diff-so-fancy.sh
 ensure_diff_so_fancy() {
   check_and_install_dependency "diff-so-fancy" "$LOCALDIR/bin/diff-so-fancy" "install_diff_so_fancy"
   configure_dependency "diff-so-fancy" "configure_diff_so_fancy"
 }
 
 # Fzf
-source installer/dependencies/fzf.sh
+source install_files/dependencies/fzf.sh
 ensure_fzf() {
   check_and_install_dependency "fzf" "$HOMEDIR/.fzf/bin/fzf" "install_fzf"
 }
 
 # gettext
-source installer/dependencies/gettext.sh
+source install_files/dependencies/gettext.sh
 ensure_gettext() {
   # Don't trust OS's gettext, because it may not have autopoint.
   # check_and_install_hard_dependency "gettext" "install_gettext"
@@ -77,7 +77,7 @@ ensure_gettext() {
 }
 
 # Git
-source installer/dependencies/git.sh
+source install_files/dependencies/git.sh
 ensure_git() {
   # Don't build git from source yet;
   # TODO: figure out HTTPS remote cloning issue
@@ -94,39 +94,39 @@ ensure_git() {
 }
 
 # Git-lfs
-source installer/dependencies/git-lfs.sh
+source install_files/dependencies/git-lfs.sh
 ensure_git_lfs() {
   check_and_install_dependency "git-lfs" "$LOCALDIR/bin/git-lfs" "install_git_lfs"
 }
 
 # gnu sed
-source installer/dependencies/gnu-sed.sh
+source install_files/dependencies/gnu-sed.sh
 ensure_gnu_sed() {
   check_and_install_dependency "sed" "$LOCALDIR/bin/sed" "install_gnu_sed"
 }
 
 # Htop
-source installer/dependencies/htop.sh
+source install_files/dependencies/htop.sh
 ensure_htop() {
   check_and_install_dependency "htop" "$LOCALDIR/bin/htop" "install_htop"
   configure_dependency "htop" "configure_htop"
 }
 
 # LSD
-source installer/dependencies/lsd.sh
+source install_files/dependencies/lsd.sh
 ensure_lsd() {
   check_and_install_hard_dependency "lsd" "install_lsd"
 }
 
 # Make
-source installer/dependencies/make.sh
+source install_files/dependencies/make.sh
 ensure_make() {
   # Because if it's too old, things like building git from source might fail
   check_and_install_dependency "make" "$LOCALDIR/bin/make" "install_make"
 }
 
 # M4
-source installer/dependencies/m4.sh
+source install_files/dependencies/m4.sh
 ensure_m4() {
   if [[ "$OSTYPE" == "darwin"* ]]; then
     # Don't use mac's m4
@@ -137,25 +137,25 @@ ensure_m4() {
 }
 
 # NCurses
-source installer/dependencies/ncurses.sh
+source install_files/dependencies/ncurses.sh
 ensure_ncurses() {
   check_and_install_dependency "ncurses" "$NCDIR/bin/ncursesw6-config" "install_ncurses"
 }
 
 # pkg-config
-source installer/dependencies/pkg_config.sh
+source install_files/dependencies/pkg_config.sh
 ensure_pkg_config() {
   check_and_install_hard_dependency "pkg-config" "install_pkg_config"
 }
 
 # Ripgrep
-source installer/dependencies/rg.sh
+source install_files/dependencies/rg.sh
 ensure_rg() {
   check_and_install_hard_dependency "rg" "install_rg"
 }
 
 # Tmux
-source installer/dependencies/tmux.sh
+source install_files/dependencies/tmux.sh
 ensure_tmux() {
   #if [[ $IS_PERSONAL -eq 0 ]]; then
     check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
@@ -165,40 +165,40 @@ ensure_tmux() {
 }
 
 # Tre
-source installer/dependencies/tre.sh
+source install_files/dependencies/tre.sh
 ensure_tre() {
   check_and_install_hard_dependency "tre" "install_tre"
 }
 
 # Vim
-source installer/dependencies/vim.sh
+source install_files/dependencies/vim.sh
 ensure_vim() {
   check_and_install_dependency "vim" "$LOCALDIR/bin/vim" "install_vim"
   configure_dependency "vim" "configure_vim"
 }
 
 # Vifm
-source installer/dependencies/vifm.sh
+source install_files/dependencies/vifm.sh
 ensure_vifm() {
   check_and_install_dependency "vifm" "$LOCALDIR/bin/vifm" "install_vifm"
   configure_dependency "vifm" "configure_vifm"
 }
 
 # watch
-source installer/dependencies/watch.sh
+source install_files/dependencies/watch.sh
 ensure_watch() {
   check_and_install_hard_dependency "watch" "install_watch"
 }
 
 # wget
-source installer/dependencies/wget.sh
+source install_files/dependencies/wget.sh
 ensure_wget() {
   check_and_install_hard_dependency "wget" "install_wget"
   configure_wget
 }
 
 # Zathura
-source installer/dependencies/zathura.sh
+source install_files/dependencies/zathura.sh
 ensure_zathura() {
   if [[ $IS_PERSONAL -eq 1 ]]; then
     check_and_install_dependency "zathura" "$(which zathura)" "install_zathura"
@@ -207,7 +207,7 @@ ensure_zathura() {
 }
 
 # ZSH
-source installer/dependencies/zsh.sh
+source install_files/dependencies/zsh.sh
 ensure_zsh() {
   # TODO: zsh builds on mac, but it just hangs.
   if [[ $IS_PERSONAL -eq 0 ]]; then

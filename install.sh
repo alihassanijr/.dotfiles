@@ -16,7 +16,7 @@ if [[ $NUM_WORKERS -gt $MAX_JOBS ]]; then
 fi
 
 # Load functions
-source installer/prolog.sh
+source install_files/prolog.sh
 if [[ $IS_PERSONAL -eq 1 ]]; then
   echo "This is a GUI device, is that right? (will attempt to install terminal emulator and pdf viewer.)"
 else
@@ -24,9 +24,9 @@ else
 fi
 read
 
-source installer/utils.sh
-source installer/deps.sh
-source installer/configs.sh
+source install_files/utils.sh
+source install_files/deps.sh
+source install_files/configs.sh
 
 assert_dotfiles_in_home
 

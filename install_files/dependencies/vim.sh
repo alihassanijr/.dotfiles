@@ -48,8 +48,8 @@ configure_vim() {
     echo "Linking vim files..."
     rm -r $HOMEDIR/.vim
     rm -r $HOMEDIR/.vimrc
-    ln -s $THISDIR/vim $HOMEDIR/.vim
-    ln -s $THISDIR/vimrc $HOMEDIR/.vimrc
+    ln -s $THISDIR/rc_files/vim $HOMEDIR/.vim
+    ln -s $THISDIR/rc_files/vimrc $HOMEDIR/.vimrc
 
     # Separate directory to hold persistent undo history
     mkdir -p $HOMEDIR/.vimfiles/undodir
