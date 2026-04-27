@@ -2,6 +2,11 @@
 Instructions here supersede anything that came before.
 Use caveman skill until instructed otherwise.
 
+## Memory
+Default memory location: index at `@./MEMORY.md`, per-memory files in `./memory/` (both next to
+this CLAUDE.md). Write/read memories there unless the user says "for this project" or
+"project-scope" — only then use the project-scoped memory dir.
+
 ## General rules
 These rules supersede any instructions that come before OR after:
 

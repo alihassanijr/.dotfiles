@@ -58,6 +58,27 @@ link_agentfiles() {
   mkdir -p $HOME/.claude
   link_to_home "Claude config" "agentfiles/claude/settings.json" ".claude/settings.json"
   link_to_home "Claude prompt" "agentfiles/claude/CLAUDE.md" ".claude/CLAUDE.md"
+  link_to_home "Claude memory index" "agentfiles/claude/MEMORY.md" ".claude/MEMORY.md"
+  # Memory dir (link_to_home only handles files)
+  local MEM_SRC="$THISDIR/agentfiles/claude/memory"
+  local MEM_DST="$HOMEDIR/.claude/memory"
+  if [[ -L $MEM_DST ]]; then
+    local CURRENT_TARGET="$(readlink "$MEM_DST")"
+    if [[ "$CURRENT_TARGET" == "$MEM_SRC" ]]; then
+      echo "Claude memory dir already linked to $MEM_SRC; skipping."
+    else
+      echo "ERROR: ~/.claude/memory is a symlink to $CURRENT_TARGET, expected $MEM_SRC."
+      echo "Remove or fix it manually, then re-run."
+      exit 1
+    fi
+  elif [[ -d $MEM_DST ]]; then
+    echo "ERROR: ~/.claude/memory exists as a real directory, not a symlink."
+    echo "Move its contents into $MEM_SRC and remove ~/.claude/memory, then re-run."
+    exit 1
+  else
+    echo "Linking Claude memory dir. Symlink agentfiles/claude/memory to ~/.claude/memory"
+    ln -s "$MEM_SRC" "$MEM_DST"
+  fi
 }
 
 # Custom scripts
