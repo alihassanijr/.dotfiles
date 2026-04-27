@@ -4,8 +4,8 @@ description: When walking through code with user, do not strip comments when quo
 type: feedback
 ---
 
-When walking the user through code (tutorials, code reviews, explanations), keep the inline comments in the snippets you show by default. Only condense or strip comments that are clearly irrelevant to the current focus.
+Walk user thru code (tutorial, review, explain) — keep inline comments in snippets by default. Strip/condense only when comment clearly irrelevant to focus.
 
-**Why:** User got annoyed when I quoted a code chunk without its inline comments — those comments often answer the question the user is about to ask. User clarified: stripping is fine *only when the comment is irrelevant*.
+**Why:** User annoyed when quote code chunk minus inline comments — comments often answer next question. Strip OK *only* for obvious/trivial fluff (e.g. `# figure out shape` above `shape = tensor.shape`).
 
-**How to apply:** When showing code blocks during walkthroughs/reviews, copy comments verbatim by default. Trim only when the comment has no bearing on what's being explained.
+**How to apply:** Show code blocks in walkthrough/review → copy comments verbatim by default. Trim only when comment no bearing on what explained.

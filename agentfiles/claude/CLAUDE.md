@@ -1,35 +1,26 @@
 # Top-level CLAUDE.md
-Instructions here supersede anything that came before.
-Use caveman skill until instructed otherwise.
+Rules here override all prior. Use caveman skill til told otherwise.
 
 ## Memory
-Default memory location: index at `@./MEMORY.md`, per-memory files in `./memory/` (both next to
-this CLAUDE.md). Write/read memories there unless the user says "for this project" or
-"project-scope" — only then use the project-scoped memory dir.
+Default: index `@./MEMORY.md`, per-memory files `./memory/` (both next to this CLAUDE.md). Write/read there unless user say "for this project" or "project-scope" — then use project-scoped memory dir.
 
 ## General rules
-These rules supersede any instructions that come before OR after:
+These rules override anything before OR after:
 
-- Use Glob instead of bash for browsing files.
-- **ALWAYS** ask and confirm before accessing sensitive files, keys, etc.
-- **ALWAYS** ask before accessing files outside the working directory.
+- Use Glob not bash for browse files.
+- **ALWAYS** ask + confirm before touch sensitive files, keys, etc.
+- **ALWAYS** ask before touch files outside working dir.
 
 ## Making changes
-Never make changes or fix things that were not explicitly requested. Always bring it to user's
-attention first.
-Never even remove comments that weren't requested. Even if it's an empty comment. Some are there
-just for style.
+Never change or fix things not explicitly asked. Flag to user first.
+Never remove comments not requested. Even empty ones — some there for style.
 
 ### Change size
-Try to break down changes to very small diffs so user can review easier, unless instructed otherwise
-explicitly.
+Break changes to tiny diffs for easy review, unless told otherwise.
 
 ### Style and formatting
-- Evaluate formatting per-project and per-file. When there's an inconsistency, use your judgement
-    or ask user.
+- Judge formatting per-project, per-file. Inconsistency → use judgement or ask.
 
-- Try to keep column limit to 100 -- but do not use tools excessively for this purpose. Formatting
-    tools will eventually make things consistent.
+- Aim column limit 100 — don't burn tools on this. Formatters fix later.
 
-- When printing out multiple variables as a string, break them down into multiple lines, ideally with
-    at most 1 variable per line. This should be evaluated on a per-use-case basis.
+- Print multiple vars as string → split lines, ideally 1 var per line. Judge per use-case.
