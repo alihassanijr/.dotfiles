@@ -82,7 +82,7 @@ ensure_git() {
   # Don't build git from source yet;
   # TODO: figure out HTTPS remote cloning issue
   check_hard_dependency "git"
-  #if [[ "$OSTYPE" != "darwin"* ]]; then
+  #if [[ "$_OS_NAME" != "darwin" ]]; then
   #  # Apparently there is such a thing as an old git build
   #  # I.e. they don't automatically add your ssh ids to agent.
   #  # I'm not worried about mac, because git has always been
@@ -128,7 +128,7 @@ ensure_make() {
 # M4
 source installer/dependencies/m4.sh
 ensure_m4() {
-  if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [[ "$_OS_NAME" == "darwin" ]]; then
     # Don't use mac's m4
     check_and_install_dependency "m4" "$LOCALDIR/bin/m4" "install_m4"
   else

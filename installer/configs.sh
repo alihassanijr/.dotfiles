@@ -29,7 +29,7 @@ link_bashrc() {
 
 # Inputrc
 link_inputrc() {
-  if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [[ "$_OS_NAME" == "darwin" ]]; then
     link_to_home "Inputrc (mac)" "inputrc.mac" ".inputrc"
   else
     link_to_home "Inputrc" "inputrc" ".inputrc"
@@ -67,7 +67,7 @@ link_custom_scripts() {
   link_bin "Tmux shortcuts (4wc)" "scripts/4wc" "4wc"
 
   # SSH Agent Init
-  if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [[ "$_OS_NAME" == "darwin" ]]; then
     link_bin "SSH agent initializer (sagent)" "scripts/sagent.mac" "sagent"
   else
     link_bin "SSH agent initializer (sagent)" "scripts/sagent" "sagent"

@@ -9,18 +9,18 @@ install_tre() {
     local TREURL=""
     local arch="$(uname -m)"
 
-        cd $THISDIR
-        rm -rf $TMPDIR
-        mkdir -p $TMPDIR
-        mkdir -p $TMPDIR/tre
+    cd $THISDIR
+    rm -rf $TMPDIR
+    mkdir -p $TMPDIR
+    mkdir -p $TMPDIR/tre
 
-    if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "arm64" ]]; then
+    if [[ "$_OS_NAME" == "darwin" ]] && [[ "$arch" == "arm64" ]]; then
         TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-aarch64-apple-darwin.tar.gz"
-    elif [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$_OS_NAME" == "darwin" ]] && [[ "$arch" == "x86_64" ]]; then
         TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-x86_64-apple-darwin.tar.gz"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "x86_64" ]]; then
         TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-x86_64-unknown-linux-musl.tar.gz"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
+    elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "arm" ]]; then
         TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-arm-unknown-linux-gnueabihf.tar.gz"
     fi
     if [[ "$TREURL" != "" ]]; then
@@ -29,7 +29,7 @@ install_tre() {
     else
         echo "Failed to install static tre. Please install it manually before proceeding."
         echo "arch: $arch"
-        echo "ostype: $OSTYPE"
+        echo "os: $_OS_NAME"
         exit 1
     fi
     cd $THISDIR

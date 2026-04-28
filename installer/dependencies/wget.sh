@@ -11,7 +11,7 @@ build_openssl() {
     local PACKAGEDIRNAME="openssl-3.0.13"
 
     local OPENSSLTARGET=""
-    if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ "$_OS_NAME" == "darwin" ]]; then
         OPENSSLTARGET="darwin64-$(uname -m)-cc"
     else
         echo "WARNING: please read this in detail!!"

@@ -21,7 +21,7 @@ install_vifm() {
 configure_vifm() {
     # Replace the vifm files
     echo "Linking vifm files..."
-    if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ "$_OS_NAME" == "darwin" ]]; then
         VIFMRC=$THISDIR/vifmrc.mac
     else
         VIFMRC=$THISDIR/vifmrc

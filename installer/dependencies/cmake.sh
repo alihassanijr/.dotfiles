@@ -15,12 +15,12 @@ install_cmake() {
     rm -rf $TMPDIR
     mkdir -p $TMPDIR
 
-    if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ "$_OS_NAME" == "darwin" ]]; then
         CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-macos-universal.tar.gz"
         CMAKEDIR="cmake*/CMake.app/Contents/"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "x86_64" ]]; then
         CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-linux-x86_64.tar.gz"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "aarch64" ]]; then
+    elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "aarch64" ]]; then
         CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-linux-aarch64.tar.gz"
     fi
     if [[ "$CMAKEURL" != "" ]]; then
@@ -31,7 +31,7 @@ install_cmake() {
     else
         echo "Failed to install static cmake. Please install it manually before proceeding."
         echo "arch: $arch"
-        echo "ostype: $OSTYPE"
+        echo "os: $_OS_NAME"
         exit 1
     fi
 

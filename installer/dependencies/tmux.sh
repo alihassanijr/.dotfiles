@@ -81,7 +81,7 @@ build_tmux() {
   rm -rf $TMPDIR
   mkdir -p $TMPDIR
 
-  if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [[ "$_OS_NAME" == "darwin" ]]; then
     ADDITIONAL_TMUX_CONF_ARGS="-with-TERM=screen-256color"
   fi
   
@@ -115,7 +115,7 @@ configure_tmux() {
   # Tmux config files
   if [[ -f "$(which tmux)" ]]; then
     rm $HOMEDIR/.tmux.conf
-    if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ "$_OS_NAME" == "darwin" ]]; then
       ln -s $THISDIR/tmux.mac.conf $HOMEDIR/.tmux.conf
     else
       ln -s $THISDIR/tmux.conf $HOMEDIR/.tmux.conf

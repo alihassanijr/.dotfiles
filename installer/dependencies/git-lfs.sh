@@ -12,15 +12,15 @@ install_git_lfs() {
     rm -rf $TMPDIR
     mkdir -p $TMPDIR
 
-    if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
+    if [[ "$_OS_NAME" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-darwin-amd64-v$GITLFSVER.zip"
-    elif [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "arm64" ]]; then
+    elif [[ "$_OS_NAME" == "darwin"* ]] && [[ "$arch" == "arm64" ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-darwin-arm64-v$GITLFSVER.zip"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$_OS_NAME" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-amd64-v$GITLFSVER.tar.gz"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
+    elif [[ "$_OS_NAME" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-arm-v$GITLFSVER.tar.gz"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
+    elif [[ "$_OS_NAME" == "linux"* ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
         GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-arm64-v$GITLFSVER.tar.gz"
     fi
     if [[ "$GITLFSURL" != "" ]]; then
@@ -43,7 +43,7 @@ install_git_lfs() {
     else
         echo "Failed to install static git-lfs. Please install it manually before proceeding."
         echo "arch: $arch"
-        echo "ostype: $OSTYPE"
+        echo "os: $_OS_NAME"
         exit 1
     fi
 

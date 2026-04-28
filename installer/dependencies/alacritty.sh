@@ -10,7 +10,7 @@ install_alacritty() {
 configure_alacritty() {
     # Alacritty config
     rm -rf $HOMEDIR/.config/alacritty
-    if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ "$_OS_NAME" == "darwin" ]]; then
         ln -s $THISDIR/config/alacritty.mac $HOMEDIR/.config/alacritty
     else
         ln -s $THISDIR/config/alacritty.linux $HOMEDIR/.config/alacritty

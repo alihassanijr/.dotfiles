@@ -25,7 +25,7 @@ install_ncurses() {
         make -j$NUM_WORKERS VERBOSE=1 && \
         make install
 
-    if [[ "$OSTYPE" != "darwin"* ]]; then
+    if [[ "$_OS_NAME" != "darwin" ]]; then
       # libtinfo is provided by ncurses and has the same api.
       # Some linux builds fail if they don't resolve libtinfo.so.5
       # https://bugs.centos.org/view.php?id=11423

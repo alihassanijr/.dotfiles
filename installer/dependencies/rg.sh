@@ -13,15 +13,15 @@ install_rg() {
     rm -rf $TMPDIR
     mkdir -p $TMPDIR
 
-    if [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "arm64" ]]; then
+    if [[ "$_OS_NAME" == "darwin" ]] && [[ "$arch" == "arm64" ]]; then
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-aarch64-apple-darwin.tar.gz"
-    elif [[ "$OSTYPE" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$_OS_NAME" == "darwin" ]] && [[ "$arch" == "x86_64" ]]; then
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-x86_64-apple-darwin.tar.gz"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
+    elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "x86_64" ]]; then
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-x86_64-unknown-linux-musl.tar.gz"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
+    elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "arm" ]]; then
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-arm-unknown-linux-gnueabihf.tar.gz"
-    elif [[ "$OSTYPE" == "linux"* ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
+    elif [[ "$_OS_NAME" == "linux" ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
         RGURL="https://github.com/BurntSushi/ripgrep/releases/download/$RGVER/ripgrep-$RGVER-aarch64-unknown-linux-gnu.tar.gz"
     fi
     if [[ "$RGURL" != "" ]]; then
@@ -30,7 +30,7 @@ install_rg() {
     else
         echo "Failed to install static ripgrep. Please install it manually before proceeding."
         echo "arch: $arch"
-        echo "ostype: $OSTYPE"
+        echo "os: $_OS_NAME"
         exit 1
     fi
 

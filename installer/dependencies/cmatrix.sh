@@ -17,7 +17,7 @@ install_cmatrix() {
     # MacOS fix
     local ADDITIONAL_C_FLAGS="-I$NCDIR/include/ncursesw"
     local ADDITIONAL_LINKER_FLAGS=""
-    if [[ "$OSTYPE" = "darwin"* ]]; then
+    if [[ "$_OS_NAME" = "darwin" ]]; then
       local ADDITIONAL_C_FLAGS="$ADDITIONAL_C_FLAGS -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR"
       local ADDITIONAL_LINKER_FLAGS="$ADDITIONAL_LINKER_FLAGS -Wl,-search_paths_first"
     fi

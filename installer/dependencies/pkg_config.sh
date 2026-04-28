@@ -18,7 +18,7 @@ install_pkg_config() {
         tar -xzf $PACKAGETARNAME && \
         rm $PACKAGETARNAME
 
-    if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ "$_OS_NAME" == "darwin" ]]; then
         cd $TMPDIR && \
             cd $PACKAGEDIRNAME && \
             CFLAGS="-Wno-int-conversion" ./configure \
