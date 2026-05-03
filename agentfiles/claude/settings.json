@@ -68,6 +68,9 @@
     ]
   },
   "model": "opus[1m]",
+  "enabledPlugins": {
+    "caveman@caveman": true
+  },
   "extraKnownMarketplaces": {
     "caveman": {
       "source": {
@@ -78,8 +81,5 @@
   },
   "feedbackSurveyRate": 0,
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
-  "enabledPlugins": {
-    "caveman@caveman": true
-  }
+  "effortLevel": "high"
 }

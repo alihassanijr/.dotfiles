@@ -1,0 +1,30 @@
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+approvals_reviewer = "user"
+personality = "pragmatic"
+
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "run-state", "context-remaining", "context-used", "five-hour-limit", "weekly-limit", "codex-version", "context-window-size", "used-tokens", "total-input-tokens", "total-output-tokens", "fast-mode", "thread-title", "task-progress"]
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+
+[features]
+memories = true
+
+[memories]
+use_memories = true
+generate_memories = true
+disable_on_external_context = true
+
+[marketplaces.caveman-repo]
+last_updated = "2026-05-03T05:04:32Z"
+last_revision = "ef6050c5e1848b6880ff47c32ade1a608a64f85e"
+source_type = "git"
+source = "https://github.com/JuliusBrussee/caveman.git"
+
+[plugins."caveman@caveman-repo"]
+enabled = true

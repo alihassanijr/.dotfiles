@@ -79,6 +79,36 @@ link_agentfiles() {
     echo "Linking Claude memory dir. Symlink agentfiles/claude/memory to ~/.claude/memory"
     ln -s "$MEM_SRC" "$MEM_DST"
   fi
+  claude plugin marketplace add JuliusBrussee/caveman
+  claude plugin install caveman@caveman
+
+  mkdir -p $HOME/.codex
+  mkdir -p $HOME/.codex/rules
+  link_to_home "Codex config" "agentfiles/codex/config.toml" ".codex/config.toml"
+  link_to_home "Codex prompt" "agentfiles/codex/AGENTS.md" ".codex/AGENTS.md"
+  link_to_home "Codex memory index" "agentfiles/codex/MEMORY.md" ".codex/MEMORY.md"
+  link_to_home "Codex Claude-port rules" "agentfiles/codex/rules/claude-port.rules" ".codex/rules/claude-port.rules"
+  # User-managed memory dir (link_to_home only handles files)
+  local CODEX_MEM_SRC="$THISDIR/agentfiles/codex/memory"
+  local CODEX_MEM_DST="$HOMEDIR/.codex/memory"
+  if [[ -L $CODEX_MEM_DST ]]; then
+    local CODEX_CURRENT_TARGET="$(readlink "$CODEX_MEM_DST")"
+    if [[ "$CODEX_CURRENT_TARGET" == "$CODEX_MEM_SRC" ]]; then
+      echo "Codex memory dir already linked to $CODEX_MEM_SRC; skipping."
+    else
+      echo "ERROR: ~/.codex/memory is a symlink to $CODEX_CURRENT_TARGET, expected $CODEX_MEM_SRC."
+      echo "Remove or fix it manually, then re-run."
+      exit 1
+    fi
+  elif [[ -d $CODEX_MEM_DST ]]; then
+    echo "ERROR: ~/.codex/memory exists as a real directory, not a symlink."
+    echo "Move its contents into $CODEX_MEM_SRC and remove ~/.codex/memory, then re-run."
+    exit 1
+  else
+    echo "Linking Codex memory dir. Symlink agentfiles/codex/memory to ~/.codex/memory"
+    ln -s "$CODEX_MEM_SRC" "$CODEX_MEM_DST"
+  fi
+  codex plugin marketplace add JuliusBrussee/caveman
 }
 
 # Custom scripts
