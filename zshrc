@@ -59,12 +59,18 @@ source ~/.commonrc
 
 # Timeout (seconds) for git prompt in the agnoster theme
 export OMZ_GIT_TIMEOUT=1
-# Maximum character length for branch name / head ref
-export OMZ_MAX_GIT_REF_LENGTH=50
+# Maximum character lengths for prompt segments (incl. ellipsis marker)
+export OMZ_MAX_USER_LENGTH=10
+export OMZ_MAX_HOST_LENGTH=10
+export OMZ_MAX_GIT_REF_LENGTH=20
+export OMZ_MAX_DIR_LENGTH=30
 
 
 # Defaults
 source ~/.config/zsh/mini-omz/themes/agnoster.zsh-theme
+
+# Shared helpers (must load before segment overrides)
+source ~/.config/zsh/zsh-agnoster-custom-truncate.sh
 
 # Mods
 if [[ $HAS_NV_SMI = 1 ]]; then

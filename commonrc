@@ -124,6 +124,9 @@ alias sagent='source sagent'
 # Solution for when a program dies before printing EOL, which screws up zsh
 alias reset-term='stty sane'
 
+# git branch shorthand
+alias gbr='git branch --show-current'
+
 #####################
 # Functions
 #####################
