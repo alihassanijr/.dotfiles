@@ -128,7 +128,7 @@ alias reset-term='stty sane'
 alias gbr='git branch --show-current'
 
 # because bureaucrats are here, a pain in my rear, getting used to it
-alias claude='claude --model opus[1m] --effort high'
+alias claude='claude --model "opus[1m]" --effort high'
 
 #####################
 # Functions
