@@ -23,7 +23,9 @@ install_watch() {
         --disable-nls \
         --enable-watch8bit \
         --with-ncurses \
-        CFLAGS="-I$NCDIR/include/" && \
+        --verbose \
+        CFLAGS="-I$NCDIR/include/" \
+        CPPFLAGS="-I$NCDIR/include/" && \
       make src/watch &&
       mv src/watch ${LOCALDIR}/bin/ &&
       mv man/watch.1 ${LOCALDIR}/man/man1

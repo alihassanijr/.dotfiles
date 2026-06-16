@@ -23,6 +23,13 @@ install_libtool() {
       --disable-dependency-tracking \
       --enable-ltdl-install && \
     make install
+
+  if [ $? -ne 0 ]; then
+    echo "Libtool build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
   
   cd $THISDIR
   rm -rf $TMPDIR

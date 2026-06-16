@@ -38,6 +38,19 @@ ensure_local_exists
 
 echo "Installing my stuff..."
 
+# .local
+export PATH=$LOCALDIR/bin:$PATH
+export LD_LIBRARY_PATH=$LOCALDIR/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export PKG_CONFIG_PATH="$LOCALDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
+export ACLOCAL_PATH="$LOCALDIR/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
+
+# .ncurses
+export LD_LIBRARY_PATH=$NCDIR/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export PKG_CONFIG_PATH="$NCDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
+export CFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
+export CPPFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
+
+
 # Very basic stuff (usually installed on linux, but
 # not necessarily on mac).
 ensure_pkg_config

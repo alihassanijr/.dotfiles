@@ -5,7 +5,10 @@ install_libevent() {
 
   # Dependency: libtool
   source installer/dependencies/libtool.sh
-  check_and_install_dependency "libtool" "$LOCALDIR/bin/libtool" "install_libtool"
+  check_and_install_dependency "libtool" "$LOCALDIR/bin/libtool" "install_libtool" || {
+    echo "Libevent dependency resolution failed. Won't attempt build.";
+    return 1
+  }
   # check_and_install_hard_dependency "libtool" "install_libtool"
 
   echo "Installing dependency: libevent"
@@ -31,6 +34,13 @@ install_libevent() {
       --disable-debug-mode && \
     make && \
     make install
+
+  if [ $? -ne 0 ]; then
+    echo "Libevent build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
   
   cd $THISDIR
   rm -rf $TMPDIR
@@ -54,6 +64,14 @@ install_utf8proc() {
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
     make install prefix=${LOCALDIR}
+
+  if [ $? -ne 0 ]; then
+    echo "Utf8proc build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
+
   cd $THISDIR
   rm -rf $TMPDIR
 }
@@ -62,12 +80,12 @@ install_tmux_dependencies() {
   if [[ -f "$LOCALDIR/include/event.h" ]]; then
     echo "Libevent is already installed, skipping..."
   else
-    install_libevent
+    install_libevent || { echo "FAILED TO BUILD TMUX DEPENDENCY: libevent!"; return 1; }
   fi
   if [[ -f "$LOCALDIR/include/utf8proc.h" ]]; then
     echo "utf8proc is already installed, skipping..."
   else
-    install_utf8proc
+    install_utf8proc || { echo "FAILED TO BUILD TMUX DEPENDENCY: ut8proc!"; return 1; }
   fi
 }
 
@@ -90,24 +108,31 @@ build_tmux() {
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
-    PKG_CONFIG_PATH="$LOCALDIR/lib/pkgconfig:$PKG_CONFIG_PATH" ./configure \
-      CFLAGS="-I$LOCALDIR/include -I$NCDIR/include -I$NCDIR/include/ncursesw" LDFLAGS="-L$LOCALDIR/lib -L$NCDIR/lib" \
+    ./configure \
       --enable-sixel \
       --enable-utf8proc \
       $ADDITIONAL_TMUX_CONF_ARGS \
       --prefix=${LOCALDIR} && \
     make install
+
+  if [ $? -ne 0 ]; then
+    echo "Tmux build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
+
   cd $THISDIR
   rm -rf $TMPDIR
 }
 
 install_tmux() {
   if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
-    install_tmux_dependencies
-    build_tmux
+    install_tmux_dependencies || { echo "FAILED TO BUILD TMUX DEPENDENCIES!"; return 1; }
+    build_tmux || { echo "FAILED TO BUILD TMUX!"; return 1; }
   else
     echo "ncurses not found! Tmux requires ncurses!"
-    exit 1;
+    return 1
   fi
 }
 

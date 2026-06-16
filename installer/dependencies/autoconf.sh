@@ -24,6 +24,13 @@ install_autoconf() {
           --prefix=${LOCALDIR} && \
         make install
 
+    if [ $? -ne 0 ]; then
+      echo "autoconf build failed."
+      cd $THISDIR
+      rm -rf $TMPDIR
+      return 1
+    fi
+
     cd $THISDIR
     rm -rf $TMPDIR
 }

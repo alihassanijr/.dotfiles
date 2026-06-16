@@ -22,6 +22,13 @@ install_automake() {
           --prefix=${LOCALDIR} && \
         make install
 
+    if [ $? -ne 0 ]; then
+      echo "automake build failed."
+      cd $THISDIR
+      rm -rf $TMPDIR
+      return 1
+    fi
+
     cd $THISDIR
     rm -rf $TMPDIR
 }

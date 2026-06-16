@@ -18,7 +18,9 @@ install_ncurses() {
         rm ncurses*.tar.gz && \
         cd ncurses-$NCURSESVER && \
         ./configure \
-            --enable-widec --with-shared \
+            --enable-widec \
+            --with-shared \
+            --enable-pc-files \
             --prefix=$NCDIR \
             CFLAGS="-I$NCDIR/include" \
             LIBS="-L$NCDIR/lib" && \

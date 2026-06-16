@@ -158,7 +158,10 @@ ensure_rg() {
 source installer/dependencies/tmux.sh
 ensure_tmux() {
   #if [[ $IS_PERSONAL -eq 0 ]]; then
-    check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
+    check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux" || {
+      echo "tmux build failed";
+      return 1
+    }
     # check_and_install_hard_dependency "tmux" "install_tmux"
     configure_dependency "tmux" "configure_tmux"
   #fi
