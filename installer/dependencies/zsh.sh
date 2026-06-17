@@ -12,7 +12,7 @@ build_zsh() {
   mkdir -p $TMPDIR
   
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME $PACKAGEURL && \
     tar -xf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
@@ -30,7 +30,14 @@ build_zsh() {
        --with-tcsetpgrp \
        DL_EXT=bundl \
       --prefix=${LOCALDIR} && \
-    make install
+    make -j$NUM_WORKERS install
+
+  if [ $? -ne 0 ]; then
+    echo "zsh build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
   cd $THISDIR
   rm -rf $TMPDIR
 }
@@ -40,7 +47,7 @@ install_zsh() {
     build_zsh
   else
     echo "ncurses not found! Zsh requires ncurses!"
-    exit 1;
+    return 1
   fi
 }
 
@@ -56,7 +63,7 @@ configure_zsh() {
     # So that tmux wouldn't have to look for ZSH
     if [[ ! -f $LOCALDIR/bin/zsh ]]; then
       echo "Linking zsh binary (because you opted out of building it)."
-      ln -s $(which zsh) $LOCALDIR/bin/zsh
+      ln -s $(program_path zsh) $LOCALDIR/bin/zsh
     fi
 
     mkdir -p $HOMEDIR/.config/

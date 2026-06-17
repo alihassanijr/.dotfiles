@@ -26,7 +26,7 @@ install_pkg_config() {
               --disable-host-tool  \
               --disable-debug \
               --prefix=${LOCALDIR} && \
-            CFLAGS="-Wno-int-conversion" make && \
+            CFLAGS="-Wno-int-conversion" make -j$NUM_WORKERS && \
             CFLAGS="-Wno-int-conversion" make install
     else
         # TODO: this is untested; I've only needed to install
@@ -38,8 +38,15 @@ install_pkg_config() {
               --disable-host-tool  \
               --disable-debug \
               --prefix=${LOCALDIR} && \
-            make && \
+            make -j$NUM_WORKERS && \
             make install
+    fi
+
+    if [ $? -ne 0 ]; then
+        echo "pkg-config build failed."
+        cd $THISDIR
+        rm -rf $TMPDIR
+        return 1
     fi
 
     cd $THISDIR

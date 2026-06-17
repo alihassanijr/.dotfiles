@@ -25,12 +25,18 @@ install_tre() {
     fi
     if [[ "$TREURL" != "" ]]; then
         echo "Fetching static tre binaries"
-        cd $TMPDIR && wget $TREURL && tar -xzf tre*.tar.gz -C tre/ && rm tre*.tar.gz && mv tre/tre $LOCALDIR/bin/tre
+        cd $TMPDIR && fetch_package "$(basename $TREURL)" $TREURL && tar -xzf tre*.tar.gz -C tre/ && rm tre*.tar.gz && mv tre/tre $LOCALDIR/bin/tre
+        if [ $? -ne 0 ]; then
+            echo "Failed to fetch/install tre."
+            cd $THISDIR
+            rm -rf $TMPDIR
+            return 1
+        fi
     else
         echo "Failed to install static tre. Please install it manually before proceeding."
         echo "arch: $arch"
         echo "os: $_OS_NAME"
-        exit 1
+        return 1
     fi
     cd $THISDIR
     rm -rf $TMPDIR

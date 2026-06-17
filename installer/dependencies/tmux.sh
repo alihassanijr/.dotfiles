@@ -23,7 +23,7 @@ install_libevent() {
   mkdir -p $TMPDIR
   
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME $PACKAGEURL && \
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
@@ -32,7 +32,7 @@ install_libevent() {
       --prefix=${LOCALDIR} \
       --disable-dependency-tracking \
       --disable-debug-mode && \
-    make && \
+    make -j$NUM_WORKERS && \
     make install
 
   if [ $? -ne 0 ]; then
@@ -59,11 +59,11 @@ install_utf8proc() {
   mkdir -p $TMPDIR
   
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME $PACKAGEURL && \
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
-    make install prefix=${LOCALDIR}
+    make -j$NUM_WORKERS install prefix=${LOCALDIR}
 
   if [ $? -ne 0 ]; then
     echo "Utf8proc build failed."
@@ -104,7 +104,7 @@ build_tmux() {
   fi
   
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME $PACKAGEURL && \
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
@@ -113,7 +113,7 @@ build_tmux() {
       --enable-utf8proc \
       $ADDITIONAL_TMUX_CONF_ARGS \
       --prefix=${LOCALDIR} && \
-    make install
+    make -j$NUM_WORKERS install
 
   if [ $? -ne 0 ]; then
     echo "Tmux build failed."
@@ -138,7 +138,7 @@ install_tmux() {
 
 configure_tmux() {
   # Tmux config files
-  if [[ -f "$(which tmux)" ]]; then
+  if program_exists tmux; then
     rm $HOMEDIR/.tmux.conf
     if [[ "$_OS_NAME" == "darwin" ]]; then
       ln -s $THISDIR/tmux.mac.conf $HOMEDIR/.tmux.conf

@@ -5,7 +5,10 @@ install_coreutils() {
   echo "Installing dependency: coreutils"
   
   local TMPDIR=$THISDIR/tmp_coreutils
-  local PACKAGEURL="https://ftp.gnu.org/gnu/coreutils/coreutils-9.5.tar.xz"
+  local PACKAGEURLS=(
+    "https://ftpmirror.gnu.org/gnu/coreutils/coreutils-9.5.tar.xz"
+    "https://ftp.gnu.org/gnu/coreutils/coreutils-9.5.tar.xz"
+  )
   local PACKAGETARNAME="coreutils-9.5.tar.xz"
   local PACKAGEDIRNAME="coreutils-9.5"
   
@@ -17,15 +20,22 @@ install_coreutils() {
     export PERL5LIB=$LOCALDIR/lib/perl5/
   fi
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME "${PACKAGEURLS[@]}" && \
     tar -xf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
     ./configure \
       --prefix=${LOCALDIR}/extras/coreutils && \
-    make && \
+    make -j$NUM_WORKERS && \
     make install
-  
+
+  if [ $? -ne 0 ]; then
+    echo "coreutils build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
+
   cd $THISDIR
   rm -rf $TMPDIR
 }

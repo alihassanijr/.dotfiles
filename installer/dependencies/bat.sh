@@ -26,12 +26,18 @@ install_bat() {
       fi
       if [[ "$BATURL" != "" ]]; then
           echo "Fetching static bat binaries"
-          cd $TMPDIR && wget $BATURL && tar -xzf bat*.tar.gz && rm bat*.tar.gz && mv bat*/bat $LOCALDIR/bin/bat
+          cd $TMPDIR && fetch_package "$(basename $BATURL)" $BATURL && tar -xzf bat*.tar.gz && rm bat*.tar.gz && mv bat*/bat $LOCALDIR/bin/bat
+          if [ $? -ne 0 ]; then
+              echo "Failed to fetch/install bat."
+              cd $THISDIR
+              rm -rf $TMPDIR
+              return 1
+          fi
       else
           echo "Failed to install static bat. Please install it manually before proceeding."
           echo "arch: $arch"
           echo "os: $_OS_NAME"
-          exit 1
+          return 1
       fi
 
     cd $THISDIR

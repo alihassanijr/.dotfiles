@@ -5,7 +5,10 @@ install_libtool() {
   echo "Installing dependency: libtool"
   
   local TMPDIR=$THISDIR/tmp_libtool
-  local PACKAGEURL="https://ftp.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz"
+  local PACKAGEURLS=(
+    "https://ftpmirror.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz"
+    "https://ftp.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz"
+  )
   local PACKAGETARNAME="libtool-2.4.7.tar.xz"
   local PACKAGEDIRNAME="libtool-2.4.7"
   
@@ -14,7 +17,7 @@ install_libtool() {
   mkdir -p $TMPDIR
   
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME "${PACKAGEURLS[@]}" && \
     tar -xf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
@@ -22,7 +25,7 @@ install_libtool() {
       --prefix=${LOCALDIR} \
       --disable-dependency-tracking \
       --enable-ltdl-install && \
-    make install
+    make -j$NUM_WORKERS install
 
   if [ $? -ne 0 ]; then
     echo "Libtool build failed."

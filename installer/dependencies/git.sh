@@ -19,14 +19,21 @@ install_git() {
   mkdir -p $TMPDIR
   
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME $PACKAGEURL && \
     tar -xf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
     ./configure \
       --prefix=${LOCALDIR} && \
-    make && \
+    make -j$NUM_WORKERS && \
     make install
+
+  if [ $? -ne 0 ]; then
+    echo "git build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
   cd $THISDIR
   rm -rf $TMPDIR
 }

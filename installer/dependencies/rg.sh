@@ -26,12 +26,18 @@ install_rg() {
     fi
     if [[ "$RGURL" != "" ]]; then
         echo "Fetching static ripgrep"
-        cd $TMPDIR && wget $RGURL && tar -xzf ripgrep*.tar.gz && rm ripgrep*.tar.gz && mv ripgrep*/rg $LOCALDIR/bin/rg
+        cd $TMPDIR && fetch_package "$(basename $RGURL)" $RGURL && tar -xzf ripgrep*.tar.gz && rm ripgrep*.tar.gz && mv ripgrep*/rg $LOCALDIR/bin/rg
+        if [ $? -ne 0 ]; then
+            echo "Failed to fetch/install ripgrep."
+            cd $THISDIR
+            rm -rf $TMPDIR
+            return 1
+        fi
     else
         echo "Failed to install static ripgrep. Please install it manually before proceeding."
         echo "arch: $arch"
         echo "os: $_OS_NAME"
-        exit 1
+        return 1
     fi
 
     cd $THISDIR

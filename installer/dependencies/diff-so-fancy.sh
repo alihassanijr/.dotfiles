@@ -6,7 +6,7 @@
 install_diff_so_fancy() {
     echo "Setting up diff-so-fancy"
     rm -f $LOCALDIR/bin/diff-so-fancy
-    ln -s $THISDIR/third_party/misc/diff-so-fancy/diff-so-fancy $LOCALDIR/bin/diff-so-fancy 
+    cp -f $THISDIR/third_party/misc/diff-so-fancy/diff-so-fancy $LOCALDIR/bin/diff-so-fancy
 }
 
 configure_diff_so_fancy() {

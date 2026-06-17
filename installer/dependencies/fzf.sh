@@ -3,9 +3,9 @@
 # Fuzzy finder
 
 install_fzf() {
-    cd $THISDIR/third_party/fzf/ && ./install
+    cd $THISDIR/third_party/fzf/ && ./install --key-bindings --completion --no-update-rc
     cd $THISDIR
     rm -rf $HOMEDIR/.fzf
-    ln -s $THISDIR/third_party/fzf $HOMEDIR/.fzf
+    cp -r $THISDIR/third_party/fzf $HOMEDIR/.fzf
     cd $THISDIR
 }

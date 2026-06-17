@@ -27,24 +27,36 @@ install_git_lfs() {
         echo "Fetching static git-lfs binaries"
         if [[ $GITLFSURL == *"zip"* ]]; then
             cd $TMPDIR && \
-                wget $GITLFSURL && \
+                fetch_package "$(basename $GITLFSURL)" $GITLFSURL && \
                 unzip git-lfs*.zip && \
                 rm git-lfs*.zip && \
                 mv git-lfs-*/git-lfs $LOCALDIR/bin/git-lfs && \
                 cp -r -n -v git-lfs-*/man/* $LOCALDIR/man/
+            if [ $? -ne 0 ]; then
+                echo "Failed to fetch/install git-lfs."
+                cd $THISDIR
+                rm -rf $TMPDIR
+                return 1
+            fi
         else
             cd $TMPDIR && \
-                wget $GITLFSURL && \
+                fetch_package "$(basename $GITLFSURL)" $GITLFSURL && \
                 tar -xzf git-lfs*.tar.gz && \
                 rm git-lfs*.tar.gz && \
                 mv git-lfs-*/git-lfs $LOCALDIR/bin/git-lfs && \
                 cp -r -n -v git-lfs-*/man/* $LOCALDIR/man/
+            if [ $? -ne 0 ]; then
+                echo "Failed to fetch/install git-lfs."
+                cd $THISDIR
+                rm -rf $TMPDIR
+                return 1
+            fi
         fi
     else
         echo "Failed to install static git-lfs. Please install it manually before proceeding."
         echo "arch: $arch"
         echo "os: $_OS_NAME"
-        exit 1
+        return 1
     fi
 
     cd $THISDIR

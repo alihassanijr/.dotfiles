@@ -8,11 +8,11 @@ install_cmatrix() {
     local TEMP_DIR=$(mktemp -d)
     if [[ ! -d "$TEMP_DIR" ]]; then
         echo "Failed to create temporary directory. Exiting..."
-        exit 1
+        return 1
     fi
 
     # Change to the temporary directory
-    cd "$TEMP_DIR" || { echo "Failed to switch to temp directory. Exiting..."; exit 1; }
+    cd "$TEMP_DIR" || { echo "Failed to switch to temp directory. Exiting..."; rm -rf "$TEMP_DIR"; return 1; }
 
     # MacOS fix
     local ADDITIONAL_C_FLAGS="-I$NCDIR/include/ncursesw"
@@ -35,6 +35,7 @@ install_cmatrix() {
     if [ "$?" -ne 0 ]; then
       echo "Setting up cmake for building cmatrix failed!"
       cd $THISDIR
+      rm -rf $TEMP_DIR
       return 1
     fi
 
@@ -42,6 +43,7 @@ install_cmatrix() {
     if [ "$?" -ne 0 ]; then
       echo "Building cmatrix failed!"
       cd $THISDIR
+      rm -rf $TEMP_DIR
       return 1
     fi
 
@@ -49,11 +51,13 @@ install_cmatrix() {
     if [ "$?" -ne 0 ]; then
       echo "Installing cmatrix failed?!"
       cd $THISDIR
+      rm -rf $TEMP_DIR
       return 1
     fi
 
     echo "cmatrix was built successfully."
     cd $THISDIR
+    rm -rf $TEMP_DIR
   else
     echo "ncurses not found! cmatrix requires ncurses!"
     return 1

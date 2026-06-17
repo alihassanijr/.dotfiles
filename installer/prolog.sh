@@ -24,10 +24,13 @@ _ARCH=$(uname -m)
 echo "OS: $_OS_NAME"
 echo "Arch: $_ARCH"
 
-# Whether or not this is a personal device 
+# Whether or not this is a personal device
 ## I want certain things like my terminal emulator only on
 ## personal devices, not on servers.
 IS_PERSONAL=0
 if [[ "$OS_NAME" == "darwin" ]]; then
     IS_PERSONAL=1
 fi
+
+# When set to 1, only build/install dependencies and skip all configuration.
+BUILD_ONLY=${BUILD_ONLY:-0}

@@ -17,12 +17,14 @@ fi
 
 # Load functions
 source installer/prolog.sh
-if [[ $IS_PERSONAL -eq 1 ]]; then
-  echo "This is a GUI device, is that right? (will attempt to install terminal emulator and pdf viewer.)"
-else
-  echo "This is NOT a GUI device, is that right? (will skip installing terminal emulator and pdf viewer.)"
+if [[ "$BUILD_ONLY" -ne 1 ]]; then
+  if [[ $IS_PERSONAL -eq 1 ]]; then
+    echo "This is a GUI device, is that right? (will attempt to install terminal emulator and pdf viewer.)"
+  else
+    echo "This is NOT a GUI device, is that right? (will skip installing terminal emulator and pdf viewer.)"
+  fi
+  read
 fi
-read
 
 source installer/utils.sh
 source installer/deps.sh
@@ -53,6 +55,7 @@ export CPPFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
 
 # Very basic stuff (usually installed on linux, but
 # not necessarily on mac).
+ensure_make
 ensure_pkg_config
 ensure_wget
 
@@ -68,21 +71,20 @@ ensure_gettext
 # Utilities
 ensure_coreutils
 ensure_gnu_sed
-ensure_watch            # watch command
-#ensure_make
+ensure_watch
 ensure_cmake
 #ensure_git
 ensure_git_lfs
 
 # Everyday
-ensure_clang_format     # formatting
-ensure_alacritty        # terminal emulator (conditional dependency)
-ensure_tmux             # window manager (conditional soft dependency)
-ensure_vim              # editor
-ensure_vifm             # file browser
-ensure_zathura          # document viewer (conditional dependency)
-ensure_zsh              # shell
-ensure_fzf              # Fuzzy finder
+ensure_clang_format
+ensure_alacritty
+ensure_tmux
+ensure_vim
+ensure_vifm
+ensure_zathura
+ensure_zsh
+ensure_fzf
 
 # Fancy alternatives
 ensure_bat              # alternative to cat
@@ -95,16 +97,18 @@ ensure_tre              # alternative to tree
 # Entertainment
 ensure_cmatrix
 
-# Link configs and whatnot
-link_base16colors
-link_lscolors
-link_inputrc
-link_commonrc
-link_bashrc
-link_git_config
-link_agentfiles
-
+# Custom scripts
 link_custom_scripts
+
+# Link configs and whatnot
+if [[ "$BUILD_ONLY" -ne 1 ]]; then
+  link_base16colors
+  link_lscolors
+  link_inputrc
+  link_commonrc
+  link_bashrc
+  link_git_config
+  link_agentfiles
 
 # Fix permissions
 chmod 700 $LOCALDIR
@@ -112,5 +116,9 @@ chmod 700 $NCDIR
 
 # Just for being safe
 chmod 700 $HOME/.ssh
+
+else
+  echo "BUILD_ONLY set; skipping config linking."
+fi
 
 echo "Installation complete."

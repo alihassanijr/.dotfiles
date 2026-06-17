@@ -113,9 +113,6 @@ link_agentfiles() {
 
 # Custom scripts
 link_custom_scripts() {
-  # Conda init
-  link_bin "Anaconda initializer (cnda)" "scripts/cnda" "cnda"
-  
   # True color vifm
   link_bin "Vifm with truecolor (vif)" "scripts/vif" "vif"
   

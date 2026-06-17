@@ -25,14 +25,20 @@ install_cmake() {
     fi
     if [[ "$CMAKEURL" != "" ]]; then
         echo "Fetching static cmake binaries"
-        cd $TMPDIR && wget $CMAKEURL && tar -xzf cmake*.tar.gz && rm cmake*.tar.gz && \
+        cd $TMPDIR && fetch_package "$(basename $CMAKEURL)" $CMAKEURL && tar -xzf cmake*.tar.gz && rm cmake*.tar.gz && \
             mv $CMAKEDIR/bin/* $LOCALDIR/bin/ && \
             cp -r -n -v $CMAKEDIR/share/* $LOCALDIR/share/
+        if [ $? -ne 0 ]; then
+            echo "Failed to fetch/install cmake."
+            cd $THISDIR
+            rm -rf $TMPDIR
+            return 1
+        fi
     else
         echo "Failed to install static cmake. Please install it manually before proceeding."
         echo "arch: $arch"
         echo "os: $_OS_NAME"
-        exit 1
+        return 1
     fi
 
     cd $THISDIR
