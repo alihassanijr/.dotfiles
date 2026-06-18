@@ -12,6 +12,9 @@ assert_dotfiles_in_home() {
 }
 
 update_submodules() {
+  if [[ "$BUILD_ONLY" -eq 1 ]]; then
+    return 0
+  fi
   git submodule update --init --recursive
 }
 
@@ -175,10 +178,20 @@ link_bin() {
 
 ensure_local_exists() {
   # Ensure expected directories exist
+
+  # .local
   mkdir -p $LOCALDIR/
   mkdir -p $LOCALDIR/bin
   mkdir -p $LOCALDIR/man
   mkdir -p $LOCALDIR/share
-  mkdir -p $HOMEDIR/.config
+
+  # .ncurses
   mkdir -p $NCDIR
+
+  if [[ "$BUILD_ONLY" -eq 1 ]]; then
+    return 0
+  fi
+
+  # .config
+  mkdir -p $HOMEDIR/.config
 }
