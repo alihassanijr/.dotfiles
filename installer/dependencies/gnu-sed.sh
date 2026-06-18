@@ -4,7 +4,7 @@
 install_gnu_sed() {
   echo "Installing dependency: gnu sed"
   
-  local TMPDIR=$THISDIR/tmp_gnu_sed
+  local TMPDIR=$(build_tmpdir gnu_sed)
   local PACKAGEURLS=(
     "https://ftpmirror.gnu.org/gnu/sed/sed-4.9.tar.xz"
     "https://ftp.gnu.org/gnu/sed/sed-4.9.tar.xz"

@@ -4,7 +4,7 @@
 install_automake() {
     echo "Installing automake"
 
-    local TMPDIR=$THISDIR/tmp_automake
+    local TMPDIR=$(build_tmpdir automake)
     local PACKAGEURLS=(
         "https://ftpmirror.gnu.org/gnu/automake/automake-1.16.5.tar.xz"
         "https://ftp.gnu.org/gnu/automake/automake-1.16.5.tar.xz"

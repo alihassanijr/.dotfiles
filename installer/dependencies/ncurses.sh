@@ -5,7 +5,7 @@
 NCURSESVER="6.4"
 
 install_ncurses() {
-    local TMPDIR=$THISDIR/tmp
+    local TMPDIR=$(build_tmpdir ncurses)
     local NCURSESURLS=(
         "https://invisible-mirror.net/archives/ncurses/ncurses-$NCURSESVER.tar.gz"
         "https://ftp.gnu.org/pub/gnu/ncurses/ncurses-$NCURSESVER.tar.gz"

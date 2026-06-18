@@ -9,7 +9,7 @@ install_git() {
     MAKECMND="make"
   fi
 
-  local TMPDIR=$THISDIR/tmp_git
+  local TMPDIR=$(build_tmpdir git)
   local PACKAGEURL="https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.45.0.tar.xz"
   local PACKAGETARNAME="git-2.45.0.tar.xz"
   local PACKAGEDIRNAME="git-2.45.0"

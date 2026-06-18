@@ -4,7 +4,7 @@
 install_m4() {
     echo "Installing m4"
 
-    local TMPDIR=$THISDIR/tmp_m4
+    local TMPDIR=$(build_tmpdir m4)
     local PACKAGEURLS=(
         "https://ftpmirror.gnu.org/gnu/m4/m4-1.4.19.tar.xz"
         "https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.xz"

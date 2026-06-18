@@ -46,6 +46,18 @@ fetch_package() {
   return 1
 }
 
+build_tmpdir() {
+  # Pick a build temp dir. Under BUILD_ONLY (containerized builds that ship the
+  # tree) use an OS-generated tmp dir to avoid conflicts and keep $THISDIR clean;
+  # otherwise use a predictable local dir under $THISDIR.
+  local NAME=$1
+  if [[ "$BUILD_ONLY" -eq 1 ]]; then
+    mktemp -d
+  else
+    echo "$THISDIR/tmp_$NAME"
+  fi
+}
+
 check_soft_dependency() {
   local DEP_NAME=$1         # dependency name
 

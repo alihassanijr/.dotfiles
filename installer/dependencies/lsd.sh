@@ -5,7 +5,7 @@
 LSDVER="v1.1.5"
 
 install_lsd() {
-    local TMPDIR=$THISDIR/tmp
+    local TMPDIR=$(build_tmpdir lsd)
     local LSDURL=""
     local arch="$(uname -m)"
 

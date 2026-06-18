@@ -6,7 +6,7 @@
 CMAKEVER="4.1.0"
 
 install_cmake() {
-    local TMPDIR=$THISDIR/tmp
+    local TMPDIR=$(build_tmpdir cmake)
     local CMAKEURL=""
     local CMAKEDIR="cmake*/"
     local arch="$(uname -m)"

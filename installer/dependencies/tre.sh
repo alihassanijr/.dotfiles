@@ -5,7 +5,7 @@
 TREVER="0.4.0"
 
 install_tre() {
-    local TMPDIR=$THISDIR/tmp
+    local TMPDIR=$(build_tmpdir tre)
     local TREURL=""
     local arch="$(uname -m)"
 

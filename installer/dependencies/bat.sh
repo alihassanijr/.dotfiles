@@ -5,7 +5,7 @@
 BATVER="0.25.0"
 
 install_bat() {
-    local TMPDIR=$THISDIR/tmp
+    local TMPDIR=$(build_tmpdir bat)
     local BATURL=""
     local arch="$(uname -m)"
 

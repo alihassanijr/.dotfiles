@@ -2,7 +2,7 @@
 # Make
 
 install_make() {
-  local TMPDIR=$THISDIR/tmp_make
+  local TMPDIR=$(build_tmpdir make)
   local PACKAGEURLS=(
     "https://ftpmirror.gnu.org/gnu/make/make-4.4.1.tar.gz"
     "https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz"

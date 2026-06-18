@@ -4,7 +4,7 @@
 GITLFSVER="3.7.0"
 
 install_git_lfs() {
-    local TMPDIR=$THISDIR/tmp
+    local TMPDIR=$(build_tmpdir git_lfs)
     local GITLFSURL=""
     local arch="$(uname -m)"
     

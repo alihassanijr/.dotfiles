@@ -4,7 +4,7 @@
 install_autoconf() {
     check_hard_dependency "m4"
 
-    local TMPDIR=$THISDIR/tmp_autoconf
+    local TMPDIR=$(build_tmpdir autoconf)
     local PACKAGEURLS=(
         "https://ftpmirror.gnu.org/gnu/autoconf/autoconf-2.72.tar.gz"
         "https://ftp.gnu.org/gnu/autoconf/autoconf-2.72.tar.gz"

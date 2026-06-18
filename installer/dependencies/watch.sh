@@ -3,7 +3,7 @@
 install_watch() {
   echo "Installing procps/watch"
 
-  local TMPDIR=$THISDIR/tmp_watch
+  local TMPDIR=$(build_tmpdir watch)
   local PACKAGEURLS=(
     "https://downloads.sourceforge.net/project/procps-ng/Production/procps-ng-4.0.4.tar.xz"
     "https://newcontinuum.dl.sourceforge.net/project/procps-ng/Production/procps-ng-4.0.4.tar.xz"

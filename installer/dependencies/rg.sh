@@ -5,7 +5,7 @@
 RGVER="14.1.1"
 
 install_rg() {
-    local TMPDIR=$THISDIR/tmp
+    local TMPDIR=$(build_tmpdir rg)
     local RGURL=""
     local arch="$(uname -m)"
 

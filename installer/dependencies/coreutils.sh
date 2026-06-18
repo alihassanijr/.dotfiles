@@ -4,7 +4,7 @@
 install_coreutils() {
   echo "Installing dependency: coreutils"
   
-  local TMPDIR=$THISDIR/tmp_coreutils
+  local TMPDIR=$(build_tmpdir coreutils)
   local PACKAGEURLS=(
     "https://ftpmirror.gnu.org/gnu/coreutils/coreutils-9.5.tar.xz"
     "https://ftp.gnu.org/gnu/coreutils/coreutils-9.5.tar.xz"

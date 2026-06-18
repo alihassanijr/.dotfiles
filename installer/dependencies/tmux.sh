@@ -13,7 +13,7 @@ install_libevent() {
 
   echo "Installing dependency: libevent"
   
-  local TMPDIR=$THISDIR/tmp_libevent
+  local TMPDIR=$(build_tmpdir libevent)
   local PACKAGEURL="https://github.com/libevent/libevent/archive/refs/tags/release-2.1.12-stable.tar.gz"
   local PACKAGETARNAME="libevent-release-2.1.12-stable.tar.gz"
   local PACKAGEDIRNAME="libevent-release-2.1.12-stable"
@@ -49,7 +49,7 @@ install_libevent() {
 install_utf8proc() {
   echo "Installing dependency: utf8proc"
   
-  local TMPDIR=$THISDIR/tmp_utf8proc
+  local TMPDIR=$(build_tmpdir utf8proc)
   local PACKAGEURL="https://github.com/JuliaStrings/utf8proc/archive/refs/tags/v2.9.0.tar.gz"
   local PACKAGETARNAME="utf8proc.tar.gz"
   local PACKAGEDIRNAME="utf8proc-2.9.0/"
@@ -90,7 +90,7 @@ install_tmux_dependencies() {
 }
 
 build_tmux() {
-  local TMPDIR=$THISDIR/tmp_tmux
+  local TMPDIR=$(build_tmpdir tmux)
   local PACKAGEURL="https://github.com/tmux/tmux/releases/download/3.4/tmux-3.4.tar.gz"
   local PACKAGETARNAME="tmux-3.4.tar.gz"
   local PACKAGEDIRNAME="tmux-3.4/"

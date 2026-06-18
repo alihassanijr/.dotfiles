@@ -4,7 +4,7 @@
 install_libtool() {
   echo "Installing dependency: libtool"
   
-  local TMPDIR=$THISDIR/tmp_libtool
+  local TMPDIR=$(build_tmpdir libtool)
   local PACKAGEURLS=(
     "https://ftpmirror.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz"
     "https://ftp.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz"
