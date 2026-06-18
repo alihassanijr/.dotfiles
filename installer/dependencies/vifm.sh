@@ -5,16 +5,37 @@
 
 install_vifm() {
     if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
-        NCARG="--with-curses=$NCDIR --with-curses-name=ncursesw"
-        cd $THISDIR/third_party/vifm/ && \
-          autoreconf -f -i && \
-          ./configure --prefix=$LOCALDIR $NCARG && \
-          make -j$NUM_WORKERS VERBOSE=1 && \
-          make install
+        local TMPDIR=$(build_tmpdir vifm)
+        local PACKAGEURL="https://github.com/vifm/vifm/releases/download/v0.14.4/vifm-0.14.4.tar.bz2"
+        local PACKAGETARNAME="vifm-0.14.4.tar.bz2"
+        local PACKAGEDIRNAME="vifm-0.14.4"
+        local NCARG="--with-curses=$NCDIR --with-curses-name=ncursesw"
+
         cd $THISDIR
+        rm -rf $TMPDIR
+        mkdir -p $TMPDIR
+
+        cd $TMPDIR && \
+            fetch_package $PACKAGETARNAME $PACKAGEURL && \
+            tar -xjf $PACKAGETARNAME && \
+            rm $PACKAGETARNAME && \
+            cd $PACKAGEDIRNAME && \
+            ./configure --prefix=$LOCALDIR $NCARG && \
+            make -j$NUM_WORKERS VERBOSE=1 && \
+            make install
+
+        if [ $? -ne 0 ]; then
+            echo "vifm build failed."
+            cd $THISDIR
+            rm -rf $TMPDIR
+            return 1
+        fi
+
+        cd $THISDIR
+        rm -rf $TMPDIR
     else
         echo "ncurses not found! Vifm requires ncurses!"
-        exit 1;
+        return 1
     fi
 }
 

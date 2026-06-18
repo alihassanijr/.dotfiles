@@ -13,11 +13,21 @@ install_vim() {
     # C. Needed to explicitly use --disable-darwin to have it build normally on
     #    mac.
     # D. Obviously installing to ~/.local/bin -- sourced in commonrc.
-    # E. I added the submodule to path third_party/vim9 because third_party/vim
-    #    holds all the vim plugins, and I really don't want to move submodules now.
     if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
-        cd $THISDIR/third_party/vim9/ && \
-            make clean && make distclean &&           \
+        local TMPDIR=$(build_tmpdir vim)
+        local PACKAGEURL="https://github.com/vim/vim/archive/refs/tags/v9.2.0650.tar.gz"
+        local PACKAGETARNAME="vim-9.2.0650.tar.gz"
+        local PACKAGEDIRNAME="vim-9.2.0650"
+
+        cd $THISDIR
+        rm -rf $TMPDIR
+        mkdir -p $TMPDIR
+
+        cd $TMPDIR && \
+            fetch_package $PACKAGETARNAME $PACKAGEURL && \
+            tar -xzf $PACKAGETARNAME && \
+            rm $PACKAGETARNAME && \
+            cd $PACKAGEDIRNAME && \
             LDFLAGS=-L${NCDIR}/lib                    \
             CFLAGS=-I${NCDIR}/include                 \
             ./configure                               \
@@ -34,12 +44,20 @@ install_vim() {
             --with-compiledby="Ali Hassani"           \
             --prefix=${LOCALDIR} &&                   \
             make -j$NUM_WORKERS VERBOSE=1 && \
-            make install && \
-            make clean
+            make install
+
+        if [ $? -ne 0 ]; then
+            echo "vim build failed."
+            cd $THISDIR
+            rm -rf $TMPDIR
+            return 1
+        fi
+
         cd $THISDIR
+        rm -rf $TMPDIR
     else
         echo "ncurses not found! Vim requires ncurses!"
-        exit 1;
+        return 1
     fi
 }
 
