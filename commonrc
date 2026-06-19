@@ -59,7 +59,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]] && command_exists nvidia-smi && ! command_exi
 fi
 
 LOCAL_HOME_PATH="$HOME"
-PROGRAMS_PATH="$HOME/.programs/${DISTRO_NAME}_$(uname -m)"
+PROGRAMS_PATH="$HOME/.programs/${DISTRO_NAME}_$(uname -m | sed 's/^aarch64$/arm64/')"
 if [[ -d $PROGRAMS_PATH ]]; then
   LOCAL_HOME_PATH=$PROGRAMS_PATH
 fi
