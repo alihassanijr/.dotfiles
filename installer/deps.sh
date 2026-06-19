@@ -220,6 +220,12 @@ ensure_zathura() {
 source installer/dependencies/zsh.sh
 ensure_zsh() {
   set -e
-  check_and_install_dependency "zsh" "$LOCALDIR/bin/zsh" "install_zsh"
+  # TODO: zsh builds on mac, but hangs when executed.
+  if [[ "$_OS_NAME" != "darwin" ]]; then
+    check_and_install_dependency "zsh" "$LOCALDIR/bin/zsh" "install_zsh"
+  else
+    echo "ZSH build is disabled on darwin, but it usually comes pre-installed."
+    check_hard_dependency "zsh"
+  fi
   configure_dependency "zsh" "configure_zsh"
 }
