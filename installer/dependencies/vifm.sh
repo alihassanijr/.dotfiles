@@ -24,6 +24,7 @@ install_vifm() {
             cd $PACKAGEDIRNAME && \
             ./configure --prefix=$LOCALDIR $NCARG && \
             make -j$NUM_WORKERS VERBOSE=1 && \
+            make check &&
             make install
 
         if [ $? -ne 0 ]; then
