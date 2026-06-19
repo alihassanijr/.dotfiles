@@ -19,9 +19,16 @@ function command_exists() {
 }
 
 distro_name() {
-  . /etc/os-release
-  id=${ID:-linux}
-  ver=${VERSION_ID:-rolling}
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    id=macos
+    ver=$(sw_vers -productVersion 2>/dev/null | cut -d. -f1)
+  elif [[ -r /etc/os-release ]]; then
+    . /etc/os-release
+    id=${ID:-linux}
+    ver=${VERSION_ID:-rolling}
+  fi
+  id=${id:-linux}
+  ver=${ver:-rolling}
 
   ver=$(printf '%s' "$ver" | tr -cd '0-9A-Za-z')
   printf '%s_%s\n' "$id" "$ver"
