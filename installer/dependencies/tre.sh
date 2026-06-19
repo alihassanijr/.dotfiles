@@ -22,6 +22,12 @@ install_tre() {
         TREURL="https://github.com/dduan/tre/releases/download/v$TRE_VERSION/tre-v$TRE_VERSION-x86_64-unknown-linux-musl.tar.gz"
     elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "arm" ]]; then
         TREURL="https://github.com/dduan/tre/releases/download/v$TRE_VERSION/tre-v$TRE_VERSION-arm-unknown-linux-gnueabihf.tar.gz"
+    elif [[ "$_OS_NAME" == "linux" ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
+        # abandoned project without arm64 dist
+        # arm one can technically run in some cases where 32-bit binaries can run, but I don't
+        # want to take any chances.
+        # building my own in a fork.
+        TREURL="https://github.com/alihassanijr/tre/releases/download/v$TRE_VERSION/tre-v$TRE_VERSION-aarch64-unknown-linux-musl.tar.gz"
     fi
     if [[ "$TREURL" != "" ]]; then
         echo "Fetching static tre binaries"
