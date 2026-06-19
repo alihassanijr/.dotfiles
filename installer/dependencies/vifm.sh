@@ -3,12 +3,14 @@
 # It's rarely pre-installed, and I insist on having everything regardless
 # of my sudo access. And let's face it, that's not always the only limit.
 
+VIFM_VERSION="0.14.4"
+
 install_vifm() {
     if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
         local TMPDIR=$(build_tmpdir vifm)
-        local PACKAGEURL="https://github.com/vifm/vifm/releases/download/v0.14.4/vifm-0.14.4.tar.bz2"
-        local PACKAGETARNAME="vifm-0.14.4.tar.bz2"
-        local PACKAGEDIRNAME="vifm-0.14.4"
+        local PACKAGEURL="https://github.com/vifm/vifm/releases/download/v$VIFM_VERSION/vifm-$VIFM_VERSION.tar.bz2"
+        local PACKAGETARNAME="vifm-$VIFM_VERSION.tar.bz2"
+        local PACKAGEDIRNAME="vifm-$VIFM_VERSION"
         local NCARG="--with-curses=$NCDIR --with-curses-name=ncursesw"
 
         cd $THISDIR

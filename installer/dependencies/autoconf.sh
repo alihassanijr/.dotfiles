@@ -1,16 +1,18 @@
 #!/bin/bash
 # Autoconf
 
+AUTOCONF_VERSION="2.72"
+
 install_autoconf() {
     check_hard_dependency "m4"
 
     local TMPDIR=$(build_tmpdir autoconf)
     local PACKAGEURLS=(
-        "https://ftpmirror.gnu.org/gnu/autoconf/autoconf-2.72.tar.gz"
-        "https://ftp.gnu.org/gnu/autoconf/autoconf-2.72.tar.gz"
+        "https://ftpmirror.gnu.org/gnu/autoconf/autoconf-$AUTOCONF_VERSION.tar.gz"
+        "https://ftp.gnu.org/gnu/autoconf/autoconf-$AUTOCONF_VERSION.tar.gz"
     )
-    local PACKAGETARNAME="autoconf-2.72.tar.gz"
-    local PACKAGEDIRNAME="autoconf-2.72"
+    local PACKAGETARNAME="autoconf-$AUTOCONF_VERSION.tar.gz"
+    local PACKAGEDIRNAME="autoconf-$AUTOCONF_VERSION"
     
     cd $THISDIR
     rm -rf $TMPDIR

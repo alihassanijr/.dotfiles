@@ -1,13 +1,15 @@
 #!/bin/bash
 # pkg-config
 
+PKG_CONFIG_VERSION="0.29.2"
+
 install_pkg_config() {
     echo "Installing pkg-config"
 
     local TMPDIR=$(build_tmpdir pkg-config)
-    local PACKAGEURL="https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz"
-    local PACKAGETARNAME="pkg-config-0.29.2.tar.gz"
-    local PACKAGEDIRNAME="pkg-config-0.29.2"
+    local PACKAGEURL="https://pkgconfig.freedesktop.org/releases/pkg-config-$PKG_CONFIG_VERSION.tar.gz"
+    local PACKAGETARNAME="pkg-config-$PKG_CONFIG_VERSION.tar.gz"
+    local PACKAGEDIRNAME="pkg-config-$PKG_CONFIG_VERSION"
     
     cd $THISDIR
     rm -rf $TMPDIR

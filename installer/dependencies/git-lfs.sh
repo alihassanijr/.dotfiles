@@ -1,7 +1,7 @@
 #!/bin/bash
 # Git-lfs installer
 
-GITLFSVER="3.7.0"
+GITLFS_VERSION="3.7.0"
 
 install_git_lfs() {
     local TMPDIR=$(build_tmpdir git_lfs)
@@ -13,15 +13,15 @@ install_git_lfs() {
     mkdir -p $TMPDIR
 
     if [[ "$_OS_NAME" == "darwin"* ]] && [[ "$arch" == "x86_64" ]]; then
-        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-darwin-amd64-v$GITLFSVER.zip"
+        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFS_VERSION/git-lfs-darwin-amd64-v$GITLFS_VERSION.zip"
     elif [[ "$_OS_NAME" == "darwin"* ]] && [[ "$arch" == "arm64" ]]; then
-        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-darwin-arm64-v$GITLFSVER.zip"
+        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFS_VERSION/git-lfs-darwin-arm64-v$GITLFS_VERSION.zip"
     elif [[ "$_OS_NAME" == "linux"* ]] && [[ "$arch" == "x86_64" ]]; then
-        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-amd64-v$GITLFSVER.tar.gz"
+        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFS_VERSION/git-lfs-linux-amd64-v$GITLFS_VERSION.tar.gz"
     elif [[ "$_OS_NAME" == "linux"* ]] && [[ "$arch" == "arm" ]]; then
-        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-arm-v$GITLFSVER.tar.gz"
+        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFS_VERSION/git-lfs-linux-arm-v$GITLFS_VERSION.tar.gz"
     elif [[ "$_OS_NAME" == "linux"* ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
-        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFSVER/git-lfs-linux-arm64-v$GITLFSVER.tar.gz"
+        GITLFSURL="https://github.com/git-lfs/git-lfs/releases/download/v$GITLFS_VERSION/git-lfs-linux-arm64-v$GITLFS_VERSION.tar.gz"
     fi
     if [[ "$GITLFSURL" != "" ]]; then
         echo "Fetching static git-lfs binaries"

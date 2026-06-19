@@ -1,16 +1,18 @@
 #!/bin/bash
 # Automake
 
+AUTOMAKE_VERSION="1.16.5"
+
 install_automake() {
     echo "Installing automake"
 
     local TMPDIR=$(build_tmpdir automake)
     local PACKAGEURLS=(
-        "https://ftpmirror.gnu.org/gnu/automake/automake-1.16.5.tar.xz"
-        "https://ftp.gnu.org/gnu/automake/automake-1.16.5.tar.xz"
+        "https://ftpmirror.gnu.org/gnu/automake/automake-$AUTOMAKE_VERSION.tar.xz"
+        "https://ftp.gnu.org/gnu/automake/automake-$AUTOMAKE_VERSION.tar.xz"
     )
-    local PACKAGETARNAME="automake-1.16.5.tar.xz"
-    local PACKAGEDIRNAME="automake-1.16.5"
+    local PACKAGETARNAME="automake-$AUTOMAKE_VERSION.tar.xz"
+    local PACKAGEDIRNAME="automake-$AUTOMAKE_VERSION"
     
     cd $THISDIR
     rm -rf $TMPDIR

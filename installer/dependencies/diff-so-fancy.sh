@@ -4,12 +4,14 @@
 # so we install the whole package under $LOCALDIR/extras and point a *relative*
 # symlink at it from $LOCALDIR/bin (relocatable; survives a shipped tree).
 
+DIFF_SO_FANCY_VERSION="1.4.10"
+
 install_diff_so_fancy() {
     echo "Setting up diff-so-fancy"
     local TMPDIR=$(build_tmpdir diff_so_fancy)
-    local PACKAGEURL="https://github.com/so-fancy/diff-so-fancy/archive/refs/tags/v1.4.10.tar.gz"
-    local PACKAGETARNAME="diff-so-fancy-1.4.10.tar.gz"
-    local PACKAGEDIRNAME="diff-so-fancy-1.4.10"
+    local PACKAGEURL="https://github.com/so-fancy/diff-so-fancy/archive/refs/tags/v$DIFF_SO_FANCY_VERSION.tar.gz"
+    local PACKAGETARNAME="diff-so-fancy-$DIFF_SO_FANCY_VERSION.tar.gz"
+    local PACKAGEDIRNAME="diff-so-fancy-$DIFF_SO_FANCY_VERSION"
 
     cd $THISDIR
     rm -rf $TMPDIR

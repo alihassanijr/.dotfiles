@@ -2,7 +2,7 @@
 # Tre installer
 # Just gives more options than tree
 
-TREVER="0.4.0"
+TRE_VERSION="0.4.0"
 
 install_tre() {
     local TMPDIR=$(build_tmpdir tre)
@@ -15,13 +15,13 @@ install_tre() {
     mkdir -p $TMPDIR/tre
 
     if [[ "$_OS_NAME" == "darwin" ]] && [[ "$arch" == "arm64" ]]; then
-        TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-aarch64-apple-darwin.tar.gz"
+        TREURL="https://github.com/dduan/tre/releases/download/v$TRE_VERSION/tre-v$TRE_VERSION-aarch64-apple-darwin.tar.gz"
     elif [[ "$_OS_NAME" == "darwin" ]] && [[ "$arch" == "x86_64" ]]; then
-        TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-x86_64-apple-darwin.tar.gz"
+        TREURL="https://github.com/dduan/tre/releases/download/v$TRE_VERSION/tre-v$TRE_VERSION-x86_64-apple-darwin.tar.gz"
     elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "x86_64" ]]; then
-        TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-x86_64-unknown-linux-musl.tar.gz"
+        TREURL="https://github.com/dduan/tre/releases/download/v$TRE_VERSION/tre-v$TRE_VERSION-x86_64-unknown-linux-musl.tar.gz"
     elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "arm" ]]; then
-        TREURL="https://github.com/dduan/tre/releases/download/v$TREVER/tre-v$TREVER-arm-unknown-linux-gnueabihf.tar.gz"
+        TREURL="https://github.com/dduan/tre/releases/download/v$TRE_VERSION/tre-v$TRE_VERSION-arm-unknown-linux-gnueabihf.tar.gz"
     fi
     if [[ "$TREURL" != "" ]]; then
         echo "Fetching static tre binaries"

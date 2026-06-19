@@ -1,6 +1,10 @@
 #!/bin/bash
 # Tmux
 
+LIBEVENT_VERSION="2.1.12"
+UTF8PROC_VERSION="2.9.0"
+TMUX_VERSION="3.4"
+
 install_libevent() {
 
   # Dependency: libtool
@@ -14,9 +18,9 @@ install_libevent() {
   echo "Installing dependency: libevent"
   
   local TMPDIR=$(build_tmpdir libevent)
-  local PACKAGEURL="https://github.com/libevent/libevent/archive/refs/tags/release-2.1.12-stable.tar.gz"
-  local PACKAGETARNAME="libevent-release-2.1.12-stable.tar.gz"
-  local PACKAGEDIRNAME="libevent-release-2.1.12-stable"
+  local PACKAGEURL="https://github.com/libevent/libevent/archive/refs/tags/release-$LIBEVENT_VERSION-stable.tar.gz"
+  local PACKAGETARNAME="libevent-release-$LIBEVENT_VERSION-stable.tar.gz"
+  local PACKAGEDIRNAME="libevent-release-$LIBEVENT_VERSION-stable"
   
   cd $THISDIR
   rm -rf $TMPDIR
@@ -50,9 +54,9 @@ install_utf8proc() {
   echo "Installing dependency: utf8proc"
   
   local TMPDIR=$(build_tmpdir utf8proc)
-  local PACKAGEURL="https://github.com/JuliaStrings/utf8proc/archive/refs/tags/v2.9.0.tar.gz"
+  local PACKAGEURL="https://github.com/JuliaStrings/utf8proc/archive/refs/tags/v$UTF8PROC_VERSION.tar.gz"
   local PACKAGETARNAME="utf8proc.tar.gz"
-  local PACKAGEDIRNAME="utf8proc-2.9.0/"
+  local PACKAGEDIRNAME="utf8proc-$UTF8PROC_VERSION/"
   
   cd $THISDIR
   rm -rf $TMPDIR
@@ -91,9 +95,9 @@ install_tmux_dependencies() {
 
 build_tmux() {
   local TMPDIR=$(build_tmpdir tmux)
-  local PACKAGEURL="https://github.com/tmux/tmux/releases/download/3.4/tmux-3.4.tar.gz"
-  local PACKAGETARNAME="tmux-3.4.tar.gz"
-  local PACKAGEDIRNAME="tmux-3.4/"
+  local PACKAGEURL="https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz"
+  local PACKAGETARNAME="tmux-$TMUX_VERSION.tar.gz"
+  local PACKAGEDIRNAME="tmux-$TMUX_VERSION/"
   
   cd $THISDIR
   rm -rf $TMPDIR

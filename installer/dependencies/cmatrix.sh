@@ -1,11 +1,13 @@
 #!/bin/bash
 
+CMATRIX_VERSION="2.0"
+
 install_cmatrix() {
   if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
     local TMPDIR=$(build_tmpdir cmatrix)
-    local PACKAGEURL="https://github.com/abishekvashok/cmatrix/archive/refs/tags/v2.0.tar.gz"
-    local PACKAGETARNAME="cmatrix-2.0.tar.gz"
-    local PACKAGEDIRNAME="cmatrix-2.0"
+    local PACKAGEURL="https://github.com/abishekvashok/cmatrix/archive/refs/tags/v$CMATRIX_VERSION.tar.gz"
+    local PACKAGETARNAME="cmatrix-$CMATRIX_VERSION.tar.gz"
+    local PACKAGEDIRNAME="cmatrix-$CMATRIX_VERSION"
 
     cd $THISDIR
     rm -rf $TMPDIR

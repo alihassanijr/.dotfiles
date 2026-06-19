@@ -4,6 +4,8 @@
 # everywhere, and I want to decide when to upgrade or not.
 # Even now most Ubuntu builds don't have vim9.
 
+VIM_VERSION="9.2.0650"
+
 install_vim() {
     # Couple of notes:
     # A. I disable selinux because not all the servers I'm on have it installed
@@ -15,9 +17,9 @@ install_vim() {
     # D. Obviously installing to ~/.local/bin -- sourced in commonrc.
     if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
         local TMPDIR=$(build_tmpdir vim)
-        local PACKAGEURL="https://github.com/vim/vim/archive/refs/tags/v9.2.0650.tar.gz"
-        local PACKAGETARNAME="vim-9.2.0650.tar.gz"
-        local PACKAGEDIRNAME="vim-9.2.0650"
+        local PACKAGEURL="https://github.com/vim/vim/archive/refs/tags/v$VIM_VERSION.tar.gz"
+        local PACKAGETARNAME="vim-$VIM_VERSION.tar.gz"
+        local PACKAGEDIRNAME="vim-$VIM_VERSION"
 
         cd $THISDIR
         rm -rf $TMPDIR

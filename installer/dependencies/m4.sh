@@ -1,16 +1,18 @@
 #!/bin/bash
 # M4
 
+M4_VERSION="1.4.19"
+
 install_m4() {
     echo "Installing m4"
 
     local TMPDIR=$(build_tmpdir m4)
     local PACKAGEURLS=(
-        "https://ftpmirror.gnu.org/gnu/m4/m4-1.4.19.tar.xz"
-        "https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.xz"
+        "https://ftpmirror.gnu.org/gnu/m4/m4-$M4_VERSION.tar.xz"
+        "https://ftp.gnu.org/gnu/m4/m4-$M4_VERSION.tar.xz"
     )
-    local PACKAGETARNAME="m4-1.4.19.tar.xz"
-    local PACKAGEDIRNAME="m4-1.4.19"
+    local PACKAGETARNAME="m4-$M4_VERSION.tar.xz"
+    local PACKAGEDIRNAME="m4-$M4_VERSION"
     
     cd $THISDIR
     rm -rf $TMPDIR

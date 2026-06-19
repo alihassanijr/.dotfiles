@@ -1,16 +1,18 @@
 #!/bin/bash
 # gnu sed
 
+SED_VERSION="4.9"
+
 install_gnu_sed() {
   echo "Installing dependency: gnu sed"
   
   local TMPDIR=$(build_tmpdir gnu_sed)
   local PACKAGEURLS=(
-    "https://ftpmirror.gnu.org/gnu/sed/sed-4.9.tar.xz"
-    "https://ftp.gnu.org/gnu/sed/sed-4.9.tar.xz"
+    "https://ftpmirror.gnu.org/gnu/sed/sed-$SED_VERSION.tar.xz"
+    "https://ftp.gnu.org/gnu/sed/sed-$SED_VERSION.tar.xz"
   )
-  local PACKAGETARNAME="sed-4.9.tar.xz"
-  local PACKAGEDIRNAME="sed-4.9"
+  local PACKAGETARNAME="sed-$SED_VERSION.tar.xz"
+  local PACKAGEDIRNAME="sed-$SED_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR

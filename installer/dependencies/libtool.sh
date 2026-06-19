@@ -1,16 +1,18 @@
 #!/bin/bash
 # libtool: shared dependency between tmux and aria2
 
+LIBTOOL_VERSION="2.4.7"
+
 install_libtool() {
   echo "Installing dependency: libtool"
   
   local TMPDIR=$(build_tmpdir libtool)
   local PACKAGEURLS=(
-    "https://ftpmirror.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz"
-    "https://ftp.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz"
+    "https://ftpmirror.gnu.org/gnu/libtool/libtool-$LIBTOOL_VERSION.tar.xz"
+    "https://ftp.gnu.org/gnu/libtool/libtool-$LIBTOOL_VERSION.tar.xz"
   )
-  local PACKAGETARNAME="libtool-2.4.7.tar.xz"
-  local PACKAGEDIRNAME="libtool-2.4.7"
+  local PACKAGETARNAME="libtool-$LIBTOOL_VERSION.tar.xz"
+  local PACKAGEDIRNAME="libtool-$LIBTOOL_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR

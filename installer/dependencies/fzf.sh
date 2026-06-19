@@ -2,11 +2,13 @@
 # Fzf builder
 # Fuzzy finder
 
+FZF_VERSION="0.73.1"
+
 install_fzf() {
     local TMPDIR=$(build_tmpdir fzf)
-    local PACKAGEURL="https://github.com/junegunn/fzf/archive/refs/tags/v0.73.1.tar.gz"
-    local PACKAGETARNAME="fzf-0.73.1.tar.gz"
-    local PACKAGEDIRNAME="fzf-0.73.1"
+    local PACKAGEURL="https://github.com/junegunn/fzf/archive/refs/tags/v$FZF_VERSION.tar.gz"
+    local PACKAGETARNAME="fzf-$FZF_VERSION.tar.gz"
+    local PACKAGEDIRNAME="fzf-$FZF_VERSION"
 
     cd $THISDIR
     rm -rf $TMPDIR

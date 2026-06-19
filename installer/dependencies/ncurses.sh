@@ -2,13 +2,13 @@
 # NCurses builder
 # Vim, Vifm, and htop require curses or ncurses
 
-NCURSESVER="6.4"
+NCURSES_VERSION="6.4"
 
 install_ncurses() {
     local TMPDIR=$(build_tmpdir ncurses)
     local NCURSESURLS=(
-        "https://invisible-mirror.net/archives/ncurses/ncurses-$NCURSESVER.tar.gz"
-        "https://ftp.gnu.org/pub/gnu/ncurses/ncurses-$NCURSESVER.tar.gz"
+        "https://invisible-mirror.net/archives/ncurses/ncurses-$NCURSES_VERSION.tar.gz"
+        "https://ftp.gnu.org/pub/gnu/ncurses/ncurses-$NCURSES_VERSION.tar.gz"
     )
     
     cd $THISDIR
@@ -16,10 +16,10 @@ install_ncurses() {
     mkdir -p $TMPDIR
 
     cd $TMPDIR && \
-        fetch_package "ncurses-$NCURSESVER.tar.gz" "${NCURSESURLS[@]}" && \
+        fetch_package "ncurses-$NCURSES_VERSION.tar.gz" "${NCURSESURLS[@]}" && \
         tar -xzf ncurses*.tar.gz && \
         rm ncurses*.tar.gz && \
-        cd ncurses-$NCURSESVER && \
+        cd ncurses-$NCURSES_VERSION && \
         ./configure \
             --enable-widec \
             --with-shared \

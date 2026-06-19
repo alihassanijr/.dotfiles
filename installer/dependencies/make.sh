@@ -1,14 +1,16 @@
 #!/bin/bash
 # Make
 
+MAKE_VERSION="4.4.1"
+
 install_make() {
   local TMPDIR=$(build_tmpdir make)
   local PACKAGEURLS=(
-    "https://ftpmirror.gnu.org/gnu/make/make-4.4.1.tar.gz"
-    "https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz"
+    "https://ftpmirror.gnu.org/gnu/make/make-$MAKE_VERSION.tar.gz"
+    "https://ftp.gnu.org/gnu/make/make-$MAKE_VERSION.tar.gz"
   )
-  local PACKAGETARNAME="make-4.4.1.tar.gz"
-  local PACKAGEDIRNAME="make-4.4.1"
+  local PACKAGETARNAME="make-$MAKE_VERSION.tar.gz"
+  local PACKAGEDIRNAME="make-$MAKE_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR

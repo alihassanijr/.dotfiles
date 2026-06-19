@@ -3,12 +3,14 @@
 # Sometimes not pre-installed, and I insist on having everything regardless
 # of my sudo access. And let's face it, that's not always the only limit.
 
+HTOP_VERSION="3.5.1"
+
 install_htop() {
     if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
         local TMPDIR=$(build_tmpdir htop)
-        local PACKAGEURL="https://github.com/htop-dev/htop/archive/refs/tags/3.5.1.tar.gz"
-        local PACKAGETARNAME="htop-3.5.1.tar.gz"
-        local PACKAGEDIRNAME="htop-3.5.1"
+        local PACKAGEURL="https://github.com/htop-dev/htop/archive/refs/tags/$HTOP_VERSION.tar.gz"
+        local PACKAGETARNAME="htop-$HTOP_VERSION.tar.gz"
+        local PACKAGEDIRNAME="htop-$HTOP_VERSION"
 
         cd $THISDIR
         rm -rf $TMPDIR

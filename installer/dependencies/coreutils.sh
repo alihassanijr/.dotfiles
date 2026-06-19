@@ -1,16 +1,18 @@
 #!/bin/bash
 # gnu coreutils
 
+COREUTILS_VERSION="9.5"
+
 install_coreutils() {
   echo "Installing dependency: coreutils"
   
   local TMPDIR=$(build_tmpdir coreutils)
   local PACKAGEURLS=(
-    "https://ftpmirror.gnu.org/gnu/coreutils/coreutils-9.5.tar.xz"
-    "https://ftp.gnu.org/gnu/coreutils/coreutils-9.5.tar.xz"
+    "https://ftpmirror.gnu.org/gnu/coreutils/coreutils-$COREUTILS_VERSION.tar.xz"
+    "https://ftp.gnu.org/gnu/coreutils/coreutils-$COREUTILS_VERSION.tar.xz"
   )
-  local PACKAGETARNAME="coreutils-9.5.tar.xz"
-  local PACKAGEDIRNAME="coreutils-9.5"
+  local PACKAGETARNAME="coreutils-$COREUTILS_VERSION.tar.xz"
+  local PACKAGEDIRNAME="coreutils-$COREUTILS_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR

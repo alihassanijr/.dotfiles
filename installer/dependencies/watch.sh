@@ -1,15 +1,17 @@
 #!/bin/bash
 
+PROCPS_VERSION="4.0.4"
+
 install_watch() {
   echo "Installing procps/watch"
 
   local TMPDIR=$(build_tmpdir watch)
   local PACKAGEURLS=(
-    "https://downloads.sourceforge.net/project/procps-ng/Production/procps-ng-4.0.4.tar.xz"
-    "https://newcontinuum.dl.sourceforge.net/project/procps-ng/Production/procps-ng-4.0.4.tar.xz"
+    "https://downloads.sourceforge.net/project/procps-ng/Production/procps-ng-$PROCPS_VERSION.tar.xz"
+    "https://newcontinuum.dl.sourceforge.net/project/procps-ng/Production/procps-ng-$PROCPS_VERSION.tar.xz"
   )
-  local PACKAGETARNAME="procps-ng-4.0.4.tar.xz"
-  local PACKAGEDIRNAME="procps-ng-4.0.4"
+  local PACKAGETARNAME="procps-ng-$PROCPS_VERSION.tar.xz"
+  local PACKAGEDIRNAME="procps-ng-$PROCPS_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR

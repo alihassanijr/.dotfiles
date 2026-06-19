@@ -1,11 +1,13 @@
 #!/bin/bash
 # ZShell
 
+ZSH_PKG_VERSION="5.9"
+
 build_zsh() {
   local TMPDIR=$(build_tmpdir zsh)
-  local PACKAGEURL="https://downloads.sourceforge.net/project/zsh/zsh/5.9/zsh-5.9.tar.xz"
-  local PACKAGETARNAME="zsh-5.9.tar.xz"
-  local PACKAGEDIRNAME="zsh-5.9"
+  local PACKAGEURL="https://downloads.sourceforge.net/project/zsh/zsh/$ZSH_PKG_VERSION/zsh-$ZSH_PKG_VERSION.tar.xz"
+  local PACKAGETARNAME="zsh-$ZSH_PKG_VERSION.tar.xz"
+  local PACKAGEDIRNAME="zsh-$ZSH_PKG_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR

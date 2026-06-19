@@ -1,15 +1,17 @@
 #!/bin/bash
 
+GETTEXT_VERSION="0.22.5"
+
 install_gettext() {
   echo "Installing gettext"
 
   local TMPDIR=$(build_tmpdir gettext)
   local PACKAGEURLS=(
-    "https://ftpmirror.gnu.org/gnu/gettext/gettext-0.22.5.tar.gz"
-    "https://ftp.gnu.org/gnu/gettext/gettext-0.22.5.tar.gz"
+    "https://ftpmirror.gnu.org/gnu/gettext/gettext-$GETTEXT_VERSION.tar.gz"
+    "https://ftp.gnu.org/gnu/gettext/gettext-$GETTEXT_VERSION.tar.gz"
   )
-  local PACKAGETARNAME="gettext-0.22.5.tar.gz"
-  local PACKAGEDIRNAME="gettext-0.22.5"
+  local PACKAGETARNAME="gettext-$GETTEXT_VERSION.tar.gz"
+  local PACKAGEDIRNAME="gettext-$GETTEXT_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR
