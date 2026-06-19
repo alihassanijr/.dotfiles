@@ -21,6 +21,10 @@ install_libevent() {
   local PACKAGEURL="https://github.com/libevent/libevent/archive/refs/tags/release-$LIBEVENT_VERSION-stable.tar.gz"
   local PACKAGETARNAME="libevent-release-$LIBEVENT_VERSION-stable.tar.gz"
   local PACKAGEDIRNAME="libevent-release-$LIBEVENT_VERSION-stable"
+
+  if [[ "$_OS_NAME" == "darwin" ]]; then
+    ADDITIONAL_LIBEVENT_CONF_ARGS="--disable-openssl"
+  fi
   
   cd $THISDIR
   rm -rf $TMPDIR
@@ -34,6 +38,7 @@ install_libevent() {
     ./autogen.sh && \
     ./configure \
       --prefix=${LOCALDIR} \
+      $ADDITIONAL_LIBEVENT_CONF_ARGS \
       --disable-dependency-tracking \
       --disable-debug-mode && \
     make -j$NUM_WORKERS && \

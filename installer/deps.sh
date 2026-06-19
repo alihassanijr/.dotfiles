@@ -200,7 +200,7 @@ ensure_watch() {
 ensure_wget() {
   set -e
   # wget must come from OS or installed via brew runtime
-  check_hard_dependency "wget"
+  check_soft_dependency "wget"
 }
 
 # Zathura

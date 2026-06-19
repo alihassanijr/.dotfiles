@@ -2,7 +2,7 @@
 # Bat installer
 # Bats are better than cats ;)
 
-BAT_VERSION="0.25.0"
+BAT_VERSION="0.26.1"
 
 install_bat() {
     local TMPDIR=$(build_tmpdir bat)
@@ -14,6 +14,8 @@ install_bat() {
     mkdir -p $TMPDIR
     
       if [[ "$_OS_NAME" == "darwin" ]] && [[ "$arch" == "x86_64" ]]; then
+          BATURL="https://github.com/sharkdp/bat/releases/download/v$BAT_VERSION/bat-v$BAT_VERSION-x86_64-apple-darwin.tar.gz"
+      elif [[ "$_OS_NAME" == "darwin" ]] && [[ ( "$arch" == "arm64" || "$arch" == "aarch64" ) ]]; then
           BATURL="https://github.com/sharkdp/bat/releases/download/v$BAT_VERSION/bat-v$BAT_VERSION-aarch64-apple-darwin.tar.gz"
       elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "x86_64" ]]; then
           BATURL="https://github.com/sharkdp/bat/releases/download/v$BAT_VERSION/bat-v$BAT_VERSION-x86_64-unknown-linux-gnu.tar.gz"
