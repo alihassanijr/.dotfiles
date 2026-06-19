@@ -15,9 +15,6 @@ source ~/.config/zsh/mini-omz/plugins/zsh-history-substring-search/zsh-history-s
 source ~/.config/zsh/mini-omz/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ~/.config/zsh/zsh-syntax-highlighting-custom-colors.sh
 
-# Fuzzy finder
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 ###############################################################
 # Histfile mods
 ###############################################################

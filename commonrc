@@ -83,6 +83,13 @@ fi
 export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
+# FZF
+if [[ -n "$ZSH_VERSION" ]]; then
+  [ -f $LOCAL_HOME_PATH/.fzf.zsh ] && source $LOCAL_HOME_PATH/.fzf.zsh
+elif [[ -n "$BASH_VERSION" ]]; then
+  [ -f $LOCAL_HOME_PATH/.fzf.bash ] && source $LOCAL_HOME_PATH/.fzf.bash
+fi
+
 # Bat config
 export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
 

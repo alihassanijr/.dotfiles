@@ -105,6 +105,7 @@ build_tmux() {
 
   if [[ "$_OS_NAME" == "darwin" ]]; then
     ADDITIONAL_TMUX_CONF_ARGS="-with-TERM=screen-256color"
+    export CFLAGS="-Wno-error=int-conversion -Wno-error=implicit-function-declaration ${CFLAGS:-}"
   fi
   
   cd $TMPDIR && \
