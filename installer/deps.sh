@@ -70,7 +70,7 @@ ensure_diff_so_fancy() {
 # Fzf
 source installer/dependencies/fzf.sh
 ensure_fzf() {
-  check_and_install_dependency "fzf" "$HOMEDIR/.fzf/bin/fzf" "install_fzf"
+  check_and_install_dependency "fzf" "$FZF_DIR/.fzf/bin/fzf" "install_fzf"
 }
 
 # gettext

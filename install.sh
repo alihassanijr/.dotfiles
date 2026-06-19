@@ -17,6 +17,8 @@ fi
 
 # Load functions
 source installer/prolog.sh
+echo "Target directory for programs: $PROGRAMS_PATH"
+
 if [[ "$BUILD_ONLY" -ne 1 ]]; then
   if [[ $IS_PERSONAL -eq 1 ]]; then
     echo "This is a GUI device, is that right? (will attempt to install terminal emulator and pdf viewer.)"

@@ -170,7 +170,7 @@ link_bin() {
   local BIN_NAME=$1         # Name
   local PATH_IN_DOTFILES=$2 # File name in .dotfiles
   local TARGET_NAME=$3      # Target in $LOCALDIR/bin
-  echo "Copying $BIN_NAME. Copy $PATH_IN_DOTFILES to ~/.local/bin/$TARGET_NAME"
+  echo "Copying $BIN_NAME. Copy $PATH_IN_DOTFILES to $LOCALDIR/bin/$TARGET_NAME"
   rm -f $LOCALDIR/bin/$TARGET_NAME
   cp -f $THISDIR/$PATH_IN_DOTFILES $LOCALDIR/bin/$TARGET_NAME
 

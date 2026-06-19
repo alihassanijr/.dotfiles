@@ -2,6 +2,7 @@
 
 WORKERS ?= 1
 BUILD_ONLY ?= 0
+PROGRAMS_PATH ?= $(HOME)
 
 all: install
 

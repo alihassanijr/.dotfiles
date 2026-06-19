@@ -9,10 +9,11 @@ THISDIR=$HOME/.dotfiles
 HOMEDIR=$HOME
 
 # Where should I install everything?
-LOCALDIR=$HOME/.local/
+PROGRAMS_PATH=${PROGRAMS_PATH:-$HOME}
 
-# Curses is special; where do I install that?
-NCDIR=$HOME/.ncurses/
+LOCALDIR=$PROGRAMS_PATH/.local/
+NCDIR=$PROGRAMS_PATH/.ncurses/
+FZF_DIR=$PROGRAMS_PATH
 
 
 _OS_NAME=$(uname -s | tr '[:upper:]' '[:lower:]')
