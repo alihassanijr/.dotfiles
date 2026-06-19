@@ -44,6 +44,12 @@ ensure_clang_format() {
   check_and_install_dependency "clang-format" "$LOCALDIR/bin/clang-format" "install_clang_format"
 }
 
+# Claude Code
+source installer/dependencies/claude.sh
+ensure_claude() {
+  check_and_install_dependency "claude" "$LOCALDIR/bin/claude" "install_claude"
+}
+
 # CMake
 source installer/dependencies/cmake.sh
 ensure_cmake() {
@@ -54,6 +60,12 @@ ensure_cmake() {
 source installer/dependencies/cmatrix.sh
 ensure_cmatrix() {
   check_and_install_dependency "cmatrix" "$LOCALDIR/bin/cmatrix" "install_cmatrix"
+}
+
+# Codex
+source installer/dependencies/codex.sh
+ensure_codex() {
+  check_and_install_dependency "codex" "$LOCALDIR/bin/codex" "install_codex"
 }
 
 # coreutils

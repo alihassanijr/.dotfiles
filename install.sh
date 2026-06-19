@@ -98,6 +98,10 @@ ensure_zathura
 ensure_zsh
 ensure_fzf
 
+# Coding agents
+ensure_claude
+ensure_codex
+
 # Fancy alternatives
 ensure_bat              # alternative to cat
 ensure_diff_so_fancy    # alternative to diff
@@ -122,12 +126,12 @@ if [[ "$BUILD_ONLY" -ne 1 ]]; then
   link_git_config
   link_agentfiles
 
-# Fix permissions
-chmod 700 $LOCALDIR
-chmod 700 $NCDIR
+  # Fix permissions
+  chmod 700 $LOCALDIR
+  chmod 700 $NCDIR
 
-# Just for being safe
-chmod 700 $HOME/.ssh
+  # Just for being safe
+  chmod 700 $HOME/.ssh
 
 else
   echo "BUILD_ONLY set; skipping config linking."
