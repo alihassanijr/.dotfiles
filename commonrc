@@ -52,8 +52,9 @@ if [[ "$OSTYPE" == "linux-gnu"* ]] && command_exists nvidia-smi && ! command_exi
 fi
 
 LOCAL_HOME_PATH="$HOME"
-if [[ -d "$HOME/.programs/$DISTRO_NAME" ]]; then
-  LOCAL_HOME_PATH="$HOME/.programs/$DISTRO_NAME"
+PROGRAMS_PATH="$HOME/.programs/${DISTRO_NAME}_$(uname -m)"
+if [[ -d $PROGRAMS_PATH ]]; then
+  LOCAL_HOME_PATH=$PROGRAMS_PATH
 fi
 
 # General Exports
