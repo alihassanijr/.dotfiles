@@ -8,10 +8,15 @@ echo "#====================#"
 
 echo "Building dotfiles with $NUM_WORKERS workers"
 
-MAX_JOBS=$(nproc)
+MAX_WORKERS=""
+if command -v nproc >/dev/null 2>&1; then
+  MAX_WORKERS=$(nproc)
+elif [[ "$(uname -s)" == "Darwin" ]]; then
+  MAX_WORKERS=$(sysctl -n hw.logicalcpu 2>/dev/null)
+fi
 
-if [[ $NUM_WORKERS -gt $MAX_JOBS ]]; then
-  echo "You're exceeding nproc: $NUM_WORKERS > $MAX_JOBS."
+if [[ -n "$MAX_WORKERS" && $NUM_WORKERS -gt $MAX_WORKERS ]]; then
+  echo "You're exceeding nproc: $NUM_WORKERS > $MAX_WORKERS."
   exit 1
 fi
 
