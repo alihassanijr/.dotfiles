@@ -18,6 +18,16 @@ function command_exists() {
   command -v $1 >/dev/null 2>&1
 }
 
+distro_name() {
+  . /etc/os-release
+  id=${ID:-linux}
+  ver=${VERSION_ID:-rolling}
+
+  ver=$(printf '%s' "$ver" | tr -cd '0-9A-Za-z')
+  printf '%s_%s\n' "$id" "$ver"
+}
+export DISTRO_NAME=$(distro_name)
+
 # Try to look for CTK on linux devices
 if [[ "$OSTYPE" == "linux-gnu"* ]] && command_exists nvidia-smi && ! command_exists nvcc; then
     CUDA_PATHS=( 
@@ -41,24 +51,29 @@ if [[ "$OSTYPE" == "linux-gnu"* ]] && command_exists nvidia-smi && ! command_exi
     done
 fi
 
+LOCAL_HOME_PATH="$HOME"
+if [[ -d "$HOME/.programs/$DISTRO_NAME" ]]; then
+  LOCAL_HOME_PATH="$HOME/.programs/$DISTRO_NAME"
+fi
+
 # General Exports
 export EDITOR="vim"
 
 # Load local binaries
-export PATH=$HOME/.local/bin:$PATH
-export MANPATH=$HOME/.local/man:$MANPATH
-if [[ -d "$HOME/.local/extras/coreutils" ]]; then
-  export PATH=$HOME/.local/extras/coreutils/bin:$PATH
-  export MANPATH=$HOME/.local/extras/coreutils/man:$MANPATH
+export PATH=$LOCAL_HOME_PATH/.local/bin:$PATH
+export MANPATH=$LOCAL_HOME_PATH/.local/man:$MANPATH
+if [[ -d "$LOCAL_HOME_PATH/.local/extras/coreutils" ]]; then
+  export PATH=$LOCAL_HOME_PATH/.local/extras/coreutils/bin:$PATH
+  export MANPATH=$LOCAL_HOME_PATH/.local/extras/coreutils/man:$MANPATH
 fi
 
 # Load homebrew (if available)
-if [[ -d $HOME/.brew ]]; then
-  export PATH="$HOME/.brew/bin:$HOME/.brew/sbin:$PATH"
+if [[ -d $LOCAL_HOME_PATH/.brew ]]; then
+  export PATH="$LOCAL_HOME_PATH/.brew/bin:$LOCAL_HOME_PATH/.brew/sbin:$PATH"
 fi
 
-export LD_LIBRARY_PATH=$HOME/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
 # Bat config
 export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
@@ -128,7 +143,7 @@ alias reset-term='stty sane'
 alias gbr='git branch --show-current'
 
 # because bureaucrats are here, a pain in my rear, getting used to it
-alias claude='claude --model "opus[1m]" --effort high'
+alias claude='claude --model "opus[1m]" --effort high --append-system-prompt "use caveman skill"'
 
 #####################
 # Functions
@@ -306,7 +321,7 @@ sshrun() {
 
 # Run command on multiple remote nodes
 sshrun_local() {
-  COMMAND=$HOME/.local/bin/$1
+  COMMAND=$LOCAL_HOME_PATH/.local/bin/$1
   NODES=$2
 
   sshrun $COMMAND $NODES
