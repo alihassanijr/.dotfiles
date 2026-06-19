@@ -4,8 +4,11 @@
 BREW_VERSION="6.0.0"
 
 install_brew() {
-  echo "Installing brew"
-  rm -rf $BREWDIR
+  if [[ -d $BREWDIR ]]; then
+    echo "$BREWDIR already exists. Please remove it before attempting to reinstall brew."
+    return 1
+  fi
+
   git clone https://github.com/homebrew/brew $BREWDIR && \
       git -C $BREWDIR checkout $BREW_VERSION
 
