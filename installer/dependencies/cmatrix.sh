@@ -3,6 +3,11 @@
 CMATRIX_VERSION="2.0"
 
 install_cmatrix() {
+  if [[ "$BUILD_ONLY" -eq 1 ]]; then
+    echo "Skip cmatrix in BUILD_ONLY -- not a requirement for most cases"
+    return 0
+  fi
+
   if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
     local TMPDIR=$(build_tmpdir cmatrix)
     local PACKAGEURL="https://github.com/abishekvashok/cmatrix/archive/refs/tags/v$CMATRIX_VERSION.tar.gz"

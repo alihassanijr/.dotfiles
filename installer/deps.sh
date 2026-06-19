@@ -32,6 +32,12 @@ ensure_bat() {
   configure_dependency "bat" "configure_bat"
 }
 
+# Brew
+source installer/dependencies/brew.sh
+ensure_brew() {
+  check_and_install_dependency "brew" "$BREWDIR/bin/brew" "install_brew"
+}
+
 # clang-format
 source installer/dependencies/clang-format.sh
 ensure_clang_format() {
@@ -47,9 +53,6 @@ ensure_cmake() {
 # cmatrix
 source installer/dependencies/cmatrix.sh
 ensure_cmatrix() {
-  if [[ "$BUILD_ONLY" -eq 1 ]]; then
-    return 0
-  fi
   check_and_install_dependency "cmatrix" "$LOCALDIR/bin/cmatrix" "install_cmatrix"
 }
 
@@ -197,19 +200,15 @@ ensure_watch() {
 }
 
 # wget
+source installer/dependencies/wget.sh
 ensure_wget() {
-  set -e
-  # wget must come from OS or installed via brew runtime
-  check_soft_dependency "wget"
+  check_and_install_hard_dependency "wget" "install_wget"
 }
 
 # Zathura
 source installer/dependencies/zathura.sh
 ensure_zathura() {
   set -e
-  if [[ "$BUILD_ONLY" -eq 1 ]]; then
-    return 0
-  fi
   if [[ $IS_PERSONAL -eq 1 ]]; then
     check_and_install_dependency "zathura" "$(program_path zathura)" "install_zathura"
     configure_dependency "zathura" "configure_zathura"

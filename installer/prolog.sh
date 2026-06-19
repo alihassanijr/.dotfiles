@@ -14,6 +14,7 @@ PROGRAMS_PATH=${PROGRAMS_PATH:-$HOME}
 LOCALDIR=$PROGRAMS_PATH/.local/
 NCDIR=$PROGRAMS_PATH/.ncurses/
 FZF_DIR=$PROGRAMS_PATH
+BREWDIR=$PROGRAMS_PATH/.brew
 
 
 _OS_NAME=$(uname -s | tr '[:upper:]' '[:lower:]')

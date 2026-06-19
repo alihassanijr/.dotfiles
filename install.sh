@@ -49,6 +49,8 @@ echo "Installing my stuff..."
 
 # .local
 export PATH=$LOCALDIR/bin:$PATH
+# .brew
+export PATH=$BREWDIR/bin:$BREWDIR/sbin:$PATH
 export LD_LIBRARY_PATH=$LOCALDIR/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 export PKG_CONFIG_PATH="$LOCALDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
 export ACLOCAL_PATH="$LOCALDIR/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
@@ -59,6 +61,10 @@ export PKG_CONFIG_PATH="$NCDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
 export CFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
 export CPPFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
 
+
+# git and brew first; other dependencies may rely on them.
+ensure_git
+ensure_brew
 
 # Very basic stuff (usually installed on linux, but
 # not necessarily on mac).
@@ -80,7 +86,6 @@ ensure_coreutils
 ensure_gnu_sed
 ensure_watch
 ensure_cmake
-#ensure_git
 ensure_git_lfs
 
 # Everyday
