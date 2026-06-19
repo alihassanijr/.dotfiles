@@ -18,15 +18,13 @@ install_fzf() {
         fetch_package $PACKAGETARNAME $PACKAGEURL && \
         tar -xzf $PACKAGETARNAME && \
         rm $PACKAGETARNAME && \
-        cd $PACKAGEDIRNAME && \
-        XDG_CONFIG_HOME=$FZF_DIR \
+        mv $PACKAGEDIRNAME $FZF_DIR/.fzf && \
+        cd $FZF_DIR/.fzf && \
+        HOME=$FZF_DIR XDG_CONFIG_HOME=$FZF_DIR \
           ./install \
             --key-bindings \
             --completion \
-            --no-update-rc && \
-        cd $TMPDIR && \
-        rm -rf $FZF_DIR/.fzf && \
-        cp -r $PACKAGEDIRNAME $FZF_DIR/.fzf
+            --no-update-rc
 
     if [ $? -ne 0 ]; then
         echo "fzf build failed."
