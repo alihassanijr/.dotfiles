@@ -1,19 +1,24 @@
 #!/bin/bash
 
+GETTEXT_VERSION="0.22.5"
+
 install_gettext() {
   echo "Installing gettext"
 
-  local TMPDIR=$THISDIR/tmp_gettext
-  local PACKAGEURL="https://ftp.gnu.org/gnu/gettext/gettext-0.22.5.tar.gz"
-  local PACKAGETARNAME="gettext-0.22.5.tar.gz"
-  local PACKAGEDIRNAME="gettext-0.22.5"
+  local TMPDIR=$(build_tmpdir gettext)
+  local PACKAGEURLS=(
+    "https://ftpmirror.gnu.org/gnu/gettext/gettext-$GETTEXT_VERSION.tar.gz"
+    "https://ftp.gnu.org/gnu/gettext/gettext-$GETTEXT_VERSION.tar.gz"
+  )
+  local PACKAGETARNAME="gettext-$GETTEXT_VERSION.tar.gz"
+  local PACKAGEDIRNAME="gettext-$GETTEXT_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR
   mkdir -p $TMPDIR
 
   cd $TMPDIR && \
-      wget $PACKAGEURL -O $PACKAGETARNAME && \
+      fetch_package $PACKAGETARNAME "${PACKAGEURLS[@]}" && \
       tar -xzf $PACKAGETARNAME && \
       rm $PACKAGETARNAME && \
       cd $PACKAGEDIRNAME && \
@@ -30,8 +35,15 @@ install_gettext() {
         --without-git \
         --without-cvs \
         --without-xz && \
-      make && \
+      make -j$NUM_WORKERS && \
       make install
+
+  if [ $? -ne 0 ]; then
+    echo "gettext build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
 
   cd $THISDIR
   rm -rf $TMPDIR

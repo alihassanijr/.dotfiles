@@ -1,0 +1,50 @@
+# Ported from agentfiles/claude/settings.json.
+#
+# Codex rules apply to shell command prefixes that run outside the sandbox. File-read
+# restrictions for credentials and other sensitive paths are expressed in AGENTS.md.
+
+prefix_rule(pattern=["git", "diff"], decision="allow")
+prefix_rule(pattern=["git", "log"], decision="allow")
+prefix_rule(pattern=["git", "show"], decision="allow")
+prefix_rule(pattern=["git", "status"], decision="allow")
+prefix_rule(pattern=["git", "branch"], decision="allow")
+prefix_rule(pattern=["ls"], decision="allow")
+prefix_rule(pattern=["wc"], decision="allow")
+
+prefix_rule(
+    pattern=["rm", "-rf"],
+    decision="forbidden",
+    justification="Do not run recursive destructive removal without an explicit user request.",
+)
+prefix_rule(
+    pattern=["rm", "-fr"],
+    decision="forbidden",
+    justification="Do not run recursive destructive removal without an explicit user request.",
+)
+prefix_rule(
+    pattern=["git", "push"],
+    decision="forbidden",
+    justification="Do not push from an agent session unless the user explicitly asks.",
+)
+prefix_rule(
+    pattern=["git", "reset", "--hard"],
+    decision="forbidden",
+    justification="Do not discard worktree changes without an explicit user request.",
+)
+prefix_rule(
+    pattern=["git", "clean", "-fd"],
+    decision="forbidden",
+    justification="Do not delete untracked files without an explicit user request.",
+)
+prefix_rule(
+    pattern=["git", "clean", "-f"],
+    decision="forbidden",
+    justification="Do not delete untracked files without an explicit user request.",
+)
+
+prefix_rule(pattern=["ssh"], decision="prompt", justification="Confirm before using SSH material or remote access.")
+prefix_rule(pattern=["scp"], decision="prompt", justification="Confirm before using SSH material or remote access.")
+prefix_rule(pattern=["sftp"], decision="prompt", justification="Confirm before using SSH material or remote access.")
+prefix_rule(pattern=["ssh-add"], decision="prompt", justification="Confirm before using SSH agent keys.")
+prefix_rule(pattern=["ssh-agent"], decision="prompt", justification="Confirm before using SSH agent state.")
+prefix_rule(pattern=["ssh-keygen"], decision="prompt", justification="Confirm before touching SSH keys.")

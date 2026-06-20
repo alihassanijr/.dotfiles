@@ -4,7 +4,7 @@
 prompt_git() {
   local ref dirty
 
-  OMZ_MAX_GIT_REF_LENGTH=${OMZ_MAX_GIT_REF_LENGTH:-50}
+  OMZ_MAX_GIT_REF_LENGTH=${OMZ_MAX_GIT_REF_LENGTH:-20}
 
   # (ali): timeout limit on ALL git-related stuff
   OMZ_GIT_TIMEOUT=${OMZ_GIT_TIMEOUT:-1}
@@ -46,9 +46,14 @@ prompt_git() {
     if [ "$exit_status_ref" -ne 0 ]; then
       echo -n "⚔ $dirty"
     else
-      final_ref="${ref/refs\/heads\//⭠ }"
-      final_ref="${final_ref:0:$OMZ_MAX_GIT_REF_LENGTH}"
-      echo -n "$final_ref$dirty"
+      local branch_name
+      branch_name="${ref/refs\/heads\//}"
+      branch_name=$(truncate_middle "$branch_name" "$OMZ_MAX_GIT_REF_LENGTH")
+      if [[ "$ref" == refs/heads/* ]]; then
+        echo -n "⭠ $branch_name$dirty"
+      else
+        echo -n "$branch_name$dirty"
+      fi
     fi
   fi
 }

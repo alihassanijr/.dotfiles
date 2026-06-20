@@ -1,9 +1,6 @@
 [submodule "third_party/vim/vifm.vim"]
 	path = third_party/vim/vifm.vim
 	url = https://github.com/vifm/vifm.vim
-[submodule "third_party/vifm"]
-	path = third_party/vifm
-	url = https://github.com/vifm/vifm
 [submodule "third_party/vim/gitbranch"]
 	path = third_party/vim/gitbranch
 	url = https://github.com/itchyny/vim-gitbranch
@@ -16,21 +13,9 @@
 [submodule "third_party/vim/vimtex"]
 	path = third_party/vim/vimtex
 	url = https://github.com/lervag/vimtex
-[submodule "third_party/fzf"]
-	path = third_party/fzf
-	url = https://github.com/junegunn/fzf
 [submodule "third_party/vim/fzf.vim"]
 	path = third_party/vim/fzf.vim
 	url = https://github.com/junegunn/fzf.vim
-[submodule "third_party/htop"]
-	path = third_party/htop
-	url = https://github.com/htop-dev/htop
-[submodule "third_party/vim9"]
-	path = third_party/vim9
-	url = https://github.com/vim/vim
-[submodule "third_party/misc/diff-so-fancy"]
-	path = third_party/misc/diff-so-fancy
-	url = https://github.com/so-fancy/diff-so-fancy
 [submodule "third_party/vim/vim-polyglot"]
 	path = third_party/vim/vim-polyglot
 	url = https://github.com/sheerun/vim-polyglot
@@ -43,6 +28,3 @@
 [submodule "third_party/tmux/tmux-battery"]
 	path = third_party/tmux/tmux-battery
 	url = https://github.com/alihassanijr/tmux-battery
-[submodule "third_party/misc/cmatrix"]
-	path = third_party/misc/cmatrix
-	url = https://github.com/alihassanijr/cmatrix

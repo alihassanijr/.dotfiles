@@ -18,6 +18,23 @@ function command_exists() {
   command -v $1 >/dev/null 2>&1
 }
 
+distro_name() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    id=macos
+    ver=$(sw_vers -productVersion 2>/dev/null | cut -d. -f1)
+  elif [[ -r /etc/os-release ]]; then
+    . /etc/os-release
+    id=${ID:-linux}
+    ver=${VERSION_ID:-rolling}
+  fi
+  id=${id:-linux}
+  ver=${ver:-rolling}
+
+  ver=$(printf '%s' "$ver" | tr -cd '0-9A-Za-z')
+  printf '%s_%s\n' "$id" "$ver"
+}
+export DISTRO_NAME=$(distro_name)
+
 # Try to look for CTK on linux devices
 if [[ "$OSTYPE" == "linux-gnu"* ]] && command_exists nvidia-smi && ! command_exists nvcc; then
     CUDA_PATHS=( 
@@ -41,24 +58,37 @@ if [[ "$OSTYPE" == "linux-gnu"* ]] && command_exists nvidia-smi && ! command_exi
     done
 fi
 
+LOCAL_HOME_PATH="$HOME"
+PROGRAMS_PATH="$HOME/.programs/${DISTRO_NAME}_$(uname -m | sed 's/^aarch64$/arm64/')"
+if [[ -d $PROGRAMS_PATH ]]; then
+  LOCAL_HOME_PATH=$PROGRAMS_PATH
+fi
+
 # General Exports
 export EDITOR="vim"
 
 # Load local binaries
-export PATH=$HOME/.local/bin:$PATH
-export MANPATH=$HOME/.local/man:$MANPATH
-if [[ -d "$HOME/.local/extras/coreutils" ]]; then
-  export PATH=$HOME/.local/extras/coreutils/bin:$PATH
-  export MANPATH=$HOME/.local/extras/coreutils/man:$MANPATH
+export PATH=$LOCAL_HOME_PATH/.local/bin:$PATH
+export MANPATH=$LOCAL_HOME_PATH/.local/man:$MANPATH
+if [[ -d "$LOCAL_HOME_PATH/.local/extras/coreutils" ]]; then
+  export PATH=$LOCAL_HOME_PATH/.local/extras/coreutils/bin:$PATH
+  export MANPATH=$LOCAL_HOME_PATH/.local/extras/coreutils/man:$MANPATH
 fi
 
 # Load homebrew (if available)
-if [[ -d $HOME/.brew ]]; then
-  export PATH="$HOME/.brew/bin:$HOME/.brew/sbin:$PATH"
+if [[ -d $LOCAL_HOME_PATH/.brew ]]; then
+  export PATH="$LOCAL_HOME_PATH/.brew/bin:$LOCAL_HOME_PATH/.brew/sbin:$PATH"
 fi
 
-export LD_LIBRARY_PATH=$HOME/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
+# FZF
+if [[ -n "$ZSH_VERSION" ]]; then
+  [ -f $LOCAL_HOME_PATH/.fzf.zsh ] && source $LOCAL_HOME_PATH/.fzf.zsh
+elif [[ -n "$BASH_VERSION" ]]; then
+  [ -f $LOCAL_HOME_PATH/.fzf.bash ] && source $LOCAL_HOME_PATH/.fzf.bash
+fi
 
 # Bat config
 export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
@@ -123,6 +153,12 @@ alias sagent='source sagent'
 
 # Solution for when a program dies before printing EOL, which screws up zsh
 alias reset-term='stty sane'
+
+# git branch shorthand
+alias gbr='git branch --show-current'
+
+# because bureaucrats are here, a pain in my rear, getting used to it
+alias claude='claude --model "opus[1m]" --effort high --append-system-prompt "use caveman skill"'
 
 #####################
 # Functions
@@ -300,7 +336,7 @@ sshrun() {
 
 # Run command on multiple remote nodes
 sshrun_local() {
-  COMMAND=$HOME/.local/bin/$1
+  COMMAND=$LOCAL_HOME_PATH/.local/bin/$1
   NODES=$2
 
   sshrun $COMMAND $NODES
@@ -351,4 +387,89 @@ ctr() {
     } >> "$logfile"
 
     return "$exit_code"
+}
+
+# Process search with formatted table output
+# Usage: psg <pattern> [user]
+# No user = all users (shows USER/UID columns)
+psg() {
+  if [[ "$1" == "-h" || "$1" == "--help" || -z "$1" ]]; then
+    echo "Usage: psg <pattern> [user]"
+    echo "  pattern  Process name to search"
+    echo "  user     Username (default: all users, shows user/uid)"
+    return 0
+  fi
+
+  local grep_path
+  if [[ -n "$ZSH_VERSION" ]]; then
+    grep_path=$(whence -p grep 2>/dev/null)
+  elif [[ -n "$BASH_VERSION" ]]; then
+    grep_path=$(which --skip-alias grep 2>/dev/null || which grep 2>/dev/null)
+  fi
+  [[ -z "$grep_path" ]] && { echo "grep not found"; return 1; }
+  if ! "$grep_path" --version 2>&1 | "$grep_path" -q "GNU"; then
+    echo "GNU grep required"; return 1
+  fi
+
+  local pattern="$1"
+  local ps_args=(-e)
+  local show_user=1
+  if [[ -n "$2" ]]; then
+    ps_args=(-u "$2")
+    show_user=0
+  fi
+
+  local cols=$(tput cols)
+  local inner=$((cols - 4))
+  local extra=0
+  [[ $show_user -eq 1 ]] && extra=$((16 + 8 + 6))
+  local cmd_w=$((inner - 16 - 24 - 12 - 9 - extra))
+
+  local top="┌$(printf '─%.0s' $(seq 1 $((cols - 2))))┐"
+  local mid="├$(printf '─%.0s' $(seq 1 $((cols - 2))))┤"
+  local bot="└$(printf '─%.0s' $(seq 1 $((cols - 2))))┘"
+
+  echo "$top"
+  if [[ $show_user -eq 1 ]]; then
+    printf "│ %-16s │ %-8s │ %-16s │ %-24s │ %-12s │ %-${cmd_w}s │\n" \
+      "USER" "UID" "PID" "START" "ELAPSED" "COMMAND"
+  else
+    printf "│ %-16s │ %-24s │ %-12s │ %-${cmd_w}s │\n" \
+      "PID" "START" "ELAPSED" "COMMAND"
+  fi
+  echo "$mid"
+
+  if [[ $show_user -eq 1 ]]; then
+    ps "${ps_args[@]}" -o user,uid,pid,lstart,etime,args --no-headers \
+      | "$grep_path" -ih "[${pattern:0:1}]${pattern:1}" \
+      | sed 's/^ *//' \
+      | awk -v cw="$cmd_w" '{
+          user=substr($1,1,16); uid=substr($2,1,8); pid=substr($3,1,16)
+          start=$4" "$5" "$6" "$7" "$8; etime=substr($9,1,12)
+          cmd=""; for(i=10;i<=NF;i++) cmd=cmd (i>10?" ":"") $i
+          printf "│ %-16s │ %-8s │ %-16s │ %-24s │ %-12s │ %-"cw"s │\n",
+            user, uid, pid, start, etime, substr(cmd,1,cw)
+        }'
+  else
+    ps "${ps_args[@]}" -o pid,lstart,etime,args --no-headers \
+      | "$grep_path" -ih "[${pattern:0:1}]${pattern:1}" \
+      | sed 's/^ *//' \
+      | awk -v cw="$cmd_w" '{
+          pid=substr($1,1,16); start=$2" "$3" "$4" "$5" "$6; etime=substr($7,1,12)
+          cmd=""; for(i=8;i<=NF;i++) cmd=cmd (i>8?" ":"") $i
+          printf "│ %-16s │ %-24s │ %-12s │ %-"cw"s │\n",
+            pid, start, etime, substr(cmd,1,cw)
+        }'
+  fi
+  echo "$bot"
+}
+
+# Git with retry: 10s timeout, up to 100 retries
+ggit() {
+  for i in $(seq 1 100); do
+    timeout 10 git "$@" && return 0
+    echo "ggit: attempt $i failed, retrying..."
+  done
+  echo "ggit: all 100 attempts failed"
+  return 1
 }

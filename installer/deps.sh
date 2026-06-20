@@ -6,7 +6,7 @@
 # Alacritty
 source installer/dependencies/alacritty.sh
 ensure_alacritty() {
-  if [[ -f "$(which $DEP_NAME)" ]]; then
+  if program_exists "$DEP_NAME"; then
     echo "Looks like you have alacritty installed."
     configure_dependency "alacritty" "configure_alacritty"
   fi
@@ -27,14 +27,27 @@ ensure_automake() {
 # Bat
 source installer/dependencies/bat.sh
 ensure_bat() {
+  set -e
   check_and_install_hard_dependency "bat" "install_bat"
   configure_dependency "bat" "configure_bat"
+}
+
+# Brew
+source installer/dependencies/brew.sh
+ensure_brew() {
+  check_and_install_dependency "brew" "$BREWDIR/bin/brew" "install_brew"
 }
 
 # clang-format
 source installer/dependencies/clang-format.sh
 ensure_clang_format() {
   check_and_install_dependency "clang-format" "$LOCALDIR/bin/clang-format" "install_clang_format"
+}
+
+# Claude Code
+source installer/dependencies/claude.sh
+ensure_claude() {
+  check_and_install_dependency "claude" "$LOCALDIR/bin/claude" "install_claude"
 }
 
 # CMake
@@ -49,6 +62,12 @@ ensure_cmatrix() {
   check_and_install_dependency "cmatrix" "$LOCALDIR/bin/cmatrix" "install_cmatrix"
 }
 
+# Codex
+source installer/dependencies/codex.sh
+ensure_codex() {
+  check_and_install_dependency "codex" "$LOCALDIR/bin/codex" "install_codex"
+}
+
 # coreutils
 source installer/dependencies/coreutils.sh
 ensure_coreutils() {
@@ -58,6 +77,7 @@ ensure_coreutils() {
 # Diff-so-fancy
 source installer/dependencies/diff-so-fancy.sh
 ensure_diff_so_fancy() {
+  set -e
   check_and_install_dependency "diff-so-fancy" "$LOCALDIR/bin/diff-so-fancy" "install_diff_so_fancy"
   configure_dependency "diff-so-fancy" "configure_diff_so_fancy"
 }
@@ -65,7 +85,7 @@ ensure_diff_so_fancy() {
 # Fzf
 source installer/dependencies/fzf.sh
 ensure_fzf() {
-  check_and_install_dependency "fzf" "$HOMEDIR/.fzf/bin/fzf" "install_fzf"
+  check_and_install_dependency "fzf" "$FZF_DIR/.fzf/bin/fzf" "install_fzf"
 }
 
 # gettext
@@ -108,6 +128,7 @@ ensure_gnu_sed() {
 # Htop
 source installer/dependencies/htop.sh
 ensure_htop() {
+  set -e
   check_and_install_dependency "htop" "$LOCALDIR/bin/htop" "install_htop"
   configure_dependency "htop" "configure_htop"
 }
@@ -157,11 +178,9 @@ ensure_rg() {
 # Tmux
 source installer/dependencies/tmux.sh
 ensure_tmux() {
-  #if [[ $IS_PERSONAL -eq 0 ]]; then
-    check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
-    # check_and_install_hard_dependency "tmux" "install_tmux"
-    configure_dependency "tmux" "configure_tmux"
-  #fi
+  set -e
+  check_and_install_dependency "tmux" "$LOCALDIR/bin/tmux" "install_tmux"
+  configure_dependency "tmux" "configure_tmux"
 }
 
 # Tre
@@ -173,6 +192,7 @@ ensure_tre() {
 # Vim
 source installer/dependencies/vim.sh
 ensure_vim() {
+  set -e
   check_and_install_dependency "vim" "$LOCALDIR/bin/vim" "install_vim"
   configure_dependency "vim" "configure_vim"
 }
@@ -180,6 +200,7 @@ ensure_vim() {
 # Vifm
 source installer/dependencies/vifm.sh
 ensure_vifm() {
+  set -e
   check_and_install_dependency "vifm" "$LOCALDIR/bin/vifm" "install_vifm"
   configure_dependency "vifm" "configure_vifm"
 }
@@ -194,14 +215,14 @@ ensure_watch() {
 source installer/dependencies/wget.sh
 ensure_wget() {
   check_and_install_hard_dependency "wget" "install_wget"
-  configure_wget
 }
 
 # Zathura
 source installer/dependencies/zathura.sh
 ensure_zathura() {
+  set -e
   if [[ $IS_PERSONAL -eq 1 ]]; then
-    check_and_install_dependency "zathura" "$(which zathura)" "install_zathura"
+    check_and_install_dependency "zathura" "$(program_path zathura)" "install_zathura"
     configure_dependency "zathura" "configure_zathura"
   fi
 }
@@ -209,11 +230,13 @@ ensure_zathura() {
 # ZSH
 source installer/dependencies/zsh.sh
 ensure_zsh() {
-  # TODO: zsh builds on mac, but it just hangs.
-  if [[ $IS_PERSONAL -eq 0 ]]; then
-    #check_hard_dependency "zsh"
-    echo "WARNING: try to build ZSH ONLY if your system ZSH is too old for this config."
+  set -e
+  # TODO: zsh builds on mac, but hangs when executed.
+  if [[ "$_OS_NAME" != "darwin" ]]; then
     check_and_install_dependency "zsh" "$LOCALDIR/bin/zsh" "install_zsh"
+  else
+    echo "ZSH build is disabled on darwin, but it usually comes pre-installed."
+    check_hard_dependency "zsh"
   fi
   configure_dependency "zsh" "configure_zsh"
 }

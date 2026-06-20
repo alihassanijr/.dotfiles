@@ -3,10 +3,10 @@
 # Fetches the expected build and dumps it
 # I am tired of the old cmakes and having to use conda whenever I need cutlass.
 
-CMAKEVER="4.1.0"
+CMAKE_VERSION="4.1.0"
 
 install_cmake() {
-    local TMPDIR=$THISDIR/tmp
+    local TMPDIR=$(build_tmpdir cmake)
     local CMAKEURL=""
     local CMAKEDIR="cmake*/"
     local arch="$(uname -m)"
@@ -16,23 +16,29 @@ install_cmake() {
     mkdir -p $TMPDIR
 
     if [[ "$_OS_NAME" == "darwin" ]]; then
-        CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-macos-universal.tar.gz"
+        CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-macos-universal.tar.gz"
         CMAKEDIR="cmake*/CMake.app/Contents/"
     elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "x86_64" ]]; then
-        CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-linux-x86_64.tar.gz"
+        CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-x86_64.tar.gz"
     elif [[ "$_OS_NAME" == "linux" ]] && [[ "$arch" == "aarch64" ]]; then
-        CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKEVER/cmake-$CMAKEVER-linux-aarch64.tar.gz"
+        CMAKEURL="https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-linux-aarch64.tar.gz"
     fi
     if [[ "$CMAKEURL" != "" ]]; then
         echo "Fetching static cmake binaries"
-        cd $TMPDIR && wget $CMAKEURL && tar -xzf cmake*.tar.gz && rm cmake*.tar.gz && \
+        cd $TMPDIR && fetch_package "$(basename $CMAKEURL)" $CMAKEURL && tar -xzf cmake*.tar.gz && rm cmake*.tar.gz && \
             mv $CMAKEDIR/bin/* $LOCALDIR/bin/ && \
             cp -r -n -v $CMAKEDIR/share/* $LOCALDIR/share/
+        if [ $? -ne 0 ]; then
+            echo "Failed to fetch/install cmake."
+            cd $THISDIR
+            rm -rf $TMPDIR
+            return 1
+        fi
     else
         echo "Failed to install static cmake. Please install it manually before proceeding."
         echo "arch: $arch"
         echo "os: $_OS_NAME"
-        exit 1
+        return 1
     fi
 
     cd $THISDIR

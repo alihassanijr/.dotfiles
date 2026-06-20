@@ -8,7 +8,7 @@ install_clang_format() {
     local TEMP_DIR=$(mktemp -d)
     if [[ ! -d "$TEMP_DIR" ]]; then
         echo "Failed to create temporary directory. Exiting..."
-        exit 1
+        return 1
     fi
 
     local LLVM_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-${CLANG_FORMAT_VERSION}/llvm-${CLANG_FORMAT_VERSION}.src.tar.xz
@@ -17,13 +17,13 @@ install_clang_format() {
     local THIRD_PARTY_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-${CLANG_FORMAT_VERSION}/third-party-${CLANG_FORMAT_VERSION}.src.tar.xz
 
     # Change to the temporary directory
-    cd "$TEMP_DIR" || { echo "Failed to switch to temp directory. Exiting..."; exit 1; }
+    cd "$TEMP_DIR" || { echo "Failed to switch to temp directory. Exiting..."; rm -rf "$TEMP_DIR"; return 1; }
 
     # Download release
-    wget $LLVM_URL
-    wget $CLANG_URL
-    wget $CMAKE_URL
-    wget $THIRD_PARTY_URL
+    fetch_package "$(basename $LLVM_URL)" $LLVM_URL || { echo "Failed to download llvm."; cd "$THISDIR"; rm -rf "$TEMP_DIR"; return 1; }
+    fetch_package "$(basename $CLANG_URL)" $CLANG_URL || { echo "Failed to download clang."; cd "$THISDIR"; rm -rf "$TEMP_DIR"; return 1; }
+    fetch_package "$(basename $CMAKE_URL)" $CMAKE_URL || { echo "Failed to download cmake."; cd "$THISDIR"; rm -rf "$TEMP_DIR"; return 1; }
+    fetch_package "$(basename $THIRD_PARTY_URL)" $THIRD_PARTY_URL || { echo "Failed to download third-party."; cd "$THISDIR"; rm -rf "$TEMP_DIR"; return 1; }
 
     local expected_tars=(
       llvm-${CLANG_FORMAT_VERSION}.src.tar.xz
@@ -72,7 +72,10 @@ install_clang_format() {
       cp bin/clang-format $LOCALDIR/bin/
       echo "Installed clang-format successfully."
     else
-      echo "clang-format FAILED to build."
+      echo "clang-format build failed."
+      cd $THISDIR
+      rm -rf $TEMP_DIR
+      return 1
     fi
 
     # Tear-down

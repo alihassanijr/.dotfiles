@@ -1,19 +1,24 @@
 #!/bin/bash
 
+PROCPS_VERSION="4.0.4"
+
 install_watch() {
   echo "Installing procps/watch"
 
-  local TMPDIR=$THISDIR/tmp_watch
-  local PACKAGEURL="https://newcontinuum.dl.sourceforge.net/project/procps-ng/Production/procps-ng-4.0.4.tar.xz"
-  local PACKAGETARNAME="procps-ng-4.0.4.tar.xz"
-  local PACKAGEDIRNAME="procps-ng-4.0.4"
+  local TMPDIR=$(build_tmpdir watch)
+  local PACKAGEURLS=(
+    "https://downloads.sourceforge.net/project/procps-ng/Production/procps-ng-$PROCPS_VERSION.tar.xz"
+    "https://newcontinuum.dl.sourceforge.net/project/procps-ng/Production/procps-ng-$PROCPS_VERSION.tar.xz"
+  )
+  local PACKAGETARNAME="procps-ng-$PROCPS_VERSION.tar.xz"
+  local PACKAGEDIRNAME="procps-ng-$PROCPS_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR
   mkdir -p $TMPDIR
 
   cd $TMPDIR && \
-      wget $PACKAGEURL -O $PACKAGETARNAME && \
+      fetch_package $PACKAGETARNAME "${PACKAGEURLS[@]}" && \
       tar -xf $PACKAGETARNAME && \
       rm $PACKAGETARNAME && \
       cd $PACKAGEDIRNAME && \
@@ -23,10 +28,20 @@ install_watch() {
         --disable-nls \
         --enable-watch8bit \
         --with-ncurses \
-        CFLAGS="-I$NCDIR/include/" && \
-      make src/watch &&
-      mv src/watch ${LOCALDIR}/bin/ &&
-      mv man/watch.1 ${LOCALDIR}/man/man1
+        --verbose \
+        CFLAGS="-I$NCDIR/include/" \
+        CPPFLAGS="-I$NCDIR/include/" && \
+      make -j$NUM_WORKERS src/watch &&
+      mv src/watch ${LOCALDIR}/bin/ && \
+      mkdir -p ${LOCALDIR}/man/man1/ && \
+      mv man/watch.1 ${LOCALDIR}/man/man1/
+
+  if [ $? -ne 0 ]; then
+    echo "procps/watch build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
 
   cd $THISDIR
   rm -rf $TMPDIR

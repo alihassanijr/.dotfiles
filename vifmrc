@@ -1,9 +1,29 @@
 " vim: filetype=vifm :
-" Sample configuration file for vifm (last updated: 8 August, 2022)
-" You can edit this file by hand.
-" The " character at the beginning of a line comments out the line.
-" Blank lines are ignored.
-" The basic format for each item is shown with an example.
+"
+" Sample configuration file for vifm (last updated: 11 February 2026)
+"
+" You can edit this file by hand.  The " character at the beginning of a line
+" comments out the line.  Blank lines are ignored.  The basic format for each
+" item is shown with an example.
+"
+" The purpose of this file
+" ========================
+" 1. Provide a sensible default configuration out of the box.
+" 2. Demonstrate how a typical configuration file might look like.
+" 3. Familiarize a user with commonly used features.
+" 4. Provide some ideas/settings for various use cases.
+"
+" How to use this file
+" ====================
+" - Go through it top to bottom while reading comments.
+" - Adjust/remove/comment/uncomment lines as you see fit.
+" - Look up :commands or 'options' in the documentation to learn more.
+"
+" Some settings are set to provide more useful defaults without breaking
+" compatibility and others are just a great fit (e.g., some bindings) and are
+" almost universally useful, but most lines are provided simply as usage
+" examples and can be removed without hesitation.  Make configuration specific
+" to your needs using this file as a starting point.
 
 " ------------------------------------------------------------------------------
 " Main settings
@@ -23,6 +43,8 @@ elseif executable('vile')
 elseif $EDITOR != ''
     echo 'Note: using `'.$EDITOR.'` as an editor'
     let &vicmd = $EDITOR
+elseif executable('vi')
+    set vicmd=vi
 endif
 
 " This makes vifm perform file operations on its own instead of relying on
@@ -41,10 +63,12 @@ set trash
 
 " What should be saved automatically on restarting vifm.  Drop "savedirs"
 " value if you don't want vifm to remember last visited directories for you.
-set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
-            \phistory,fhistory,dirstack,registers,bookmarks,bmarks
+set vifminfo=dhistory,savedirs,chistory,state,tui,tabs,shistory,ehistory,
+            \phistory,fhistory,dirstack,registers,bookmarks,bmarks,mchistory
 
-" This is how many directories to store in the directory history.
+" This is size of all of the many kinds of histories, in particular it's the
+" number of last visited directories (not necessarily distinct ones) stored in
+" the directory history.
 set history=100
 
 " Automatically resolve symbolic links on l or Enter.
@@ -63,9 +87,6 @@ set vimhelp
 " If you would like to run an executable file when you
 " press Enter, l or Right Arrow, set this.
 set norunexec
-
-" List of color schemes to try (picks the first one supported by the terminal)
-colorscheme gh-dark
 
 " Format for displaying time in file list. For example:
 " TIME_STAMP_FORMAT=%m/%d-%H:%M
@@ -87,7 +108,7 @@ set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
 set ignorecase
 set smartcase
 
-" Don't highlight search results automatically
+" Don't select search matches automatically
 set nohlsearch
 
 " Use increment searching (search while typing)
@@ -102,7 +123,26 @@ if !has('win')
 endif
 
 " Set custom status line look
-set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
+if !has('win')
+    set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
+else
+    set statusline="  Hint: %z%= %A %15s %20d  "
+endif
+
+" Suppress "Permission denied" errors using syntax specific to GNU find
+if system("find --version | grep -c 'GNU findutils'") != 0
+    set findprg='find %s %a -print , -type d \( ! -readable -o ! -executable \) -prune'
+endif
+
+" Add -s to the default value to suppress "Permission denied" errors
+set grepprg="grep -n -H -I -r -s %i %a %s"
+
+" List of color schemes to try (picks the first one supported by the terminal)
+"colorscheme Default-256 Default
+" (ahassani) Custom color scheme
+colorscheme gh-dark
+
+" (ahassani) Custom git status feature
 plugin load
 nnoremap gs :set viewcolumns=-{name},{GitStatus},{size}<cr>
 nnoremap gd :set viewcolumns=-{name},{size}<cr>
@@ -146,17 +186,39 @@ command! vgrep vim "+grep %a"
 command! reload :write | restart full
 
 " ------------------------------------------------------------------------------
-" File types association
+" File handlers and previewers
 " ------------------------------------------------------------------------------
 
-" :filetype pattern1,pattern2 defaultprogram,program2
-" :fileviewer pattern1,pattern2 consoleviewer
+" Setting up handlers that are considered in all environments:
+"   filetype {pattern1,pattern2} program1,{Optional description}program2
 "
-" The first entry is the default program to be used with a matching file.
-" The other programs for the file type can be accessed via :file command.
-" The command macros like %f, %F, %d, %D may be used in the commands.
-" The %a macro is ignored.  To use a % you must put %%.
-" Spaces in an app name must be escaped, for example: QuickTime\ Player.app
+" Setting up handlers that are considered only in a graphical environment:
+"   filextype {pattern} graphical-program %c
+"
+" Setting up previewers:
+"   fileviewer {pattern1,pattern2} console-viewer1,console-viewer2
+"
+" ORDER MATTERS!  Both handlers and previewers are considered in the order of
+" their definition, therefore they should be defined from most to least
+" specific.  In particular, catch-all patterns like `*`, `*/`, `.*`, `*.*`
+" should be defined after all others.
+"
+" All entries matching a particular file are considered in order until an
+" existing command is found.  Other entries are accessible via :file command
+" for handlers or via `a` and `A` keys for previewers in view mode.
+"
+" The ordering can be checked at run-time by running
+" :filetype/:filextype/:fileviewer with a file name as the only argument.
+" This displays a menu of defined entries annotated with availability of
+" commands.
+"
+" More on syntax and usage:
+"  - macros like %c, %f, %d, etc. may be used in the commands
+"  - the %a macro is ignored
+"  - to insert a literal % use %%
+"  - spaces in an app name must be escaped, for example:
+"    + QuickTime\ Player.app
+"    + "c:/Program Files (x86)/app/app.exe"
 
 " For automated FUSE mounts, you must register an extension with :file[x]type
 " in one of the following formats:
@@ -181,7 +243,7 @@ command! reload :write | restart full
 " program.  There is also %FOREGROUND, which is useful for entering passwords.
 
 " Pdf
-filextype {*.pdf},<application/pdf> zathura %c %i &, apvlv %c, xpdf %c
+filextype {*.pdf},<application/pdf> zathura %c %i, apvlv %c, xpdf %c
 fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
 
 " PostScript
@@ -189,7 +251,7 @@ filextype {*.ps,*.eps,*.ps.gz},<application/postscript>
         \ {View in zathura}
         \ zathura %f,
         \ {View in gv}
-        \ gv %c %i &,
+        \ gv %c %i,
 
 " Djvu
 filextype {*.djvu},<image/vnd.djvu>
@@ -198,23 +260,30 @@ filextype {*.djvu},<image/vnd.djvu>
         \ {View in apvlv}
         \ apvlv %f,
 
+" Midi
+filetype {*.mid,*.kar}
+       \ {Play using TiMidity++}
+       \ timidity %f,
+
 " Audio
-filetype {*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus},
+filetype {*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus,
+         \*.aac,*.mpga},
         \<audio/*>
+       \ {Play using MPlayer}
+       \ mplayer %f,
+       \ {Play using mpv}
+       \ mpv --no-video %f %s,
        \ {Play using ffplay}
        \ ffplay -nodisp -hide_banner -autoexit %c,
-       \ {Play using MPlayer}
-       \ mplayer %c,
-       \ {Play using mpv}
-       \ mpv --no-video %c %s,
 fileviewer {*.wav,*.mp3,*.flac,*.m4a,*.wma,*.ape,*.ac3,*.og[agx],*.spx,*.opus,
-           \*.aac}
+           \*.aac,*.mpga},
+          \<audio/*>
          \ ffprobe -hide_banner -pretty %c 2>&1
 
 " Video
 filextype {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
-          \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
-          \*.as[fx]},
+          \*.fl[icv],*.m2v,*.mov,*.webm,*.mts,*.m4v,*.r[am],*.qt,*.divx,
+          \*.as[fx],*.unknown_video},
          \<video/*>
         \ {View using ffplay}
         \ ffplay -fs -hide_banner -autoexit %f,
@@ -223,17 +292,17 @@ filextype {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
         \ {View using mplayer}
         \ mplayer %f,
         \ {Play using mpv}
-        \ mpv --no-video %c %s,
+        \ mpv %f,
 fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
-           \*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,
-           \*.as[fx]},
+           \*.fl[icv],*.m2v,*.mov,*.webm,*.mts,*.m4v,*.r[am],*.qt,*.divx,
+           \*.as[fx],*.unknown_video},
           \<video/*>
          \ ffprobe -hide_banner -pretty %c 2>&1
 
 " Web
 filextype {*.xhtml,*.html,*.htm},<text/html>
         \ {Open with qutebrowser}
-        \ qutebrowser %f %i &,
+        \ qutebrowser %f %i,
         \ {Open with firefox}
         \ firefox %f &,
 filetype {*.xhtml,*.html,*.htm},<text/html> links, lynx
@@ -246,6 +315,28 @@ filetype {*.[1-8]},<text/troff> man ./%c
 fileviewer {*.[1-8]},<text/troff> man ./%c | col -b
 
 " Images
+filextype {*.svg,*.svgz},<image/svg+xml>
+        \ {Edit in Inkscape}
+        \ inkscape %f,
+        \ {View in Inkview}
+        \ inkview %f,
+filextype {*.cr2}
+        \ {Open in Darktable}
+        \ darktable %f,
+        \ {Open in RawTherapee}
+        \ rawtherapee %f,
+filextype {*.xcf}
+        \ {Open in GIMP}
+        \ gimp %f,
+filextype {*.kra}
+        \ {Open in Krita}
+        \ krita %f,
+filextype {*.blend}
+        \ {Open in Blender}
+        \ blender %c,
+filextype {*.sh3d}
+        \ {Open in Sweet Home 3D}
+        \ sweethome3d %c:p,
 filextype {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
         \ {View in sxiv}
         \ sxiv %f,
@@ -293,7 +384,9 @@ filetype {*.asc},<application/pgp-signature>
 
 " Torrent
 filetype {*.torrent},<application/x-bittorrent> ktorrent %f &
-fileviewer {*.torrent},<application/x-bittorrent> dumptorrent -v %c
+fileviewer {*.torrent},<application/x-bittorrent>
+         \ dumptorrent -v %c,
+         \ transmission-show %c
 
 " FuseZipMount
 filetype {*.zip,*.jar,*.war,*.ear,*.oxt,*.apkg},
@@ -301,15 +394,15 @@ filetype {*.zip,*.jar,*.war,*.ear,*.oxt,*.apkg},
        \ {Mount with fuse-zip}
        \ FUSE_MOUNT|fuse-zip %SOURCE_FILE %DESTINATION_DIR,
        \ {View contents}
-       \ tar -tf %f | less,
+       \ unzip -l %f | less,
        \ {Extract here}
-       \ tar -vxf %c,
-fileviewer *.zip,*.jar,*.war,*.ear,*.oxt tar -tf %f
+       \ unzip %c,
+fileviewer *.zip,*.jar,*.war,*.ear,*.oxt unzip -l %f
 
 " ArchiveMount
-filetype {*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz,*.tar.zst,
-         \*.tzst},
-        \<application/x-tar>
+filetype {*.cpio,*.cpio.gz,*.rpm,*.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,
+         \*.txz,*.tar.zst,*.tzst},
+        \<application/x-cpio,application/x-rpm,application/x-tar>
        \ {Mount with archivemount}
        \ FUSE_MOUNT|archivemount %SOURCE_FILE %DESTINATION_DIR,
 fileviewer *.tgz,*.tar.gz tar -tzf %c
@@ -317,6 +410,8 @@ fileviewer *.tar.bz2,*.tbz2 tar -tjf %c
 fileviewer *.tar.xz,*.txz tar -tJf %c
 fileviewer *.tar.zst,*.tzst tar -t --zstd -f %c
 fileviewer {*.tar},<application/x-tar> tar -tf %c
+fileviewer {*.cpio},<application/x-cpio> cpio -t < %c
+fileviewer {*.rpm},<application/x-rpm> rpm -q --list %c%q 2> /dev/null
 
 " Rar2FsMount and rar archives
 filetype {*.rar},<application/x-rar>
@@ -368,6 +463,10 @@ filextype */
         \ {View in thunar}
         \ Thunar %f &,
 
+" Deb packages
+fileviewer *.deb dpkg-deb -I %c; echo; dpkg-deb -c %c
+filetype *.deb echo "$(dpkg-deb -I %c; echo; dpkg-deb -c %c)" | less
+
 " Syntax highlighting in preview
 "
 " Explicitly set highlight type for some extensions
@@ -398,19 +497,6 @@ filextype */
 " filetype * explorer %"f &
 
 " ------------------------------------------------------------------------------
-" Panel configuration examples
-" ------------------------------------------------------------------------------
-
-" Customize view columns a bit (enable ellipsis for truncated file names)
-" set viewcolumns=-{name}..,6{}.
-
-" Show vertical border
-" set fillchars=vborder:│
-
-" Filter-out build and temporary files
-" filter! {*.lo,*.o,*.d,*.class,*.pyc,*.pyo,.*~}
-
-" ------------------------------------------------------------------------------
 " Sample keyboard mappings
 " ------------------------------------------------------------------------------
 
@@ -424,7 +510,7 @@ nnoremap S :sort<cr>
 nnoremap w :view<cr>
 vnoremap w :view<cr>gv
 
-if $DISPLAY && executable('gvim')
+if $DISPLAY != '' && executable('gvim')
     " Open file in existing instance of gvim
     nnoremap o :!gvim --remote-tab-silent %f<cr>
     " Open file in new instance of gvim
@@ -439,8 +525,8 @@ if has('win')
     " Yank current directory path to Windows clipboard with forward slashes
     nnoremap yp :!echo %"d:gs!\!/! %i | clip<cr>
     " Yank path to current file to Windows clipboard with forward slashes
-    nnoremap yf :!echo %"c:gs!\!/! %i | clip<cr>
-elseif $WAYLAND_DISPLAY
+    nnoremap yf :!echo %"c:p:gs!\!/! %i | clip<cr>
+elseif $WAYLAND_DISPLAY != ''
     if executable('wl-copy')
         " Yank current directory path into primary and selection clipboards
         nnoremap yd :!echo -n %d | wl-copy %i &&
@@ -449,12 +535,12 @@ elseif $WAYLAND_DISPLAY
         nnoremap yf :!echo -n %c:p | wl-copy %i &&
                     \ echo -n %c:p | wl-copy -p %i<cr>
     endif
-elseif $DISPLAY
+elseif $DISPLAY != ''
     if executable('xclip')
         " Yank current directory path into the clipboard
-        nnoremap yd :!echo %d | xclip %i<cr>
+        nnoremap yd :!echo -n %d | xclip -selection clipboard %i<cr>
         " Yank current file path into the clipboard
-        nnoremap yf :!echo %c:p | xclip %i<cr>
+        nnoremap yf :!echo -n %c:p | xclip -selection clipboard %i<cr>
     elseif executable('xsel')
         " Yank current directory path into primary and selection clipboards
         nnoremap yd :!echo -n %d | xsel --input --primary %i &&
@@ -476,9 +562,9 @@ nnoremap A cw
 " nnoremap A cW
 
 " Open console in current directory
-if $DISPLAY && executable('xterm')
+if $DISPLAY != '' && executable('xterm')
     nnoremap ,t :!xterm &<cr>
-elseif $TERMINAL
+elseif $TERMINAL != ''
     nnoremap ,t :!$TERMINAL &<cr>
 endif
 
@@ -486,7 +572,7 @@ endif
 nnoremap ,c :write | edit $MYVIFMRC | restart full<cr>
 
 " Open gvim to edit vifmrc
-if $DISPLAY && executable('gvim')
+if $DISPLAY != '' && executable('gvim')
     nnoremap ,C :!gvim --remote-tab-silent $MYVIFMRC &<cr>
 endif
 
@@ -506,8 +592,22 @@ nnoremap <f8> :delete<cr>
 nnoremap <a-i> :sync<cr>
 " Open directory under cursor in the other pane
 nnoremap <a-o> :sync %c<cr>
-" Swap panes
+" Swap panes (uncomment if you don't need builtin behaviour of Ctrl-U)
+" (ahassani) keep previous behavior
 nnoremap <c-u> <c-w>x
+
+" ------------------------------------------------------------------------------
+" Panel configuration examples
+" ------------------------------------------------------------------------------
+
+" Customize view columns a bit (enable ellipsis for truncated file names)
+" set viewcolumns=-{name}..,6{}.
+
+" Show vertical border
+" set fillchars=vborder:│
+
+" Filter-out build artifacts and temporary files
+" filter! {*.lo,*.o,*.d,*.class,*.pyc,*.pyo,.*~}
 
 " ------------------------------------------------------------------------------
 " Various customization examples
@@ -519,7 +619,7 @@ nnoremap <c-u> <c-w>x
 " Add additional place to look for executables
 " let $PATH = $HOME.'/bin/fuse:'.$PATH
 
-" Block particular shortcut
+" Disable particular shortcut
 " nnoremap <left> <nop>
 
 " Export IPC name of current instance as environment variable and use it to
@@ -540,5 +640,6 @@ nnoremap <c-u> <c-w>x
 
 " https://github.com/cirala/vifm_devicons
 
+" (ahassani) cat -> bat, tree -> tre
 fileviewer *[^/] bat --color=always --style=numbers --wrap never --pager never %c -p
 fileviewer */ tre -c always -l 2 %c

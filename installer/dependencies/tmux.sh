@@ -1,36 +1,55 @@
 #!/bin/bash
 # Tmux
 
+LIBEVENT_VERSION="2.1.12"
+UTF8PROC_VERSION="2.9.0"
+TMUX_VERSION="3.4"
+
 install_libevent() {
 
   # Dependency: libtool
   source installer/dependencies/libtool.sh
-  check_and_install_dependency "libtool" "$LOCALDIR/bin/libtool" "install_libtool"
+  check_and_install_dependency "libtool" "$LOCALDIR/bin/libtool" "install_libtool" || {
+    echo "Libevent dependency resolution failed. Won't attempt build.";
+    return 1
+  }
   # check_and_install_hard_dependency "libtool" "install_libtool"
 
   echo "Installing dependency: libevent"
   
-  local TMPDIR=$THISDIR/tmp_libevent
-  local PACKAGEURL="https://github.com/libevent/libevent/archive/refs/tags/release-2.1.12-stable.tar.gz"
-  local PACKAGETARNAME="libevent-release-2.1.12-stable.tar.gz"
-  local PACKAGEDIRNAME="libevent-release-2.1.12-stable"
+  local TMPDIR=$(build_tmpdir libevent)
+  local PACKAGEURL="https://github.com/libevent/libevent/archive/refs/tags/release-$LIBEVENT_VERSION-stable.tar.gz"
+  local PACKAGETARNAME="libevent-release-$LIBEVENT_VERSION-stable.tar.gz"
+  local PACKAGEDIRNAME="libevent-release-$LIBEVENT_VERSION-stable"
+
+  if [[ "$_OS_NAME" == "darwin" ]]; then
+    ADDITIONAL_LIBEVENT_CONF_ARGS="--disable-openssl"
+  fi
   
   cd $THISDIR
   rm -rf $TMPDIR
   mkdir -p $TMPDIR
   
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME $PACKAGEURL && \
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
     ./autogen.sh && \
     ./configure \
       --prefix=${LOCALDIR} \
+      $ADDITIONAL_LIBEVENT_CONF_ARGS \
       --disable-dependency-tracking \
       --disable-debug-mode && \
-    make && \
+    make -j$NUM_WORKERS && \
     make install
+
+  if [ $? -ne 0 ]; then
+    echo "Libevent build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
   
   cd $THISDIR
   rm -rf $TMPDIR
@@ -39,21 +58,29 @@ install_libevent() {
 install_utf8proc() {
   echo "Installing dependency: utf8proc"
   
-  local TMPDIR=$THISDIR/tmp_utf8proc
-  local PACKAGEURL="https://github.com/JuliaStrings/utf8proc/archive/refs/tags/v2.9.0.tar.gz"
+  local TMPDIR=$(build_tmpdir utf8proc)
+  local PACKAGEURL="https://github.com/JuliaStrings/utf8proc/archive/refs/tags/v$UTF8PROC_VERSION.tar.gz"
   local PACKAGETARNAME="utf8proc.tar.gz"
-  local PACKAGEDIRNAME="utf8proc-2.9.0/"
+  local PACKAGEDIRNAME="utf8proc-$UTF8PROC_VERSION/"
   
   cd $THISDIR
   rm -rf $TMPDIR
   mkdir -p $TMPDIR
   
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME $PACKAGEURL && \
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
-    make install prefix=${LOCALDIR}
+    make -j$NUM_WORKERS install prefix=${LOCALDIR}
+
+  if [ $? -ne 0 ]; then
+    echo "Utf8proc build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
+
   cd $THISDIR
   rm -rf $TMPDIR
 }
@@ -62,20 +89,20 @@ install_tmux_dependencies() {
   if [[ -f "$LOCALDIR/include/event.h" ]]; then
     echo "Libevent is already installed, skipping..."
   else
-    install_libevent
+    install_libevent || { echo "FAILED TO BUILD TMUX DEPENDENCY: libevent!"; return 1; }
   fi
   if [[ -f "$LOCALDIR/include/utf8proc.h" ]]; then
     echo "utf8proc is already installed, skipping..."
   else
-    install_utf8proc
+    install_utf8proc || { echo "FAILED TO BUILD TMUX DEPENDENCY: ut8proc!"; return 1; }
   fi
 }
 
 build_tmux() {
-  local TMPDIR=$THISDIR/tmp_tmux
-  local PACKAGEURL="https://github.com/tmux/tmux/releases/download/3.4/tmux-3.4.tar.gz"
-  local PACKAGETARNAME="tmux-3.4.tar.gz"
-  local PACKAGEDIRNAME="tmux-3.4/"
+  local TMPDIR=$(build_tmpdir tmux)
+  local PACKAGEURL="https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz"
+  local PACKAGETARNAME="tmux-$TMUX_VERSION.tar.gz"
+  local PACKAGEDIRNAME="tmux-$TMUX_VERSION/"
   
   cd $THISDIR
   rm -rf $TMPDIR
@@ -83,37 +110,45 @@ build_tmux() {
 
   if [[ "$_OS_NAME" == "darwin" ]]; then
     ADDITIONAL_TMUX_CONF_ARGS="-with-TERM=screen-256color"
+    export CFLAGS="-Wno-error=int-conversion -Wno-error=implicit-function-declaration ${CFLAGS:-}"
   fi
   
   cd $TMPDIR && \
-    wget $PACKAGEURL -O $PACKAGETARNAME && \
+    fetch_package $PACKAGETARNAME $PACKAGEURL && \
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
-    PKG_CONFIG_PATH="$LOCALDIR/lib/pkgconfig:$PKG_CONFIG_PATH" ./configure \
-      CFLAGS="-I$LOCALDIR/include -I$NCDIR/include -I$NCDIR/include/ncursesw" LDFLAGS="-L$LOCALDIR/lib -L$NCDIR/lib" \
+    ./configure \
       --enable-sixel \
       --enable-utf8proc \
       $ADDITIONAL_TMUX_CONF_ARGS \
       --prefix=${LOCALDIR} && \
-    make install
+    make -j$NUM_WORKERS install
+
+  if [ $? -ne 0 ]; then
+    echo "Tmux build failed."
+    cd $THISDIR
+    rm -rf $TMPDIR
+    return 1
+  fi
+
   cd $THISDIR
   rm -rf $TMPDIR
 }
 
 install_tmux() {
   if [[ -f "$NCDIR/bin/ncursesw6-config" ]]; then
-    install_tmux_dependencies
-    build_tmux
+    install_tmux_dependencies || { echo "FAILED TO BUILD TMUX DEPENDENCIES!"; return 1; }
+    build_tmux || { echo "FAILED TO BUILD TMUX!"; return 1; }
   else
     echo "ncurses not found! Tmux requires ncurses!"
-    exit 1;
+    return 1
   fi
 }
 
 configure_tmux() {
   # Tmux config files
-  if [[ -f "$(which tmux)" ]]; then
+  if program_exists tmux; then
     rm $HOMEDIR/.tmux.conf
     if [[ "$_OS_NAME" == "darwin" ]]; then
       ln -s $THISDIR/tmux.mac.conf $HOMEDIR/.tmux.conf

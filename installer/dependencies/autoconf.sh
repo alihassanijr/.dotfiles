@@ -1,28 +1,38 @@
 #!/bin/bash
 # Autoconf
 
-install_autoconf() {
-    echo "Installing autoconf"
+AUTOCONF_VERSION="2.72"
 
+install_autoconf() {
     check_hard_dependency "m4"
 
-    local TMPDIR=$THISDIR/tmp_autoconf
-    local PACKAGEURL="https://ftp.gnu.org/gnu/autoconf/autoconf-2.72.tar.gz"
-    local PACKAGETARNAME="autoconf-2.72.tar.gz"
-    local PACKAGEDIRNAME="autoconf-2.72"
+    local TMPDIR=$(build_tmpdir autoconf)
+    local PACKAGEURLS=(
+        "https://ftpmirror.gnu.org/gnu/autoconf/autoconf-$AUTOCONF_VERSION.tar.gz"
+        "https://ftp.gnu.org/gnu/autoconf/autoconf-$AUTOCONF_VERSION.tar.gz"
+    )
+    local PACKAGETARNAME="autoconf-$AUTOCONF_VERSION.tar.gz"
+    local PACKAGEDIRNAME="autoconf-$AUTOCONF_VERSION"
     
     cd $THISDIR
     rm -rf $TMPDIR
     mkdir -p $TMPDIR
 
     cd $TMPDIR && \
-        wget $PACKAGEURL -O $PACKAGETARNAME && \
+        fetch_package $PACKAGETARNAME "${PACKAGEURLS[@]}" && \
         tar -xzf $PACKAGETARNAME && \
         rm $PACKAGETARNAME && \
         cd $PACKAGEDIRNAME && \
         ./configure \
           --prefix=${LOCALDIR} && \
-        make install
+        make -j$NUM_WORKERS install
+
+    if [ $? -ne 0 ]; then
+      echo "autoconf build failed."
+      cd $THISDIR
+      rm -rf $TMPDIR
+      return 1
+    fi
 
     cd $THISDIR
     rm -rf $TMPDIR

@@ -5,7 +5,10 @@ prompt_context() {
   local user=`whoami`
 
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment "#21262d" white "%(!.%{%F{#ffffff}%}.)$user"
-    prompt_segment "#77bdfb" black "%(!.%{%F{#000000}%}.)%m"
+    local user_disp host_disp
+    user_disp=$(truncate_end "$user" "${OMZ_MAX_USER_LENGTH:-10}")
+    host_disp=$(truncate_middle "${(%):-%m}" "${OMZ_MAX_HOST_LENGTH:-20}")
+    prompt_segment "#21262d" white "%(!.%{%F{#ffffff}%}.)$user_disp"
+    prompt_segment "#77bdfb" black "%(!.%{%F{#000000}%}.)$host_disp"
   fi
 }

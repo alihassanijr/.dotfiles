@@ -9,10 +9,12 @@ THISDIR=$HOME/.dotfiles
 HOMEDIR=$HOME
 
 # Where should I install everything?
-LOCALDIR=$HOME/.local/
+PROGRAMS_PATH=${PROGRAMS_PATH:-$HOME}
 
-# Curses is special; where do I install that?
-NCDIR=$HOME/.ncurses/
+LOCALDIR=$PROGRAMS_PATH/.local/
+NCDIR=$PROGRAMS_PATH/.ncurses/
+FZF_DIR=$PROGRAMS_PATH
+BREWDIR=$PROGRAMS_PATH/.brew
 
 
 _OS_NAME=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -24,10 +26,13 @@ _ARCH=$(uname -m)
 echo "OS: $_OS_NAME"
 echo "Arch: $_ARCH"
 
-# Whether or not this is a personal device 
+# Whether or not this is a personal device
 ## I want certain things like my terminal emulator only on
 ## personal devices, not on servers.
 IS_PERSONAL=0
-if [[ "$OS_NAME" == "darwin" ]]; then
+if [[ "$_OS_NAME" == "darwin" ]]; then
     IS_PERSONAL=1
 fi
+
+# When set to 1, only build/install dependencies and skip all configuration.
+BUILD_ONLY=${BUILD_ONLY:-0}
