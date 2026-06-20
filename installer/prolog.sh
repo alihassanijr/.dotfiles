@@ -30,7 +30,7 @@ echo "Arch: $_ARCH"
 ## I want certain things like my terminal emulator only on
 ## personal devices, not on servers.
 IS_PERSONAL=0
-if [[ "$OS_NAME" == "darwin" ]]; then
+if [[ "$_OS_NAME" == "darwin" ]]; then
     IS_PERSONAL=1
 fi
 

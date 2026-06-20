@@ -19,11 +19,11 @@ install_cmatrix() {
     mkdir -p $TMPDIR
 
     # MacOS fix
-    local ADDITIONAL_C_FLAGS="-I$NCDIR/include/ncursesw"
+    local ADDITIONAL_C_FLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
     local ADDITIONAL_LINKER_FLAGS=""
     if [[ "$_OS_NAME" = "darwin" ]]; then
-      ADDITIONAL_C_FLAGS="$ADDITIONAL_C_FLAGS -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR"
-      ADDITIONAL_LINKER_FLAGS="$ADDITIONAL_LINKER_FLAGS -Wl,-search_paths_first"
+      local ADDITIONAL_C_FLAGS="$ADDITIONAL_C_FLAGS -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR"
+      local ADDITIONAL_LINKER_FLAGS="$ADDITIONAL_LINKER_FLAGS -Wl,-search_paths_first"
     fi
 
     # Out-of-source cmake build so the extracted source stays clean.
