@@ -123,6 +123,18 @@ ensure_git_lfs() {
   check_and_install_dependency "git-lfs" "$LOCALDIR/bin/git-lfs" "install_git_lfs"
 }
 
+# gnu awk
+source installer/dependencies/gnu-awk.sh
+ensure_gnu_awk() {
+  check_and_install_dependency "awk" "$LOCALDIR/bin/awk" "install_gnu_awk"
+}
+
+# gnu grep
+source installer/dependencies/gnu-grep.sh
+ensure_gnu_grep() {
+  check_and_install_dependency "grep" "$LOCALDIR/bin/grep" "install_gnu_grep"
+}
+
 # gnu sed
 source installer/dependencies/gnu-sed.sh
 ensure_gnu_sed() {
@@ -159,6 +171,12 @@ ensure_m4() {
 source installer/dependencies/ncurses.sh
 ensure_ncurses() {
   check_and_install_dependency "ncurses" "$NCDIR/bin/ncursesw6-config" "install_ncurses"
+}
+
+# parallel
+source installer/dependencies/parallel.sh
+ensure_parallel() {
+  check_and_install_dependency "parallel" "$LOCALDIR/bin/parallel" "install_parallel"
 }
 
 # pkg-config

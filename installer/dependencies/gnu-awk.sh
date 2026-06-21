@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# gnu sed
+# gnu awk
 
-SED_VERSION="4.9"
+AWK_VERSION="5.4.0"
 
-install_gnu_sed() {
-  echo "Installing dependency: gnu sed"
+install_gnu_awk() {
+  echo "Installing dependency: gnu awk"
   
-  local TMPDIR=$(build_tmpdir gnu_sed)
+  local TMPDIR=$(build_tmpdir gnu_awk)
   local PACKAGEURLS=(
-    "https://ftpmirror.gnu.org/gnu/sed/sed-$SED_VERSION.tar.xz"
-    "https://ftp.gnu.org/gnu/sed/sed-$SED_VERSION.tar.xz"
+    "https://ftpmirror.gnu.org/gnu/gawk/gawk-$AWK_VERSION.tar.xz"
+    "https://ftp.gnu.org/gnu/gawk/gawk-$AWK_VERSION.tar.xz"
   )
-  local PACKAGETARNAME="sed-$SED_VERSION.tar.xz"
-  local PACKAGEDIRNAME="sed-$SED_VERSION"
+  local PACKAGETARNAME="gawk-$AWK_VERSION.tar.xz"
+  local PACKAGEDIRNAME="gawk-$AWK_VERSION"
   
   cd $THISDIR
   rm -rf $TMPDIR
@@ -25,11 +25,12 @@ install_gnu_sed() {
     cd $PACKAGEDIRNAME && \
     ./configure \
       --prefix=${LOCALDIR} \
-      --disable-dependency-tracking && \
+      --disable-silent-rules \
+      --without-libsigsegv-prefix && \
     make -j$NUM_WORKERS install
 
   if [ $? -ne 0 ]; then
-    echo "gnu sed build failed."
+    echo "gnu awk build failed."
     cd $THISDIR
     rm -rf $TMPDIR
     return 1

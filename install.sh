@@ -113,10 +113,13 @@ ensure_gettext
 
 # Utilities
 ensure_coreutils
+ensure_gnu_awk
+ensure_gnu_grep
 ensure_gnu_sed
 ensure_watch
 ensure_cmake
 ensure_git_lfs
+ensure_parallel
 
 # Everyday
 ensure_clang_format
