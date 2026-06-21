@@ -36,3 +36,7 @@ fi
 
 # When set to 1, only build/install dependencies and skip all configuration.
 BUILD_ONLY=${BUILD_ONLY:-0}
+
+PYTHON_BASE_VENV_DIR=$PROGRAMS_PATH/.python-base
+UV_PYTHON_INSTALL_DIR_DEFAULT=$PROGRAMS_PATH/.uv-python
+export UV_PYTHON_INSTALL_DIR=${UV_PYTHON_INSTALL_DIR:-$UV_PYTHON_INSTALL_DIR_DEFAULT}

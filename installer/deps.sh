@@ -24,6 +24,13 @@ ensure_automake() {
   check_and_install_hard_dependency "automake" "install_automake"
 }
 
+# bash
+source installer/dependencies/bash.sh
+ensure_bash() {
+  set -e
+  check_and_install_dependency "bash" "$LOCALDIR/bin/bash" "install_bash"
+}
+
 # Bat
 source installer/dependencies/bat.sh
 ensure_bat() {
@@ -214,7 +221,16 @@ ensure_watch() {
 # wget
 source installer/dependencies/wget.sh
 ensure_wget() {
-  check_and_install_hard_dependency "wget" "install_wget"
+  check_and_install_dependency "wget" "$BREWDIR/bin/wget" "install_wget"
+}
+
+# uv
+source installer/dependencies/uv.sh
+ensure_uv() {
+  set -e
+  check_and_install_dependency "uv" "$LOCALDIR/bin/uv" "install_uv"
+  # NOTE: preconfigure_dependency runs even when BUILD_ONLY
+  preconfigure_dependency "uv" "preconfigure_uv"
 }
 
 # Zathura
@@ -222,7 +238,7 @@ source installer/dependencies/zathura.sh
 ensure_zathura() {
   set -e
   if [[ $IS_PERSONAL -eq 1 ]]; then
-    check_and_install_dependency "zathura" "$(program_path zathura)" "install_zathura"
+    check_and_install_dependency "zathura" "$BREWDIR/bin/zathura" "install_zathura"
     configure_dependency "zathura" "configure_zathura"
   fi
 }
@@ -231,12 +247,6 @@ ensure_zathura() {
 source installer/dependencies/zsh.sh
 ensure_zsh() {
   set -e
-  # TODO: zsh builds on mac, but hangs when executed.
-  if [[ "$_OS_NAME" != "darwin" ]]; then
-    check_and_install_dependency "zsh" "$LOCALDIR/bin/zsh" "install_zsh"
-  else
-    echo "ZSH build is disabled on darwin, but it usually comes pre-installed."
-    check_hard_dependency "zsh"
-  fi
+  check_and_install_dependency "zsh" "$LOCALDIR/bin/zsh" "install_zsh"
   configure_dependency "zsh" "configure_zsh"
 }

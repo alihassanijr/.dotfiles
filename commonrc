@@ -90,6 +90,9 @@ elif [[ -n "$BASH_VERSION" ]]; then
   [ -f $LOCAL_HOME_PATH/.fzf.bash ] && source $LOCAL_HOME_PATH/.fzf.bash
 fi
 
+# uv
+export UV_PYTHON_INSTALL_DIR=$LOCAL_HOME_PATH/.uv-python
+
 # Bat config
 export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
 

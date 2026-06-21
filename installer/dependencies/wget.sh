@@ -9,5 +9,6 @@ install_wget() {
   fi
 
   echo "Installing wget via brew"
+  export PATH=$BREWDIR/bin:$BREWDIR/sbin:$PATH
   brew install wget
 }

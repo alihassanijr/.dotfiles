@@ -21,6 +21,49 @@ install_vim() {
         local PACKAGETARNAME="vim-$VIM_VERSION.tar.gz"
         local PACKAGEDIRNAME="vim-$VIM_VERSION"
 
+        # Python3 dependency
+        local FOUND_PYTHON3=0
+        local ADDITIONAL_VIM_CONF_ARGS=""
+
+        if program_exists "python3"; then
+          # os python path
+          local PYTHON_BIN=$(program_path "python3")
+          local PYTHON_INCLUDE_PATH=$($PYTHON_BIN -c "import sysconfig; print(sysconfig.get_path('include'))")
+          if [[ -d "$PYTHON_INCLUDE_PATH" && -f "$PYTHON_INCLUDE_PATH/Python.h" ]]; then
+            echo "Python3 dependency resolved: $PYTHON_BIN"
+            echo "Include dir: $PYTHON_INCLUDE_PATH"
+            ADDITIONAL_VIM_CONF_ARGS="--enable-python3interp"
+            FOUND_PYTHON3=1
+          else
+            echo "Incomplete python3 found at $PYTHON_BIN, include directories non-existent / invalid."
+          fi
+        fi
+
+        echo "FOUND_PYTHON3: $FOUND_PYTHON3"
+        echo "BASE: $PYTHON_BASE_VENV_DIR"
+        if [[ $FOUND_PYTHON3 -eq 0 && -d "$PYTHON_BASE_VENV_DIR" && -f "$PYTHON_BASE_VENV_DIR/bin/python3" ]]; then
+          # uv path
+          local PYTHON_BIN=$PYTHON_BASE_VENV_DIR/bin/python3
+          local PYTHON_INCLUDE_PATH=$($PYTHON_BIN -c "import sysconfig; print(sysconfig.get_path('include'))")
+
+          echo "Found uv path python: $PYTHON_BASE_VENV_DIR"
+          echo "Include dir: $PYTHON_INCLUDE_PATH"
+
+          if [[ -d "$PYTHON_INCLUDE_PATH" && -f "$PYTHON_INCLUDE_PATH/Python.h" ]]; then
+            echo "Python3 dependency resolved: $PYTHON_BIN"
+            echo "Include dir: $PYTHON_INCLUDE_PATH"
+
+            export PATH=$PYTHON_BASE_VENV_DIR/bin:$PATH
+            export LD_LIBRARY_PATH=$PYTHON_BASE_VENV_DIR/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+            export CFLAGS="-I$PYTHON_INCLUDE_PATH"
+            export CPPFLAGS="-I$PYTHON_INCLUDE_PATH"
+
+            ADDITIONAL_VIM_CONF_ARGS="--enable-python3interp"
+          fi
+        fi
+
+        echo "Installing vim with additional args: $ADDITIONAL_VIM_CONF_ARGS"
+
         cd $THISDIR
         rm -rf $TMPDIR
         mkdir -p $TMPDIR
@@ -36,7 +79,6 @@ install_vim() {
             --with-features=huge                      \
             --enable-terminal                         \
             --enable-multibyte                        \
-            --enable-python3interp                    \
             --with-tlib=ncursesw                      \
             --disable-darwin                          \
             --disable-selinux                         \
@@ -44,6 +86,7 @@ install_vim() {
             --disable-netbeans                        \
             --enable-cscope                           \
             --with-compiledby="Ali Hassani"           \
+            $ADDITIONAL_VIM_CONF_ARGS                 \
             --prefix=${LOCALDIR} &&                   \
             make -j$NUM_WORKERS VERBOSE=1 && \
             make install

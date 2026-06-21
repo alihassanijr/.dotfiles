@@ -13,7 +13,6 @@ install_libevent() {
     echo "Libevent dependency resolution failed. Won't attempt build.";
     return 1
   }
-  # check_and_install_hard_dependency "libtool" "install_libtool"
 
   echo "Installing dependency: libevent"
   

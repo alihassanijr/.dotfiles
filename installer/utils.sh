@@ -142,6 +142,13 @@ check_and_install_dependency() {
   fi
 }
 
+preconfigure_dependency() {
+  local DEP_NAME=$1               # dependency name
+  local CONFIGURATION_FUNCTION=$2 # function to call
+  echo "Pre-configuring $DEP_NAME..."
+  $CONFIGURATION_FUNCTION
+}
+
 configure_dependency() {
   local DEP_NAME=$1               # dependency name
   local CONFIGURATION_FUNCTION=$2 # function to call

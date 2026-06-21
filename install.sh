@@ -48,7 +48,9 @@ ensure_local_exists
 echo "Installing my stuff..."
 
 # .brew
-export PATH=$BREWDIR/bin:$BREWDIR/sbin:$PATH
+# expose brew path ONLY when using brew to build.
+# we don't want the rest of our dependencies to link with stuff installed by brew
+#export PATH=$BREWDIR/bin:$BREWDIR/sbin:$PATH
 
 # .local
 export PATH=$LOCALDIR/bin:$PATH
@@ -63,9 +65,10 @@ export CFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
 export CPPFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
 
 
-# git and brew first; other dependencies may rely on them.
+# git, brew, and uv first; other dependencies may rely on them.
 ensure_git
 ensure_brew
+ensure_uv
 
 # Very basic stuff (usually installed on linux, but
 # not necessarily on mac).
@@ -95,7 +98,7 @@ ensure_alacritty
 ensure_tmux
 ensure_vim
 ensure_vifm
-ensure_zathura
+ensure_bash
 ensure_zsh
 ensure_fzf
 
@@ -111,7 +114,8 @@ ensure_htop             # alternative to top
 ensure_rg               # alternative to grep
 ensure_tre              # alternative to tree
 
-# Entertainment
+# GUIs and other misc stuff
+ensure_zathura
 ensure_cmatrix
 
 # Custom scripts
@@ -125,6 +129,7 @@ if [[ "$BUILD_ONLY" -ne 1 ]]; then
   link_commonrc
   link_bashrc
   link_git_config
+  link_fzf
   link_agentfiles
 
   # Fix permissions

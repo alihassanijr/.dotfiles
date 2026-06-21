@@ -16,6 +16,7 @@ install_zathura() {
   echo ""
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
+    export PATH=$BREWDIR/bin:$BREWDIR/sbin:$PATH
     ensure_brew
 
     brew tap zegervdv/zathura

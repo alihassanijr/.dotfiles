@@ -54,6 +54,17 @@ link_git_config() {
   link_to_home "Git config" "gitconfig" ".gitconfig"
 }
 
+link_fzf() {
+  # apparently we need ~/.fzf for the vim plugins to work...
+  local SRC_PATH=$FZF_DIR/.fzf
+  local DST_PATH=$HOMEDIR/.fzf
+  if [[ -d $SRC_PATH ]]; then
+    echo "Linking .fzf: Symlink $SRC_PATH to $DST_PATH"
+    [ -f "$DST_PATH" ] && rm $DST_PATH
+    ln -s $SRC_PATH $DST_PATH
+  fi
+}
+
 link_agentfiles() {
   if program_exists "claude"; then
     mkdir -p $HOME/.claude
