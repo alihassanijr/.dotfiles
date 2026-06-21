@@ -47,10 +47,11 @@ ensure_local_exists
 
 echo "Installing my stuff..."
 
-# .local
-export PATH=$LOCALDIR/bin:$PATH
 # .brew
 export PATH=$BREWDIR/bin:$BREWDIR/sbin:$PATH
+
+# .local
+export PATH=$LOCALDIR/bin:$PATH
 export LD_LIBRARY_PATH=$LOCALDIR/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 export PKG_CONFIG_PATH="$LOCALDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
 export ACLOCAL_PATH="$LOCALDIR/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"

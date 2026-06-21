@@ -67,17 +67,17 @@ fi
 # General Exports
 export EDITOR="vim"
 
+# Load homebrew (if available)
+if [[ -d $LOCAL_HOME_PATH/.brew ]]; then
+  export PATH="$LOCAL_HOME_PATH/.brew/bin:$LOCAL_HOME_PATH/.brew/sbin:$PATH"
+fi
+
 # Load local binaries
 export PATH=$LOCAL_HOME_PATH/.local/bin:$PATH
 export MANPATH=$LOCAL_HOME_PATH/.local/man:$MANPATH
 if [[ -d "$LOCAL_HOME_PATH/.local/extras/coreutils" ]]; then
   export PATH=$LOCAL_HOME_PATH/.local/extras/coreutils/bin:$PATH
   export MANPATH=$LOCAL_HOME_PATH/.local/extras/coreutils/man:$MANPATH
-fi
-
-# Load homebrew (if available)
-if [[ -d $LOCAL_HOME_PATH/.brew ]]; then
-  export PATH="$LOCAL_HOME_PATH/.brew/bin:$LOCAL_HOME_PATH/.brew/sbin:$PATH"
 fi
 
 export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
