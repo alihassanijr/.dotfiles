@@ -89,6 +89,9 @@ if [[ $PATH == *brew* ]]; then
 fi
 
 
+# base python env (uv)
+export PATH=$PYTHON_BASE_VENV_DIR/bin:$PATH
+
 # .local
 export PATH=$LOCALDIR/bin:$PATH
 export LD_LIBRARY_PATH=$LOCALDIR/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
@@ -98,9 +101,8 @@ export ACLOCAL_PATH="$LOCALDIR/share/aclocal${ACLOCAL_PATH:+:$ACLOCAL_PATH}"
 # .ncurses
 export LD_LIBRARY_PATH=$NCDIR/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 export PKG_CONFIG_PATH="$NCDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
-export CFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
-export CPPFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw"
-
+export CFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw $CFLAGS"
+export CPPFLAGS="-I$NCDIR/include -I$NCDIR/include/ncursesw $CPPFLAGS"
 
 # git, brew, and uv first; other dependencies may rely on them.
 ensure_git
