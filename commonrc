@@ -255,7 +255,7 @@ vicd() {
 
 # SMUX: SSH and then attach to tmux
 smux () {
-    ssh -t ${@} 'bash -c "tmux a || tmux"'
+    ssh -t ${@} 'bash -c "source .commonrc && tmux a || tmux"'
 }
 
 # Diff so fancy shortcut
