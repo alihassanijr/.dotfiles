@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # uv
 
 UV_VERSION="0.11.23"

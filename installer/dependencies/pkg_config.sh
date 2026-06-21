@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # pkg-config
 
 PKG_CONFIG_VERSION="0.29.2"

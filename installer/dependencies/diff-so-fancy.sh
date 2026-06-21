@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Diff-so-fancy
 # The main script resolves its lib/ relative to itself (via abs_path($0)),
 # so we install the whole package under $LOCALDIR/extras and point a *relative*

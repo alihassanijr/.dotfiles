@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # gnu sed
 
 SED_VERSION="4.9"

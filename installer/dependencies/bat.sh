@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Bat installer
 # Bats are better than cats ;)
 

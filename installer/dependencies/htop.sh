@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Htop builder
 # Sometimes not pre-installed, and I insist on having everything regardless
 # of my sudo access. And let's face it, that's not always the only limit.

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Autoconf
 
 AUTOCONF_VERSION="2.72"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Dependency list
 # Author: Ali Hassani (@alihassanijr)
 # NOTE: this should be sourced from ./dotfiles/
@@ -6,8 +6,7 @@
 # Alacritty
 source installer/dependencies/alacritty.sh
 ensure_alacritty() {
-  if program_exists "$DEP_NAME"; then
-    echo "Looks like you have alacritty installed."
+  if [[ $IS_PERSONAL -eq 1 ]]; then
     configure_dependency "alacritty" "configure_alacritty"
   fi
 }
@@ -15,13 +14,13 @@ ensure_alacritty() {
 # Autoconf
 source installer/dependencies/autoconf.sh
 ensure_autoconf() {
-  check_and_install_hard_dependency "autoconf" "install_autoconf"
+  check_and_install_dependency "autoconf" "$LOCALDIR/bin/autoconf" "install_autoconf"
 }
 
 # Automake
 source installer/dependencies/automake.sh
 ensure_automake() {
-  check_and_install_hard_dependency "automake" "install_automake"
+  check_and_install_dependency "automake" "$LOCALDIR/bin/automake" "install_automake"
 }
 
 # bash
@@ -35,7 +34,7 @@ ensure_bash() {
 source installer/dependencies/bat.sh
 ensure_bat() {
   set -e
-  check_and_install_hard_dependency "bat" "install_bat"
+  check_and_install_dependency "bat" "$LOCALDIR/bin/bat" "install_bat"
   configure_dependency "bat" "configure_bat"
 }
 
@@ -98,8 +97,6 @@ ensure_fzf() {
 # gettext
 source installer/dependencies/gettext.sh
 ensure_gettext() {
-  # Don't trust OS's gettext, because it may not have autopoint.
-  # check_and_install_hard_dependency "gettext" "install_gettext"
   check_and_install_dependency "gettext" "$LOCALDIR/bin/gettext" "install_gettext"
 }
 
@@ -143,25 +140,19 @@ ensure_htop() {
 # LSD
 source installer/dependencies/lsd.sh
 ensure_lsd() {
-  check_and_install_hard_dependency "lsd" "install_lsd"
+  check_and_install_dependency "lsd" "$LOCALDIR/bin/lsd" "install_lsd"
 }
 
 # Make
 source installer/dependencies/make.sh
 ensure_make() {
-  # Because if it's too old, things like building git from source might fail
   check_and_install_dependency "make" "$LOCALDIR/bin/make" "install_make"
 }
 
 # M4
 source installer/dependencies/m4.sh
 ensure_m4() {
-  if [[ "$_OS_NAME" == "darwin" ]]; then
-    # Don't use mac's m4
-    check_and_install_dependency "m4" "$LOCALDIR/bin/m4" "install_m4"
-  else
-    check_and_install_hard_dependency "m4" "install_m4"
-  fi
+  check_and_install_dependency "m4" "$LOCALDIR/bin/m4" "install_m4"
 }
 
 # NCurses
@@ -173,13 +164,13 @@ ensure_ncurses() {
 # pkg-config
 source installer/dependencies/pkg_config.sh
 ensure_pkg_config() {
-  check_and_install_hard_dependency "pkg-config" "install_pkg_config"
+  check_and_install_dependency "pkg-config" "$LOCALDIR/bin/pkg-config" "install_pkg_config"
 }
 
 # Ripgrep
 source installer/dependencies/rg.sh
 ensure_rg() {
-  check_and_install_hard_dependency "rg" "install_rg"
+  check_and_install_dependency "rg" "$LOCALDIR/bin/rg" "install_rg"
 }
 
 # Tmux
@@ -193,7 +184,7 @@ ensure_tmux() {
 # Tre
 source installer/dependencies/tre.sh
 ensure_tre() {
-  check_and_install_hard_dependency "tre" "install_tre"
+  check_and_install_dependency "tre" "$LOCALDIR/bin/tre" "install_tre"
 }
 
 # Vim
@@ -215,7 +206,7 @@ ensure_vifm() {
 # watch
 source installer/dependencies/watch.sh
 ensure_watch() {
-  check_and_install_hard_dependency "watch" "install_watch"
+  check_and_install_dependency "watch" "$LOCALDIR/bin/watch" "install_watch"
 }
 
 # wget

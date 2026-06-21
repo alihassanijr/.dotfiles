@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Codex
 # Prebuilt release binary from openai/codex (musl on Linux, universal-ish on mac).
 

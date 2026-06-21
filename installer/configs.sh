@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Config list
 # Author: Ali Hassani (@alihassanijr)
 # NOTE: this should be sourced from ./dotfiles/
@@ -60,7 +60,12 @@ link_fzf() {
   local DST_PATH=$HOMEDIR/.fzf
   if [[ -d $SRC_PATH ]]; then
     echo "Linking .fzf: Symlink $SRC_PATH to $DST_PATH"
-    [ -f "$DST_PATH" ] && rm $DST_PATH
+    [ -L "$DST_PATH" ] && rm $DST_PATH
+    [[ -f "$DST_PATH" || -d "$DST_PATH" ]] && {
+      echo "$DST_PATH exists and it is not a symlink. Resolve this before proceeding.";
+      echo "ERROR: FZF symlink FAILED!";
+      return 1
+    }
     ln -s $SRC_PATH $DST_PATH
   fi
 }

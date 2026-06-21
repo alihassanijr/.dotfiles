@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Git-lfs installer
 
 GITLFS_VERSION="3.7.0"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Homebrew
 
 BREW_VERSION="6.0.0"

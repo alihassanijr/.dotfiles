@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 GETTEXT_VERSION="0.22.5"
 

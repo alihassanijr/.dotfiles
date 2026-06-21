@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # NCurses builder
 # Vim, Vifm, and htop require curses or ncurses
 

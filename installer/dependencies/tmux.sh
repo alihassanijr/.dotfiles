@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Tmux
 
 LIBEVENT_VERSION="2.1.12"

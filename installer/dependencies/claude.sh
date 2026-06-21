@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Claude Code
 # The official installer downloads a platform binary then runs `claude install`,
 # which only copies that binary into ~/.local/bin. We skip that and drop the

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # CMake installer
 # Fetches the expected build and dumps it
 # I am tired of the old cmakes and having to use conda whenever I need cutlass.

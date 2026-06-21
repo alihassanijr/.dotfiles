@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Installer script utilities
 # Author: Ali Hassani (@alihassanijr)
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # clang-format
 
 CLANG_FORMAT_VERSION="18.1.0"

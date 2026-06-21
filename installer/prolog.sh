@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Installer script prolog: global variables and such
 # Author: Ali Hassani (@alihassanijr)
 

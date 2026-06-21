@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Vim builder
 # Building vim from source because I want the same version of vim
 # everywhere, and I want to decide when to upgrade or not.

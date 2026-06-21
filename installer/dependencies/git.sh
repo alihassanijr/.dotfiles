@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Git (because sometimes it's WAYYY tooo old)
 
 GIT_VERSION="2.45.0"

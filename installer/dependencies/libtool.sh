@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # libtool: shared dependency between tmux and aria2
 
 LIBTOOL_VERSION="2.4.7"

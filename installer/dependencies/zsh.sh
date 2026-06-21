@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ZShell
 
 ZSH_PKG_VERSION="5.9.1"

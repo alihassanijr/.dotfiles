@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # M4
 
 M4_VERSION="1.4.19"

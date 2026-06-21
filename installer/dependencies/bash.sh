@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # bash
 # yeah, I make my own bash too... because BSD stands of Big Sack of D... Disappointment
 # "oh you want to run your scripts on your mac? why don't you run docker first..." no more!!!

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Automake
 
 AUTOMAKE_VERSION="1.16.5"

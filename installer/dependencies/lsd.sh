@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # RIP EXA -- LSD installer
 # Why ls when you can LSD?
 

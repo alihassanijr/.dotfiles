@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Installer script
 # Author: Ali Hassani (@alihassanijr)
 
@@ -51,6 +51,32 @@ echo "Installing my stuff..."
 # expose brew path ONLY when using brew to build.
 # we don't want the rest of our dependencies to link with stuff installed by brew
 #export PATH=$BREWDIR/bin:$BREWDIR/sbin:$PATH
+if [[ $PATH == *brew* ]]; then
+  echo "WARNING: brew detected in PATH. Will attempt to remove"
+  echo "PATH=$PATH"
+  echo ""
+  if [[ "$BUILD_ONLY" -eq 1 ]]; then
+    echo "ERROR: Will NOT proceed with BUILD_ONLY run."
+    echo "Please ensure PATH is untouched during BUILD_ONLY."
+    exit 1
+  fi
+  {
+    set -o pipefail
+    if NEW_PATH="$(awk -v RS=: -v ORS=: '!/brew/' <<<"$PATH" | sed 's/:$//')"; then
+      echo ""
+      echo "PATH updated to $NEW_PATH"
+      echo ""
+      echo "Please confirm by pressing ENTER"
+      read
+      export PATH=$NEW_PATH
+    else
+      echo "Failed to correct path!"
+      echo "Please exclude brew from path and try again!"
+      exit 1
+    fi
+  }
+fi
+
 
 # .local
 export PATH=$LOCALDIR/bin:$PATH

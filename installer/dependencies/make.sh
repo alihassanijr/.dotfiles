@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Make
 
 MAKE_VERSION="4.4.1"

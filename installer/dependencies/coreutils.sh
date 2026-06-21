@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # gnu coreutils
 
 COREUTILS_VERSION="9.5"
