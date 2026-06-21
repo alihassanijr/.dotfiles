@@ -39,9 +39,6 @@ source installer/configs.sh
 
 assert_dotfiles_in_home
 
-# Ensure submodules are cloned
-update_submodules
-
 # Ensure expected directories exist
 ensure_local_exists
 

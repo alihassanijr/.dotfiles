@@ -129,12 +129,6 @@ if command_exists lsd ; then
     alias la='lsd --group-directories-first -lah --color=auto'
     alias lm='lsd --group-directories-first -lah --sort modified --color=auto'
     alias ll='lsd --group-directories-first -lah --sort size --color=auto'
-elif command_exists exa ; then
-    alias ls="exa --color=auto"
-    alias lc="exa -lh --color=auto"
-    alias la='exa -lah -s name --color=auto'
-    alias lm='exa -lah -s modified --color=auto'
-    alias ll='exa -lah -s size --color=auto'
 fi
 
 # Add color and make human readable

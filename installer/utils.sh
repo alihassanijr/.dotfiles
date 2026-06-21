@@ -11,13 +11,6 @@ assert_dotfiles_in_home() {
   fi
 }
 
-update_submodules() {
-  if [[ "$BUILD_ONLY" -eq 1 ]]; then
-    return 0
-  fi
-  git submodule update --init --recursive
-}
-
 program_path() {
   # Print the resolved path of the given program (empty if not found).
   # Uses `command` rather than `which`, since `which` isn't guaranteed to exist.

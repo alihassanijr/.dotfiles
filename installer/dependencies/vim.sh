@@ -106,6 +106,97 @@ install_vim() {
     fi
 }
 
+### LARGE PLUGINS
+
+verify_sha256() {
+    # Usage: verify_sha256 <file> <expected_hash>
+    local FILE=$1
+    local EXPECTED=$2
+    local ACTUAL
+    if program_exists shasum; then
+        ACTUAL=$(shasum -a 256 "$FILE" | awk '{print $1}')
+    elif program_exists sha256sum; then
+        ACTUAL=$(sha256sum "$FILE" | awk '{print $1}')
+    else
+        echo "No sha256 tool (shasum/sha256sum) found; cannot verify $FILE."
+        return 1
+    fi
+    if [[ "$ACTUAL" != "$EXPECTED" ]]; then
+        echo "Hash mismatch for $FILE"
+        echo "  expected: $EXPECTED"
+        echo "  actual:   $ACTUAL"
+        return 1
+    fi
+}
+
+fetch_vim_pack_large_plugin() {
+    # Usage: fetch_vim_pack_large_plugin <name> <url> <sha256> <tarball_topdir>
+    local NAME=$1          # target dir name under vim/pack-large
+    local URL=$2
+    local SHA256=$3
+    local TAR_TOPDIR=$4    # top-level dir inside the tarball
+
+    local DEST="$THISDIR/vim/pack-large/$NAME"
+    local STAMP="$DEST/.fetched"
+
+    # Skip if we already fetched this exact version (verified by hash).
+    if [[ -f "$STAMP" && "$(cat "$STAMP")" == "$SHA256" ]]; then
+        echo "$NAME already fetched (hash matches); skipping."
+        return 0
+    fi
+
+    local TMPDIR=$(build_tmpdir "vim-$NAME")
+    rm -rf "$TMPDIR"
+    mkdir -p "$TMPDIR"
+
+    local TARBALL="$TMPDIR/$NAME.tar.gz"
+    if ! fetch_package "$TARBALL" "$URL"; then
+        echo "Failed to download $NAME."
+        rm -rf "$TMPDIR"
+        return 1
+    fi
+
+    # Verify the download before extracting.
+    if ! verify_sha256 "$TARBALL" "$SHA256"; then
+        echo "Refusing to extract $NAME."
+        rm -rf "$TMPDIR"
+        return 1
+    fi
+
+    if ! tar -xzf "$TARBALL" -C "$TMPDIR"; then
+        echo "Failed to extract $NAME."
+        rm -rf "$TMPDIR"
+        return 1
+    fi
+
+    # Repopulate the (always-present) target dir with the extracted contents.
+    mkdir -p "$DEST"
+    rm -rf "$DEST"/* "$DEST"/.[!.]* 2>/dev/null
+    mv "$TMPDIR/$TAR_TOPDIR"/* "$DEST"/
+    mv "$TMPDIR/$TAR_TOPDIR"/.[!.]* "$DEST"/ 2>/dev/null
+
+    # Stamp with the verified hash so reruns skip.
+    echo "$SHA256" > "$STAMP"
+    rm -rf "$TMPDIR"
+    echo "Fetched $NAME ($SHA256) into $DEST"
+}
+
+fetch_vim_polyglot() {
+    fetch_vim_pack_large_plugin \
+        "vim-polyglot" \
+        "https://github.com/vim-polyglot/vim-polyglot/archive/refs/tags/v4.17.0.tar.gz" \
+        "358c2f39042c9c5ea9233d457f03e87da5c2ed0e72001cc01f4ba95a0ae08267" \
+        "vim-polyglot-4.17.0"
+}
+
+fetch_vimtex() {
+    fetch_vim_pack_large_plugin \
+        "vimtex" \
+        "https://github.com/lervag/vimtex/archive/refs/tags/v2.17.tar.gz" \
+        "2eeb99147c06654e6908990f2f020435f3714d467d7cb02d7d04a4038ec64988" \
+        "vimtex-2.17"
+}
+
 configure_vim() {
     # Replace the vim files
     echo "Linking vim files..."
@@ -119,4 +210,10 @@ configure_vim() {
 
     # Swap dir
     mkdir -p $HOMEDIR/.vimfiles/swapdir
+
+    # Larger plugins are downloaded and not shipped out with dotfiles
+    fetch_vim_polyglot
+    if [[ $IS_PERSONAL -eq 1 ]]; then
+        fetch_vimtex
+    fi
 }

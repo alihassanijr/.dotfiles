@@ -136,9 +136,8 @@ link_custom_scripts() {
   # True color vifm
   link_bin "Vifm with truecolor (vif)" "scripts/vif" "vif"
   
-  # Tmux split shortcuts
+  # Tmux split shortcut
   link_bin "Tmux shortcuts (4w)" "scripts/4w" "4w"
-  link_bin "Tmux shortcuts (4wc)" "scripts/4wc" "4wc"
 
   # SSH Agent Init
   if [[ "$_OS_NAME" == "darwin" ]]; then
@@ -149,9 +148,4 @@ link_custom_scripts() {
 
   # SSH Agent killer
   link_bin "SSH agent killer (kssh)" "scripts/kssh" "kssh"
-
-  if [[ -f "$HOME/.config/alacritty/alacritty.toml" ]]; then
-    # Alacritty focus mode
-    link_bin "Alacritty focus mode (alacritty_widescreen_toggle)" "scripts/alacritty_widescreen_toggle" "alacritty_widescreen_toggle"
-  fi
 }

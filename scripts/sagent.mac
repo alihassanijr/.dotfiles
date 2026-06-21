@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # SAGENT starts an SSH agent if my user doesn't already have one running.
 # It first looks up ssh-agent processes associated with my user and sets

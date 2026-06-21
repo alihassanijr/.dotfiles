@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Best solution I have so far to force VIFM
 # to support true color without breaking my terminal

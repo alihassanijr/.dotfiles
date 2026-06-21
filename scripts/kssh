@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 
 # Kills an existing SSH agent
 # See `sagent` for details.

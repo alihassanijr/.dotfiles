@@ -1,13 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-dirname=${1:-.}
+dirname="${1:-.}"
 
 tmux split-window -v -t . && \
        tmux split-window -h -t .1 \
        && tmux split-window -h -t .0 \
-       && tmux send-keys -t .0 cd Space $dirname Enter clear Enter \
-       && tmux send-keys -t .1 cd Space $dirname Enter clear Enter \
-       && tmux send-keys -t .2 cd Space $dirname Enter clear Enter \
-       && tmux send-keys -t .3 cd Space $dirname Enter clear Enter \
-       && tmux send-keys -t .0 vim Enter \
+       && tmux send-keys -t .0 cd Space "$dirname" Enter \
+       && tmux send-keys -t .1 cd Space "$dirname" Enter \
+       && tmux send-keys -t .2 cd Space "$dirname" Enter \
+       && tmux send-keys -t .3 cd Space "$dirname" Enter \
        && tmux select-pane -L
+
+# stop automatically opening up vim
+#       && tmux send-keys -t .0 vim Enter \
+
+# don't clear either
+#       && tmux send-keys -t .0 cd Space "$dirname" Enter clear Enter \
+#       && tmux send-keys -t .1 cd Space "$dirname" Enter clear Enter \
+#       && tmux send-keys -t .2 cd Space "$dirname" Enter clear Enter \
+#       && tmux send-keys -t .3 cd Space "$dirname" Enter clear Enter \
