@@ -1,19 +1,36 @@
 # Ali's .dotfiles
 
-TODO until I populate it again...
+Programs I need, locked to exact versions I need, cross-platform, runnable on (almost) anything.
 
-Just to give you an idea: zshell, because it's awesome, Oh-My-Zsh, but minimalized and locked so we
-don't have to be annoyed with update notices ( _I_ decide when stuff needs an update, okay?)
-Then we have a bunch of shortcuts and handy functions available in both bash and zshell, custom
-themes and colors, and of course, last but not least, custom editor.
+Configs for said programs, rc files, and other helpers.
 
-Not only do I "use vim btw", I build my own vim from source.
-Vim, vim file manager (vifm), curses, and a bunch of other utilities are all built from their
-releases or sources.
+Rest of readme is AI-generated, pinch of coarse kosher salt needed.
 
-Some other tools have decent coverage in their release binaries, so we just download those, save
-ourselves some time.
+## PREREQUISITES
 
-## Getting started
+Obviously `git`, basic c/c++ compiler, `tar`, `curl`, `zip`/`unzip`.
 
-Run `make` or `make WORKERS=$PARALLEL_WORKERS`. 
+## RUN
+
+Read Makefile and just run `install.sh`. You don't need `make` to build.
+
+```
+make
+make WORKERS=8 install
+```
+
+## KNOBS
+
+- `WORKERS=N` — build parallelism. Default 1.
+- `BUILD_ONLY=1` — build programs only, no linking config/rc files. Brew-only tools skipped.
+- `PROGRAMS_PATH=dir` — where tools go. Default `~/.programs/<distro-or-os>_<arch>`.
+- `IS_PERSONAL=1`: run on personal devices that need the personal tmux config, terminal emulator config, pdf viewer, latex. Default 1 on mac devices.
+
+## PROGRAMS
+
+- Built from source: make, m4, autoconf, automake, pkg-config, ncurses, gettext, coreutils, gnu-awk, gnu-grep, gnu-sed, watch, cmake, parallel, clang-format, tmux, vim, vifm, bash, zsh, htop, cmatrix.
+- Grabbed prebuilt (binary/dist): uv, fzf, bat, lsd, rg, tre, git-lfs, diff-so-fancy, claude, codex.
+- Brew only (skip in BUILD_ONLY): wget, zathura.
+
+## NOTICE
+Use at your own risk. I develop this specifically for myself.

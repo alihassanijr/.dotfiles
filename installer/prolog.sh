@@ -8,8 +8,29 @@ THISDIR=$HOME/.dotfiles
 # Where is home?
 HOMEDIR=$HOME
 
+##########################
+# TODO: duplicated from commonrc
+distro_name() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    id=macos
+    ver=$(sw_vers -productVersion 2>/dev/null | cut -d. -f1)
+  elif [[ -r /etc/os-release ]]; then
+    . /etc/os-release
+    id=${ID:-linux}
+    ver=${VERSION_ID:-rolling}
+  fi
+  id=${id:-linux}
+  ver=${ver:-rolling}
+
+  ver=$(printf '%s' "$ver" | tr -cd '0-9A-Za-z')
+  printf '%s_%s\n' "$id" "$ver"
+}
+DISTRO_NAME=$(distro_name)
+PROGRAMS_PATH_DEFAULT="$HOME/.programs/${DISTRO_NAME}_$(uname -m | sed 's/^aarch64$/arm64/')"
+##########################
+
 # Where should I install everything?
-PROGRAMS_PATH=${PROGRAMS_PATH:-$HOME}
+PROGRAMS_PATH=${PROGRAMS_PATH:-$PROGRAMS_PATH_DEFAULT}
 
 LOCALDIR=$PROGRAMS_PATH/.local/
 NCDIR=$PROGRAMS_PATH/.ncurses/
@@ -26,13 +47,13 @@ _ARCH=$(uname -m)
 echo "OS: $_OS_NAME"
 echo "Arch: $_ARCH"
 
-# Whether or not this is a personal device
-## I want certain things like my terminal emulator only on
-## personal devices, not on servers.
-IS_PERSONAL=0
+# Personal devices will have latex plugin for vim, prompt to install zathura (pdf viewer), link
+# terminal emulator configs, etc.
+IS_PERSONAL_DEFAULT=0
 if [[ "$_OS_NAME" == "darwin" ]]; then
-    IS_PERSONAL=1
+    IS_PERSONAL_DEFAULT=1
 fi
+IS_PERSONAL=${IS_PERSONAL:-$IS_PERSONAL_DEFAULT}
 
 # When set to 1, only build/install dependencies and skip all configuration.
 BUILD_ONLY=${BUILD_ONLY:-0}

@@ -149,9 +149,11 @@ configure_tmux() {
   # Tmux config files
   if program_exists tmux; then
     rm $HOMEDIR/.tmux.conf
-    if [[ "$_OS_NAME" == "darwin" ]]; then
-      ln -s $THISDIR/tmux.mac.conf $HOMEDIR/.tmux.conf
+    if [[ $IS_PERSONAL -eq 1 ]]; then
+      echo "Linking PERSONAL tmux config"
+      ln -s $THISDIR/tmux.personal.conf $HOMEDIR/.tmux.conf
     else
+      echo "Linking default (remote) tmux config"
       ln -s $THISDIR/tmux.conf $HOMEDIR/.tmux.conf
     fi
     

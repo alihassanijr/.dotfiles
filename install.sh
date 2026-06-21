@@ -2,6 +2,12 @@
 # Installer script
 # Author: Ali Hassani (@alihassanijr)
 
+echo ""
+echo "================================================================="
+echo "!!!PLEASE CONFIRM THESE DETAILS BEFORE PROCEEDING TO BUILD!!!"
+echo "================================================================="
+echo ""
+
 echo "#====================#"
 echo "#   Ali's dotfiles   #"
 echo "#====================#"
@@ -23,13 +29,21 @@ fi
 # Load functions
 source installer/prolog.sh
 echo "Target directory for programs: $PROGRAMS_PATH"
+echo "This means you will end up with most programs under $PROGRAMS_PATH/.local,"
+echo "    curses under $PROGRAMS_PATH/.ncurses, "
+echo "    homebrew under $PROGRAMS_PATH/.brew, ... ."
+if [[ "$BUILD_ONLY" -ne 1 ]]; then
+  echo "BUT your RC files will still be linked to your home: $HOMEDIR"
+fi
+echo ""
 
 if [[ "$BUILD_ONLY" -ne 1 ]]; then
+  echo "IS_PERSONAL: $IS_PERSONAL"
   if [[ $IS_PERSONAL -eq 1 ]]; then
-    echo "This is a GUI device, is that right? (will attempt to install terminal emulator and pdf viewer.)"
-  else
-    echo "This is NOT a GUI device, is that right? (will skip installing terminal emulator and pdf viewer.)"
+    echo "This means I will install PDF viewer, latex plugins, and other stuff only used on a personal device!"
   fi
+  echo ""
+  echo "Press ENTER to confirm"
   read
 fi
 
@@ -42,7 +56,7 @@ assert_dotfiles_in_home
 # Ensure expected directories exist
 ensure_local_exists
 
-echo "Installing my stuff..."
+echo "Building / linking stuff..."
 
 # .brew
 # expose brew path ONLY when using brew to build.
