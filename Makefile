@@ -8,4 +8,7 @@ IS_PERSONAL ?= 0
 all: install
 
 install:
-	@NUM_WORKERS=$(WORKERS) BUILD_ONLY=$(BUILD_ONLY) ./install.sh
+	@NUM_WORKERS=$(WORKERS) \
+		BUILD_ONLY=$(BUILD_ONLY) \
+		PROGRAMS_PATH=$(PROGRAMS_PATH) \
+		IS_PERSONAL=$(IS_PERSONAL) ./install.sh
