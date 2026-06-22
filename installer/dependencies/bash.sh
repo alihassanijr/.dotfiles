@@ -20,11 +20,14 @@ build_bash() {
   rm -rf $TMPDIR
   mkdir -p $TMPDIR
   
+  # NOTE: in some os-es, bash builder ignores curses lib paths in LD_LIBRARY_PATH
   cd $TMPDIR && \
     fetch_package $PACKAGETARNAME "${PACKAGEURLS[@]}" && \
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
+    CFLAGS="-L$NCDIR/lib $CFLAGS" \
+    CPPFLAGS="-L$NCDIR/lib $CPPFLAGS" \
     ./configure \
        --with-curses \
        --with-installed-readline \

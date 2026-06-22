@@ -41,12 +41,15 @@ install_pcre2() {
       --disable-dependency-tracking \
       --enable-pcre2-16 \
       --enable-pcre2-32 \
-      --enable-pcre2grep-libz \
-      --enable-pcre2grep-libbz2 \
       --enable-jit \
       $ADDITIONAL_PCRE2_CONF_ARGS && \
     make -j$NUM_WORKERS && \
     make install
+
+  # these two are more trouble than they're worth, and after some googling/gpt-ing around, doesn't
+  # look like i'll ever need them. Plus I was using zsh without pcre2 entirely before.
+  #   --enable-pcre2grep-libz \
+  #   --enable-pcre2grep-libbz2 \
 
   if [ $? -ne 0 ]; then
     echo "pcre2 build failed."
@@ -81,6 +84,7 @@ build_zsh() {
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
     ./configure \
+      CFLAGS="-I$LOCALDIR/include -I$NCDIR/include -I$NCDIR/include/ncursesw" LDFLAGS="-L$LOCALDIR/lib -L$NCDIR/lib" \
        --enable-site-fndir=$LOCALDIR/share/zsh/site-functions \
        --enable-site-scriptdir=$LOCALDIR/share/zsh/site-scripts \
        --enable-fndir=$LOCALDIR/share/zsh/functions \
