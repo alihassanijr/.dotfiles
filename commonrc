@@ -235,12 +235,12 @@ anywait(){
 
 # Rsync shortcut; with replacement
 ry () {
-    rsync -a -H -x -v --numeric-ids --delete --progress -e "ssh -T -o Compression=no -x" $1 $2
+    rsync -a -H -x -v --numeric-ids --delete --progress -e "ssh -T -o Compression=no -o RemoteCommand=none -x" $1 $2
 }
 
 # Rsync shortcut; WITHOUT replacement
 rys () {
-    rsync -a -H -x -v --numeric-ids --ignore-existing --progress -e "ssh -T -o Compression=no -x" $1 $2
+    rsync -a -H -x -v --numeric-ids --ignore-existing --progress -e "ssh -T -o Compression=no -o RemoteCommand=none -x" $1 $2
 }
 
 # Open Vifm, and chdir to where it's closed
@@ -256,6 +256,11 @@ vicd() {
 # SMUX: SSH and then attach to tmux
 smux () {
     ssh -t ${@} 'bash -c "source .commonrc && tmux a || tmux"'
+}
+
+# special smux: TODO
+smuxx () {
+    ssh -t ${@} -o RemoteCommand=none 'bash -c "export LOAD_PERSONAL_RC=1 && source .commonrc && tmux a || tmux"'
 }
 
 # Diff so fancy shortcut
