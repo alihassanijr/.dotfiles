@@ -3,7 +3,16 @@
 
 LIBEVENT_VERSION="2.1.12"
 UTF8PROC_VERSION="2.9.0"
-TMUX_VERSION="3.4"
+
+#TMUX_VERSION="3.7"
+#TMUX_URL="https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz"
+#TMUX_FROM_SOURCE=0
+
+# tmux 3.7 + ali's patch 1
+# https://github.com/alihassanijr/tmux/releases/tag/3.7-ap1
+TMUX_VERSION="3.7-ap1"
+TMUX_URL="https://github.com/alihassanijr/tmux/archive/refs/tags/$TMUX_VERSION.tar.gz"
+TMUX_FROM_SOURCE=1
 
 install_libevent() {
 
@@ -99,7 +108,7 @@ install_tmux_dependencies() {
 
 build_tmux() {
   local TMPDIR=$(build_tmpdir tmux)
-  local PACKAGEURL="https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz"
+  local PACKAGEURL=$TMUX_URL
   local PACKAGETARNAME="tmux-$TMUX_VERSION.tar.gz"
   local PACKAGEDIRNAME="tmux-$TMUX_VERSION/"
   
@@ -117,6 +126,7 @@ build_tmux() {
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
+    { [[ "$TMUX_FROM_SOURCE" != "1" ]] || ./autogen.sh; } && \
     ./configure \
       --enable-sixel \
       --enable-utf8proc \

@@ -101,7 +101,7 @@ set -goqF @theme-message-command-fg "#{@color-white}"
 set -goqF @theme-mode-bg "#{@color-blue}"
 set -goqF @theme-mode-fg "#{@color-black}"
 set -goq  @theme-pane-active-border-bg default
-set -goqF @theme-pane-active-border-fg "#{@color-blue}"
+set -goqF @theme-pane-active-border-fg "#{@color-og-red}"
 set -goq  @theme-pane-border-bg default
 set -goqF @theme-pane-border-fg "#{@color-white}"
 set -goqF @theme-status-bg "#{@powerline-status-bg}"
