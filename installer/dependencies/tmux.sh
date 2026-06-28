@@ -94,11 +94,20 @@ install_utf8proc() {
 }
 
 install_tmux_dependencies() {
+  # Dependency: bison
+  source installer/dependencies/bison.sh
+  check_and_install_dependency "bison" "$LOCALDIR/bin/bison" "install_bison" || {
+    echo "FAILED TO BUILD TMUX DEPENDENCY: bison!"; return 1
+  }
+
+  # Dependency: libevent
   if [[ -f "$LOCALDIR/include/event.h" ]]; then
     echo "Libevent is already installed, skipping..."
   else
     install_libevent || { echo "FAILED TO BUILD TMUX DEPENDENCY: libevent!"; return 1; }
   fi
+
+  # Dependency: utf8proc
   if [[ -f "$LOCALDIR/include/utf8proc.h" ]]; then
     echo "utf8proc is already installed, skipping..."
   else
