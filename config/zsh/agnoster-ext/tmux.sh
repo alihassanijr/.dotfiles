@@ -178,7 +178,25 @@ prompt_end() {
 }
 
 ### Title emission ###########################################################
-# Render the prompt in tmux mode and push it to the pane title (OSC 2).
+# Push string $1 to the pane title as OSC 2, choosing how it reaches the
+# *local* tmux:
+#   - inside a remote tmux ($REMOTE_TMUX=1 && $TMUX): wrap in tmux passthrough
+#     so the remote tmux spits it outward, up the ssh pipe, to the local tmux
+#     -- the "bounceback". Needs `set -g allow-passthrough on` on the remote.
+#   - otherwise: plain OSC 2 (local tmux consumes it, or it rides a transparent
+#     ssh pipe up to the local tmux).
+_omz_emit_title() {
+  local osc=$'\e]2;'"$1"$'\e\\'
+  if [[ $REMOTE_TMUX == 1 && -n $TMUX ]]; then
+    # tmux passthrough: ESC P tmux ; <payload, every ESC doubled> ESC \
+    osc=${osc//$'\e'/$'\e\e'}
+    print -rn -- $'\eptmux;'"$osc"$'\e\\'
+  else
+    print -rn -- "$osc"
+  fi
+}
+
+# Render the prompt in tmux mode and push it to the pane title.
 # (exit $_ret) restores the just-finished command's status so prompt_status
 # still renders the error mark in the title.
 _omz_tmux_set_title() {
@@ -186,7 +204,7 @@ _omz_tmux_set_title() {
   _omz_tmux_active || return
   local title
   title=$( (exit $_ret); _TMUX_MODE=1 build_prompt )
-  print -rn -- $'\e]2;'"${title}"$'\e\\'
+  _omz_emit_title "$title"
 }
 
 # On shell exit, blank the pane title so the last prompt doesn't linger on the
@@ -199,7 +217,7 @@ _omz_tmux_set_title() {
 _omz_tmux_clear_title() {
   [[ $ZSH_SUBSHELL == 0 ]] || return
   _omz_tmux_active || return
-  print -rn -- $'\e]2;\e\\'
+  _omz_emit_title ""
 }
 
 autoload -Uz add-zsh-hook
