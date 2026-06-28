@@ -15,7 +15,7 @@ prompt_git() {
     # Unclear if this is a git repo or not; light red bg
     # This is very unlikely
     prompt_segment "#fa7970" "#000000"
-    echo -n " ⚠"
+    echo -n " ⚠"
     return
 
   elif [ "$exit_status" -ne 0 ]; then
@@ -39,7 +39,7 @@ prompt_git() {
     fi
 
     # Ref / head name
-    ref=$(timeout ${OMZ_GIT_TIMEOUT}s git symbolic-ref HEAD 2> /dev/null) || 
+    ref=$(timeout ${OMZ_GIT_TIMEOUT}s git symbolic-ref HEAD 2> /dev/null) ||
       ref="➦ $(timeout ${OMZ_GIT_TIMEOUT}s sh -c 'git show-ref --head -s --abbrev | head -n1' 2> /dev/null)"
     exit_status_ref=$?
 
