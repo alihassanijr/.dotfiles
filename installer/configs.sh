@@ -110,7 +110,11 @@ link_agentfiles() {
     link_to_home "Codex Claude-port rules" "agentfiles/codex/rules/claude-port.rules" ".codex/rules/claude-port.rules"
     # User-managed memory dir (link_to_home only handles files)
     link_directory "$THISDIR/agentfiles/codex/memory" "$HOMEDIR/.codex/memory"
-    codex plugin marketplace add JuliusBrussee/caveman
+    # don't let codex crash the installer because plugin is already installed!
+    codex plugin marketplace add JuliusBrussee/caveman || {
+      echo "codex caveman plugin install failed.";
+      echo "this is probably nothing. codex tends to complain about this when it's already been installed.";
+    }
   fi
 }
 
