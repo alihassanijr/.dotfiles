@@ -21,8 +21,18 @@
 # is left alone and every segment renders inline -- exactly the no-tmux path.
 : ${OMZ_TMUX_TITLE:=1}
 
-# Is the feature actually doing anything right now? (enabled AND inside tmux)
-_omz_tmux_active() { [[ $OMZ_TMUX_TITLE == 1 && -n $TMUX ]]; }
+# Is the feature producing a title right now? True when enabled and the bytes
+# can reach a local tmux: either we're inside a tmux, or $REMOTE_TMUX=1 -- a
+# contract you opt into on a remote host to say "a tmux is listening up the
+# ssh pipe", so a remote shell's title bounces up to the local tmux border.
+#
+# NOTE: a *remote* tmux still swallows the title instead of forwarding it, so
+# `tmux local -> ssh -> tmux remote` doesn't bounce yet. Crossing a nested
+# remote tmux needs passthrough -- TODO.
+_omz_tmux_active() {
+  [[ $OMZ_TMUX_TITLE == 1 ]] || return 1
+  [[ -n $TMUX || $REMOTE_TMUX == 1 ]]
+}
 
 # Segment destinations (OMZ_DEST_*) are defined in init.sh -- the one place to
 # choose what goes inline vs the tmux title. Meanings:
@@ -179,9 +189,23 @@ _omz_tmux_set_title() {
   print -rn -- $'\e]2;'"${title}"$'\e\\'
 }
 
+# On shell exit, blank the pane title so the last prompt doesn't linger on the
+# tmux border after the shell is gone.
+#
+# zsh fires zshexit for command-substitution subshells too (every $(build_prompt)
+# in PROMPT and in the title precmd), so guard on ZSH_SUBSHELL==0 -- otherwise
+# the clear sequence leaks into the captured prompt/title and blanks the title
+# on every command.
+_omz_tmux_clear_title() {
+  [[ $ZSH_SUBSHELL == 0 ]] || return
+  _omz_tmux_active || return
+  print -rn -- $'\e]2;\e\\'
+}
+
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _omz_cache_warm       # warm cache before either build
 add-zsh-hook precmd _omz_tmux_set_title
+add-zsh-hook zshexit _omz_tmux_clear_title
 
 # Stop mini-omz termsupport from overwriting the pane title each
 # prompt/command (see lib/termsupport.zsh).

@@ -255,12 +255,26 @@ vicd() {
 
 # SMUX: SSH and then attach to tmux
 smux () {
-    ssh -t ${@} 'bash -c "source .commonrc && tmux a || tmux"'
+  # LOAD_PERSONAL_RC: always load my rcfiles. on some servers i make my rc file loading optional.
+  # REMOTE_TMUX: tells zsh on remote server that we're running from a local tmux, so that we can get
+  # the panel_title from it -- only when we actually are in a local tmux.
+  local pre=
+  [[ -n $TMUX ]] && pre='export REMOTE_TMUX=1 && '
+  ssh -t ${@} -o RemoteCommand=none "bash -c \"export LOAD_PERSONAL_RC=1 && ${pre}source .commonrc && tmux a || tmux\""
 }
 
-# special smux: TODO
-smuxx () {
-    ssh -t ${@} -o RemoteCommand=none 'bash -c "export LOAD_PERSONAL_RC=1 && source .commonrc && tmux a || tmux"'
+# ssh and run my locally builtazsh 
+szh () {
+  local pre=
+  [[ -n $TMUX ]] && pre='export REMOTE_TMUX=1 && '
+  ssh -t ${@} -o RemoteCommand=none "bash -c \"export LOAD_PERSONAL_RC=1 && ${pre}source .commonrc && zsh\""
+}
+
+# ssh and run my locally built bash
+sbh () {
+  local pre=
+  [[ -n $TMUX ]] && pre='export REMOTE_TMUX=1 && '
+  ssh -t ${@} -o RemoteCommand=none "bash -c \"export LOAD_PERSONAL_RC=1 && ${pre}source .commonrc && bash\""
 }
 
 # Diff so fancy shortcut
