@@ -190,7 +190,7 @@ _omz_emit_title() {
   if [[ $REMOTE_TMUX == 1 && -n $TMUX ]]; then
     # tmux passthrough: ESC P tmux ; <payload, every ESC doubled> ESC \
     osc=${osc//$'\e'/$'\e\e'}
-    print -rn -- $'\eptmux;'"$osc"$'\e\\'
+    print -rn -- $'\ePtmux;'"$osc"$'\e\\'
   else
     print -rn -- "$osc"
   fi
