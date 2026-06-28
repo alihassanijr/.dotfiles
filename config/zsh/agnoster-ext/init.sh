@@ -18,6 +18,7 @@
 : ${OMZ_DEST_DIR:=prompt}       # changes constantly -> stay inline
 : ${OMZ_DEST_GIT:=prompt}       # changes constantly -> stay inline
 : ${OMZ_DEST_VCS:=prompt}       # bzr / hg
+: ${OMZ_DEST_CMD:=tmuxonly}     # last command run -- title only
 
 ### Load order ###############################################################
 # Stock theme first, then each extension (tmux.sh last, as it overrides

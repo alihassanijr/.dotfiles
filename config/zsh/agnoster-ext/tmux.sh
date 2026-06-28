@@ -76,6 +76,8 @@ build_prompt() {
   _omz_seg "$OMZ_DEST_VCS"        prompt_bzr
   _omz_seg "$OMZ_DEST_VCS"        prompt_hg
   prompt_end
+  # After prompt_end so it trails the styled segments as plain text.
+  _omz_seg "$OMZ_DEST_CMD"        prompt_lastcmd
 }
 
 ### Cached static facts ######################################################
@@ -216,10 +218,33 @@ _omz_tmux_set_title() {
 _omz_tmux_clear_title() {
   [[ $ZSH_SUBSHELL == 0 ]] || return
   _omz_tmux_active || return
-  _omz_emit_title ""
+  _omz_emit_title " "
+}
+
+### Last command ############################################################
+# Show the command you just ran in the title. preexec fires with the command
+# line right before it runs; stash it (newlines flattened to keep the OSC on
+# one line) and repaint now, so the title updates the instant the command
+# launches instead of only when it finishes (precmd). A long-running command
+# (vim, etc.) thus shows in the title for its whole run, not after it exits.
+_omz_capture_cmd() {
+  typeset -g _OMZ_LAST_CMD=${1//$'\n'/ }
+  _omz_tmux_set_title
+}
+
+# The stashed command, truncated in the middle so both the verb and the tail
+# survive. Defaults to the dir segment's max length. Rendered as plain text --
+# no segment, no bg/fg -- so it just trails the prompt. '#' is doubled so tmux
+# doesn't read '#[..]' / '#{..}' in the command as format directives.
+prompt_lastcmd() {
+  [[ -n $_OMZ_LAST_CMD ]] || return
+  local cmd_disp
+  cmd_disp=$(truncate_middle "$_OMZ_LAST_CMD" "${OMZ_MAX_CMD_LENGTH:-${OMZ_MAX_DIR_LENGTH:-30}}")
+  echo -n " ${cmd_disp//\#/##} "
 }
 
 autoload -Uz add-zsh-hook
+add-zsh-hook preexec _omz_capture_cmd     # stash the command before it runs
 add-zsh-hook precmd _omz_cache_warm       # warm cache before either build
 add-zsh-hook precmd _omz_tmux_set_title
 add-zsh-hook zshexit _omz_tmux_clear_title
