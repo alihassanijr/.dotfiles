@@ -148,17 +148,15 @@ install_tmux() {
 configure_tmux() {
   # Tmux config files
   if program_exists tmux; then
-    rm $HOMEDIR/.tmux.conf
     if [[ $IS_PERSONAL -eq 1 ]]; then
       echo "Linking PERSONAL tmux config"
-      ln -s $THISDIR/tmux.personal.conf $HOMEDIR/.tmux.conf
+      link_file "$THISDIR/tmux.personal.conf" "$HOMEDIR/.tmux.conf"
     else
       echo "Linking default (remote) tmux config"
-      ln -s $THISDIR/tmux.conf $HOMEDIR/.tmux.conf
+      link_file "$THISDIR/tmux.conf" "$HOMEDIR/.tmux.conf"
     fi
-    
+
     mkdir -p $HOMEDIR/.config/
-    rm -rf $HOMEDIR/.config/tmux
-    ln -s $THISDIR/config/tmux $HOMEDIR/.config/tmux
+    link_directory "$THISDIR/config/tmux" "$HOMEDIR/.config/tmux"
   fi
 }

@@ -47,6 +47,5 @@ install_htop() {
 
 configure_htop() {
     # Htop config
-    rm -rf $HOMEDIR/.config/htop
-    ln -s $THISDIR/config/htop $HOMEDIR/.config/htop
+    link_directory "$THISDIR/config/htop" "$HOMEDIR/.config/htop"
 }

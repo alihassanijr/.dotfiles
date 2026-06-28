@@ -59,14 +59,7 @@ link_fzf() {
   local SRC_PATH=$FZF_DIR/.fzf
   local DST_PATH=$HOMEDIR/.fzf
   if [[ -d $SRC_PATH ]]; then
-    echo "Linking .fzf: Symlink $SRC_PATH to $DST_PATH"
-    [ -L "$DST_PATH" ] && rm $DST_PATH
-    [[ -f "$DST_PATH" || -d "$DST_PATH" ]] && {
-      echo "$DST_PATH exists and it is not a symlink. Resolve this before proceeding.";
-      echo "ERROR: FZF symlink FAILED!";
-      return 1
-    }
-    ln -s $SRC_PATH $DST_PATH
+    link_directory "$SRC_PATH" "$DST_PATH"
   fi
 }
 
@@ -77,25 +70,7 @@ link_agentfiles() {
     link_to_home "Claude prompt" "agentfiles/claude/CLAUDE.md" ".claude/CLAUDE.md"
     link_to_home "Claude memory index" "agentfiles/claude/MEMORY.md" ".claude/MEMORY.md"
     # Memory dir (link_to_home only handles files)
-    local MEM_SRC="$THISDIR/agentfiles/claude/memory"
-    local MEM_DST="$HOMEDIR/.claude/memory"
-    if [[ -L $MEM_DST ]]; then
-      local CURRENT_TARGET="$(readlink "$MEM_DST")"
-      if [[ "$CURRENT_TARGET" == "$MEM_SRC" ]]; then
-        echo "Claude memory dir already linked to $MEM_SRC; skipping."
-      else
-        echo "ERROR: ~/.claude/memory is a symlink to $CURRENT_TARGET, expected $MEM_SRC."
-        echo "Remove or fix it manually, then re-run."
-        exit 1
-      fi
-    elif [[ -d $MEM_DST ]]; then
-      echo "ERROR: ~/.claude/memory exists as a real directory, not a symlink."
-      echo "Move its contents into $MEM_SRC and remove ~/.claude/memory, then re-run."
-      exit 1
-    else
-      echo "Linking Claude memory dir. Symlink agentfiles/claude/memory to ~/.claude/memory"
-      ln -s "$MEM_SRC" "$MEM_DST"
-    fi
+    link_directory "$THISDIR/agentfiles/claude/memory" "$HOMEDIR/.claude/memory"
     claude plugin marketplace add JuliusBrussee/caveman
     claude plugin install caveman@caveman
   fi
@@ -108,25 +83,7 @@ link_agentfiles() {
     link_to_home "Codex memory index" "agentfiles/codex/MEMORY.md" ".codex/MEMORY.md"
     link_to_home "Codex Claude-port rules" "agentfiles/codex/rules/claude-port.rules" ".codex/rules/claude-port.rules"
     # User-managed memory dir (link_to_home only handles files)
-    local CODEX_MEM_SRC="$THISDIR/agentfiles/codex/memory"
-    local CODEX_MEM_DST="$HOMEDIR/.codex/memory"
-    if [[ -L $CODEX_MEM_DST ]]; then
-      local CODEX_CURRENT_TARGET="$(readlink "$CODEX_MEM_DST")"
-      if [[ "$CODEX_CURRENT_TARGET" == "$CODEX_MEM_SRC" ]]; then
-        echo "Codex memory dir already linked to $CODEX_MEM_SRC; skipping."
-      else
-        echo "ERROR: ~/.codex/memory is a symlink to $CODEX_CURRENT_TARGET, expected $CODEX_MEM_SRC."
-        echo "Remove or fix it manually, then re-run."
-        exit 1
-      fi
-    elif [[ -d $CODEX_MEM_DST ]]; then
-      echo "ERROR: ~/.codex/memory exists as a real directory, not a symlink."
-      echo "Move its contents into $CODEX_MEM_SRC and remove ~/.codex/memory, then re-run."
-      exit 1
-    else
-      echo "Linking Codex memory dir. Symlink agentfiles/codex/memory to ~/.codex/memory"
-      ln -s "$CODEX_MEM_SRC" "$CODEX_MEM_DST"
-    fi
+    link_directory "$THISDIR/agentfiles/codex/memory" "$HOMEDIR/.codex/memory"
     codex plugin marketplace add JuliusBrussee/caveman
   fi
 }

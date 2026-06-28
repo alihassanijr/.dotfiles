@@ -200,10 +200,8 @@ fetch_vimtex() {
 configure_vim() {
     # Replace the vim files
     echo "Linking vim files..."
-    rm -r $HOMEDIR/.vim
-    rm -r $HOMEDIR/.vimrc
-    ln -s $THISDIR/vim $HOMEDIR/.vim
-    ln -s $THISDIR/vimrc $HOMEDIR/.vimrc
+    link_directory "$THISDIR/vim" "$HOMEDIR/.vim"
+    link_file "$THISDIR/vimrc" "$HOMEDIR/.vimrc"
 
     # Separate directory to hold persistent undo history
     mkdir -p $HOMEDIR/.vimfiles/undodir

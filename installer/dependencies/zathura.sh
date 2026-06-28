@@ -37,7 +37,6 @@ configure_zathura() {
   fi
 
   # Zathura config
-  rm -rf $HOMEDIR/.config/zathura
-  ln -s $THISDIR/config/zathura $HOMEDIR/.config/zathura
+  link_directory "$THISDIR/config/zathura" "$HOMEDIR/.config/zathura"
 }
 

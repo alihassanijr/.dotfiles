@@ -153,6 +153,73 @@ configure_dependency() {
   $CONFIGURATION_FUNCTION
 }
 
+# Symlink helpers
+# -----------------------------------------------------------------------------
+# Foolproof symlinking of a config/rc file or directory from the dotfiles into
+# its destination (usually somewhere under $HOME). Common edge cases:
+#   - DST is already a symlink to SRC -> skip (idempotent re-runs)
+#   - DST exists (real file/dir, or a symlink to something else) -> ask before
+#     removing it; bail out with failure if the user refuses
+#   - DST does not exist -> just create the symlink
+# _link_path does the work; link_file / link_directory wrap it and sanity-check
+# that SRC is the kind of thing the caller expects.
+
+_link_path() {
+  local KIND=$1 # "file" or "directory"; for messages only
+  local SRC=$2  # source (inside the dotfiles)
+  local DST=$3  # destination to create the symlink at
+
+  # Already linked correctly? Nothing to do.
+  if [[ -L $DST ]]; then
+    local CURRENT_TARGET
+    CURRENT_TARGET="$(readlink "$DST")"
+    if [[ "$CURRENT_TARGET" == "$SRC" ]]; then
+      echo "$DST is already pointing to $SRC, skipping..."
+      return 0
+    fi
+  fi
+
+  # Anything already at DST (wrong symlink, broken symlink, real file/dir) has
+  # to go before we can link. Confirm with the user first.
+  if [[ -e $DST || -L $DST ]]; then
+    echo "$DST already exists and is not a symlink to $SRC."
+    if [[ "$BUILD_ONLY" -eq 1 ]]; then
+      REPLY="y"
+    else
+      read -p "Remove $DST and link it to $SRC? [y/n]: " -r
+      echo ""
+    fi
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo "ERROR: refused to remove $DST; cannot link $SRC."
+      exit 1
+    fi
+    rm -rf "$DST"
+  fi
+
+  echo "Linking $KIND: symlink $SRC to $DST"
+  ln -s "$SRC" "$DST"
+}
+
+link_file() {
+  local SRC=$1 # source file (inside the dotfiles)
+  local DST=$2 # destination to create the symlink at
+  if [[ ! -f $SRC ]]; then
+    echo "ERROR: source file $SRC does not exist; cannot link to $DST."
+    exit 1
+  fi
+  _link_path "file" "$SRC" "$DST"
+}
+
+link_directory() {
+  local SRC=$1 # source directory (inside the dotfiles)
+  local DST=$2 # destination to create the symlink at
+  if [[ ! -d $SRC ]]; then
+    echo "ERROR: source directory $SRC does not exist; cannot link to $DST."
+    exit 1
+  fi
+  _link_path "directory" "$SRC" "$DST"
+}
+
 link_to_home() {
   local RC_NAME=$1          # Name
   local PATH_IN_DOTFILES=$2 # File name in .dotfiles
@@ -160,9 +227,8 @@ link_to_home() {
   local SRC_PATH="$THISDIR/$PATH_IN_DOTFILES"
   local DST_PATH="$HOMEDIR/$PATH_IN_HOME"
   if [[ -f $SRC_PATH ]]; then
-    echo "Linking $RC_NAME. Symlink $PATH_IN_DOTFILES to ~/$PATH_IN_HOME"
-    [ -f "$DST_PATH" ] && rm $DST_PATH
-    ln -s $SRC_PATH $DST_PATH
+    echo "Linking $RC_NAME."
+    link_file "$SRC_PATH" "$DST_PATH"
   fi
 }
 
