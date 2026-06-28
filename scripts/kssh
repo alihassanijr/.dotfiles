@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# Kills an existing SSH agent
-# See `sagent` for details.
-
-ssh-agent -k

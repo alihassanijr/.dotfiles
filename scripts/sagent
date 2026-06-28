@@ -7,26 +7,66 @@
 
 # This script gets sourced in my bashrc/zshrc.
 
-# This is the linux version (shorter ttl, and custom bind addresses.)
+# Works on both mac and linux: ssh-agent's -s/-a/-t flags are standard
+# OpenSSH and behave identically on both. The only thing that used to
+# differ was the lifetime, now controlled by $SSH_AGENT_TTL (default 2h).
+# We keep a custom bind address so a single agent is shared across the
+# whole host (one agent, not one per terminal). The hostname suffix keeps
+# things sane when $HOME is shared across hosts (e.g. NFS).
 
-AGENTFOUND=0
-HOSTNAME=$(hostname)
+# Default identity lifetime. Override by exporting SSH_AGENT_TTL beforehand.
+SSH_AGENT_TTL="${SSH_AGENT_TTL:-2h}"
 
-for agentsocket in $(pgrep -f -n -u $(whoami) "ssh-agent -s") ; do
-    AGENTFOUND=1
-    export SSH_AGENT_PID=$agentsocket
+if ! command -v ssh-agent >/dev/null 2>&1; then
+    echo "sagent: ssh-agent not found." >&2
+    return 1 2>/dev/null || exit 1
+fi
+
+_SSH_AGENT_FOUND=0
+_SSH_AGENT_HOST=$(hostname)
+_SSH_AGENT_SOCK_DIR="$HOME/.ssh/ssh-agent-sockets"
+_SSH_AGENT_SOCK="$_SSH_AGENT_SOCK_DIR/${_SSH_AGENT_HOST}.sock"
+
+# Make sure ~/.ssh exists, locked down to us only -- but only chmod it when
+# we're the ones creating it, so we don't stomp on perms set deliberately.
+if [ ! -d "$HOME/.ssh" ]; then
+    mkdir -p "$HOME/.ssh"
+    chmod 700 "$HOME/.ssh"
+fi
+# Socket dir lives inside the (700) ~/.ssh, so no separate chmod needed.
+mkdir -p "$_SSH_AGENT_SOCK_DIR"
+
+# Reuse an agent we're already running, if there is one.
+for _SSH_AGENT_PID in $(pgrep -f -n -u "$(whoami)" "ssh-agent -s") ; do
+    _SSH_AGENT_FOUND=1
+    export SSH_AGENT_PID=$_SSH_AGENT_PID
     break
 done
 
-# If at this point we still haven't located an agent, it's time to
-# start a new one
-if [ $AGENTFOUND = 0 ] ; then
-    eval "$(ssh-agent -s -a ~/.ssh/ssh-agent-${HOSTNAME}.sock -t 2h)" >> /dev/null
-    export SSH_AGENT_PID=$SSH_AGENT_PID
+# No agent running: start one. A leftover socket file at our path would make
+# `ssh-agent -a` fail to bind, so clear it first. If we can't remove it (e.g.
+# permissions), bail loudly -- but with return, so we don't kill the shell.
+if [ $_SSH_AGENT_FOUND = 0 ] ; then
+    rm -f "$_SSH_AGENT_SOCK"
+    if [ -e "$_SSH_AGENT_SOCK" ]; then
+        echo "sagent: cannot remove stale socket $_SSH_AGENT_SOCK; skipping agent setup." >&2
+        return 1 2>/dev/null || exit 1
+    fi
+
+    _SSH_AGENT_ENV=$(ssh-agent -s -a "$_SSH_AGENT_SOCK" -t "$SSH_AGENT_TTL" 2>/dev/null)
+    if [ $? -ne 0 ] || [ -z "$_SSH_AGENT_ENV" ]; then
+        echo "sagent: failed to start ssh-agent at $_SSH_AGENT_SOCK." >&2
+        return 1 2>/dev/null || exit 1
+    fi
+    # eval sets and exports SSH_AGENT_PID and SSH_AUTH_SOCK for us.
+    eval "$_SSH_AGENT_ENV" >/dev/null
 fi
-export SSH_AUTH_SOCK=~/.ssh/ssh-agent-${HOSTNAME}.sock
+
+export SSH_AUTH_SOCK="$_SSH_AGENT_SOCK"
+
+# Only chatter on interactive shells; keep non-interactive startup quiet/fast.
 case $- in
     *i*) ;;
-      *) return;;
+      *) return 2>/dev/null || exit 0 ;;
 esac
 echo "Agent set: ${SSH_AGENT_PID}"

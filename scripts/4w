@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if ! command -v tmux >/dev/null 2>&1; then
+    echo "4w: tmux not found." >&2
+    exit 1
+fi
+
 dirname="${1:-.}"
 
 tmux split-window -v -t . && \

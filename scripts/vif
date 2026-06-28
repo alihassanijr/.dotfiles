@@ -6,6 +6,11 @@
 # Alias wouldn't work because zsh throws warnings when I
 # try and change $TERM.
 
+if ! command -v vifm >/dev/null 2>&1; then
+  echo "vif: vifm not found." >&2
+  exit 1
+fi
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
   # Not supported on mac with alacritty
   vifm "$@"

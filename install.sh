@@ -39,6 +39,7 @@ if [[ "$BUILD_ONLY" -ne 1 ]]; then
   echo "IS_PERSONAL: $IS_PERSONAL"
   if [[ $IS_PERSONAL -eq 1 ]]; then
     echo "This means I will install PDF viewer, latex plugins, and other stuff only used on a personal device!"
+    echo "It also means longer SSH agent TTL, tmux configuration with status bar at top, Ctrl + X prefix, ... ."
   fi
   echo ""
   echo "Press ENTER to confirm"
