@@ -11,34 +11,14 @@
 #
 
 # Themepack format options
-set -goq @themepack-status-right-area-left-format "#I:#P"
-set -goq @themepack-status-right-area-middle-format "#S"
-set -goq @themepack-status-right-area-right-format "%d-%b-%y | %I:%M:%S %p"
-set -goq @themepack-status-right-area-right2-format "#h"
+set -goq @themepack-status-right-area-0-format "#I:#P"
+set -goq @themepack-status-right-area-1-format "#S"
+set -goq @themepack-status-right-area-2-format "%d-%b-%y"
+set -goq @themepack-status-right-area-3-format "%I:%M:%S %p"
+set -goq @themepack-status-right-area-4-format "#h"
+set -goq @themepack-status-right-area-5-format "★"
 set -goq @themepack-window-status-current-format "#I:#W#F"
 set -goq @themepack-window-status-format "#I:#W#F"
-
-# Customizable prefixes and suffixes for @themepack-* format options
-set -goq @themepack-status-right-area-left-prefix ""
-set -goq @themepack-status-right-area-left-suffix ""
-set -goq @themepack-status-right-area-middle-prefix ""
-set -goq @themepack-status-right-area-middle-suffix ""
-set -goq @themepack-status-right-area-right-prefix ""
-set -goq @themepack-status-right-area-right-suffix ""
-set -goq @themepack-status-right-area-right2-prefix ""
-set -goq @themepack-status-right-area-right2-suffix ""
-set -goq @themepack-window-status-current-prefix ""
-set -goq @themepack-window-status-current-suffix ""
-set -goq @themepack-window-status-prefix ""
-set -goq @themepack-window-status-suffix ""
-
-# Apply prefixes and suffixes to @themepack-* format options
-set -gqF @themepack-status-right-area-left-format "#{@themepack-status-right-area-left-prefix}#{@themepack-status-right-area-left-format}#{@themepack-status-right-area-left-suffix}"
-set -gqF @themepack-status-right-area-middle-format "#{@themepack-status-right-area-middle-prefix}#{@themepack-status-right-area-middle-format}#{@themepack-status-right-area-middle-suffix}"
-set -gqF @themepack-status-right-area-right-format "#{@themepack-status-right-area-right-prefix}#{@themepack-status-right-area-right-format}#{@themepack-status-right-area-right-suffix}"
-set -gqF @themepack-status-right-area-right2-format "#{@themepack-status-right-area-right2-prefix}#{@themepack-status-right-area-right2-format}#{@themepack-status-right-area-right2-suffix}"
-set -gqF @themepack-window-status-current-format "#{@themepack-window-status-current-prefix}#{@themepack-window-status-current-format}#{@themepack-window-status-current-suffix}"
-set -gqF @themepack-window-status-format "#{@themepack-window-status-prefix}#{@themepack-window-status-format}#{@themepack-window-status-suffix}"
 
 # GH dark color options
 set -goq @color-black      colour0
@@ -54,11 +34,13 @@ set -goq @color-purple     '#cea5fb'
 set -goq @color-lightgrey  '#21262d'
 set -goq @color-darkgrey   '#161b22'
 set -goq @color-og-red   '#B31942'
-set -goq @color-og-lightblue0  '#428EEB'
-set -goq @color-og-lightblue1  '#6BA7EF'
-set -goq @color-og-lightblue2  '#95C0F4'
-set -goq @color-og-lightblue3  '#BED8F8'
+set -goq @color-og-blue  '#0A3161'
+set -goq @color-og-blue-0  '#3B5A81'
+set -goq @color-og-blue-1  '#6C83A0'
+set -goq @color-og-blue-2  '#9DADC0'
+set -goq @color-og-blue-3  '#CED6DF'
 
+set -goq @color-abs-white      '#ffffff'
 set -goq @color-abs-black      '#000000'
 
 # Powerline options
@@ -66,14 +48,18 @@ set -goqF @powerline-status-bg "#{@color-lightgrey}"
 set -goqF @powerline-status-fg "#{@color-white}"
 set -goqF @powerline-status-left-bg "#{@color-lightgrey}"
 set -goqF @powerline-status-left-fg "#{@color-black}"
-set -goqF @powerline-status-right-area-left-bg "#{@color-og-lightblue3}"
-set -goqF @powerline-status-right-area-left-fg "#{@color-abs-black}"
-set -goqF @powerline-status-right-area-middle-bg "#{@color-og-lightblue2}"
-set -goqF @powerline-status-right-area-middle-fg "#{@color-abs-black}"
-set -goqF @powerline-status-right-area-right-bg "#{@color-og-lightblue1}"
-set -goqF @powerline-status-right-area-right-fg "#{@color-abs-black}"
-set -goqF @powerline-status-right-area-right2-bg "#{@color-og-lightblue0}"
-set -goqF @powerline-status-right-area-right2-fg "#{@color-darkblue}"
+set -goqF @powerline-status-right-area-0-bg "#{@color-abs-white}"
+set -goqF @powerline-status-right-area-0-fg "#{@color-og-blue}"
+set -goqF @powerline-status-right-area-1-bg "#{@color-og-blue-3}"
+set -goqF @powerline-status-right-area-1-fg "#{@color-og-blue-0}"
+set -goqF @powerline-status-right-area-2-bg "#{@color-og-blue-2}"
+set -goqF @powerline-status-right-area-2-fg "#{@color-og-blue}"
+set -goqF @powerline-status-right-area-3-bg "#{@color-og-blue-1}"
+set -goqF @powerline-status-right-area-3-fg "#{@color-og-blue-3}"
+set -goqF @powerline-status-right-area-4-bg "#{@color-og-blue-0}"
+set -goqF @powerline-status-right-area-4-fg "#{@color-abs-white}"
+set -goqF @powerline-status-right-area-5-bg "#{@color-og-blue}"
+set -goqF @powerline-status-right-area-5-fg "#{@color-abs-white}"
 set -goqF @powerline-status-right-bg "#{@color-lightgrey}"
 set -goqF @powerline-status-right-fg "#{@color-black}"
 
@@ -89,7 +75,7 @@ set -goqF @theme-message-command-fg "#{@color-white}"
 set -goqF @theme-mode-bg "#{@color-blue}"
 set -goqF @theme-mode-fg "#{@color-black}"
 set -goq  @theme-pane-active-border-bg default
-set -goqF @theme-pane-active-border-fg "#{@color-blue}"
+set -goqF @theme-pane-active-border-fg "#{@color-og-blue}"
 set -goq  @theme-pane-border-bg default
 set -goqF @theme-pane-border-fg "#{@color-white}"
 set -goqF @theme-status-bg "#{@powerline-status-bg}"
@@ -99,11 +85,11 @@ set -goq  @theme-status-justify left
 set -goqF @theme-status-left ""
 set -goqF @theme-status-left-bg "#{@powerline-status-left-bg}"
 set -goqF @theme-status-left-fg "#{@powerline-status-left-fg}"
-set -goq  @theme-status-left-length 60
-set -goqF @theme-status-right "#[fg=#{@powerline-status-right-area-left-bg},bg=#{@theme-status-bg}]#[fg=#{@powerline-status-right-area-left-fg},bg=#{@powerline-status-right-area-left-bg}] #{@themepack-status-right-area-left-format} #[fg=#{@powerline-status-right-area-middle-bg},bg=#{@powerline-status-right-area-left-bg}]#[fg=#{@powerline-status-right-area-middle-fg},bg=#{@powerline-status-right-area-middle-bg}] #{@themepack-status-right-area-middle-format} #[fg=#{@powerline-status-right-area-right-bg},bg=#{@powerline-status-right-area-middle-bg}]#[fg=#{@powerline-status-right-area-right-fg},bg=#{@powerline-status-right-area-right-bg},bold] #{@themepack-status-right-area-right-format} #[fg=#{@powerline-status-right-area-right2-bg},bg=#{@powerline-status-right-area-right-bg}]#[fg=#{@powerline-status-right-area-right2-fg},bg=#{@powerline-status-right-area-right2-bg},bold] #{@themepack-status-right-area-right2-format} "
+set -goq  @theme-status-left-length 0
+set -goqF @theme-status-right "#[fg=#{@powerline-status-right-area-0-bg},bg=#{@theme-status-bg}]#[fg=#{@powerline-status-right-area-0-fg},bg=#{@powerline-status-right-area-0-bg}] #{@themepack-status-right-area-0-format} #[fg=#{@powerline-status-right-area-1-bg},bg=#{@powerline-status-right-area-0-bg}]#[fg=#{@powerline-status-right-area-1-fg},bg=#{@powerline-status-right-area-1-bg}] #{@themepack-status-right-area-1-format} #[fg=#{@powerline-status-right-area-2-bg},bg=#{@powerline-status-right-area-1-bg}]#[fg=#{@powerline-status-right-area-2-fg},bg=#{@powerline-status-right-area-2-bg}] #{@themepack-status-right-area-2-format} #[fg=#{@powerline-status-right-area-3-fg},bg=#{@powerline-status-right-area-3-bg}] #{@themepack-status-right-area-3-format} #[fg=#{@powerline-status-right-area-4-bg},bg=#{@powerline-status-right-area-3-bg}]#[fg=#{@powerline-status-right-area-4-fg},bg=#{@powerline-status-right-area-4-bg}] #{@themepack-status-right-area-4-format} #[fg=#{@powerline-status-right-area-5-bg},bg=#{@powerline-status-right-area-4-bg}]#[fg=#{@powerline-status-right-area-5-fg},bg=#{@powerline-status-right-area-5-bg},bold] #{@themepack-status-right-area-5-format} "
 set -goqF @theme-status-right-bg "#{@powerline-status-right-bg}"
 set -goqF @theme-status-right-fg "#{@powerline-status-right-fg}"
-set -goq  @theme-status-right-length 150
+set -goq  @theme-status-right-length 85
 set -goqF @theme-window-status-activity-bg "#{@color-lightgrey}"
 set -goqF @theme-window-status-activity-fg "#{@color-white}"
 set -goq  @theme-window-status-separator ""
