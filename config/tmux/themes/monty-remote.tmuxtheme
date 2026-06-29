@@ -39,6 +39,7 @@ set -goq @color-og-blue-0  '#3B5A81'
 set -goq @color-og-blue-1  '#6C83A0'
 set -goq @color-og-blue-2  '#9DADC0'
 set -goq @color-og-blue-3  '#CED6DF'
+set -goq @color-og-blue-light  '#6BA7EF'
 
 set -goq @color-abs-white      '#ffffff'
 set -goq @color-abs-black      '#000000'
@@ -75,7 +76,7 @@ set -goqF @theme-message-command-fg "#{@color-white}"
 set -goqF @theme-mode-bg "#{@color-blue}"
 set -goqF @theme-mode-fg "#{@color-black}"
 set -goq  @theme-pane-active-border-bg default
-set -goqF @theme-pane-active-border-fg "#{@color-og-blue}"
+set -goqF @theme-pane-active-border-fg "#{@color-og-blue-light}"
 set -goq  @theme-pane-border-bg default
 set -goqF @theme-pane-border-fg "#{@color-white}"
 set -goqF @theme-status-bg "#{@powerline-status-bg}"
