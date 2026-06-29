@@ -123,12 +123,8 @@ install_zsh() {
 
 configure_zsh() {
     # ZSHrc and logout
-    echo "Linking zshrc to ~/.zshrc"
-    rm $HOMEDIR/.zshrc
-    ln -s $THISDIR/zshrc $HOMEDIR/.zshrc
-    echo "Linking zlogout to ~/.zlogout"
-    rm $HOMEDIR/.zlogout
-    ln -s $THISDIR/zlogout $HOMEDIR/.zlogout
+    link_file "$THISDIR/zshrc" "$HOMEDIR/.zshrc"
+    link_file "$THISDIR/zlogout" "$HOMEDIR/.zlogout"
 
     # So that tmux wouldn't have to look for ZSH
     if [[ ! -f $LOCALDIR/bin/zsh ]]; then
@@ -137,6 +133,5 @@ configure_zsh() {
     fi
 
     mkdir -p $HOMEDIR/.config/
-    rm -rf $HOMEDIR/.config/zsh
-    ln -s $THISDIR/config/zsh $HOMEDIR/.config/zsh
+    link_directory "$THISDIR/config/zsh" "$HOMEDIR/.config/zsh"
 }

@@ -48,6 +48,5 @@ install_bat() {
 
 configure_bat() {
     # Bat config
-    rm -rf $HOMEDIR/.config/bat
-    ln -s $THISDIR/config/bat $HOMEDIR/.config/bat
+    link_directory "$THISDIR/config/bat" "$HOMEDIR/.config/bat"
 }

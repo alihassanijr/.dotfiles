@@ -3,7 +3,16 @@
 
 LIBEVENT_VERSION="2.1.12"
 UTF8PROC_VERSION="2.9.0"
-TMUX_VERSION="3.4"
+
+#TMUX_VERSION="3.7"
+#TMUX_URL="https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz"
+#TMUX_FROM_SOURCE=0
+
+# tmux 3.7 + ali's patch 1
+# https://github.com/alihassanijr/tmux/releases/tag/3.7-ap1
+TMUX_VERSION="3.7-ap1"
+TMUX_URL="https://github.com/alihassanijr/tmux/archive/refs/tags/$TMUX_VERSION.tar.gz"
+TMUX_FROM_SOURCE=1
 
 install_libevent() {
 
@@ -85,11 +94,20 @@ install_utf8proc() {
 }
 
 install_tmux_dependencies() {
+  # Dependency: bison
+  source installer/dependencies/bison.sh
+  check_and_install_dependency "bison" "$LOCALDIR/bin/bison" "install_bison" || {
+    echo "FAILED TO BUILD TMUX DEPENDENCY: bison!"; return 1
+  }
+
+  # Dependency: libevent
   if [[ -f "$LOCALDIR/include/event.h" ]]; then
     echo "Libevent is already installed, skipping..."
   else
     install_libevent || { echo "FAILED TO BUILD TMUX DEPENDENCY: libevent!"; return 1; }
   fi
+
+  # Dependency: utf8proc
   if [[ -f "$LOCALDIR/include/utf8proc.h" ]]; then
     echo "utf8proc is already installed, skipping..."
   else
@@ -99,7 +117,7 @@ install_tmux_dependencies() {
 
 build_tmux() {
   local TMPDIR=$(build_tmpdir tmux)
-  local PACKAGEURL="https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/tmux-$TMUX_VERSION.tar.gz"
+  local PACKAGEURL=$TMUX_URL
   local PACKAGETARNAME="tmux-$TMUX_VERSION.tar.gz"
   local PACKAGEDIRNAME="tmux-$TMUX_VERSION/"
   
@@ -117,6 +135,7 @@ build_tmux() {
     tar -xzf $PACKAGETARNAME && \
     rm $PACKAGETARNAME && \
     cd $PACKAGEDIRNAME && \
+    { [[ "$TMUX_FROM_SOURCE" != "1" ]] || ./autogen.sh; } && \
     ./configure \
       --enable-sixel \
       --enable-utf8proc \
@@ -148,17 +167,15 @@ install_tmux() {
 configure_tmux() {
   # Tmux config files
   if program_exists tmux; then
-    rm $HOMEDIR/.tmux.conf
     if [[ $IS_PERSONAL -eq 1 ]]; then
       echo "Linking PERSONAL tmux config"
-      ln -s $THISDIR/tmux.personal.conf $HOMEDIR/.tmux.conf
+      link_file "$THISDIR/tmux.personal.conf" "$HOMEDIR/.tmux.conf"
     else
       echo "Linking default (remote) tmux config"
-      ln -s $THISDIR/tmux.conf $HOMEDIR/.tmux.conf
+      link_file "$THISDIR/tmux.conf" "$HOMEDIR/.tmux.conf"
     fi
-    
+
     mkdir -p $HOMEDIR/.config/
-    rm -rf $HOMEDIR/.config/tmux
-    ln -s $THISDIR/config/tmux $HOMEDIR/.config/tmux
+    link_directory "$THISDIR/config/tmux" "$HOMEDIR/.config/tmux"
   fi
 }

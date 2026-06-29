@@ -9,11 +9,10 @@ install_alacritty() {
 
 configure_alacritty() {
     # Alacritty config
-    rm -rf $HOMEDIR/.config/alacritty
     if [[ "$_OS_NAME" == "darwin" ]]; then
-        ln -s $THISDIR/config/alacritty.mac $HOMEDIR/.config/alacritty
+        link_directory "$THISDIR/config/alacritty.mac" "$HOMEDIR/.config/alacritty"
     else
-        ln -s $THISDIR/config/alacritty.linux $HOMEDIR/.config/alacritty
+        link_directory "$THISDIR/config/alacritty.linux" "$HOMEDIR/.config/alacritty"
     fi
 
     # No image / pdf viewing in Alacritty on mac yet!

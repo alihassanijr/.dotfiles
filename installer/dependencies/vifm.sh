@@ -55,13 +55,16 @@ configure_vifm() {
         # cp -r $THISDIR/vifm $HOMEDIR/.vifm
         mkdir -p $HOMEDIR/.vifm
     fi
-    rm -rf $HOMEDIR/.vifm/vifmrc
-    ln -s $VIFMRC $HOMEDIR/.vifm/vifmrc
+    link_file "$VIFMRC" "$HOMEDIR/.vifm/vifmrc"
     VIFMFILES=("graphics" "scripts" "colors" "shell-completion" "plugins" "vim" "man" "vimfiles"
                "vifm.desktop" "vifm-help.txt" "vifm.appdata.xml")
     for vifmfile in ${VIFMFILES[*]};do
         echo "Linking $vifmfile";
-        rm -rf $HOMEDIR/.vifm/$vifmfile
-        ln -s $THISDIR/vifm/$vifmfile $HOMEDIR/.vifm/$vifmfile
+        # VIFMFILES is a mix of directories and plain files.
+        if [[ -d $THISDIR/vifm/$vifmfile ]]; then
+            link_directory "$THISDIR/vifm/$vifmfile" "$HOMEDIR/.vifm/$vifmfile"
+        else
+            link_file "$THISDIR/vifm/$vifmfile" "$HOMEDIR/.vifm/$vifmfile"
+        fi
     done;
 }

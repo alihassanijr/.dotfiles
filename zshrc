@@ -56,29 +56,22 @@ source ~/.commonrc
 
 # Timeout (seconds) for git prompt in the agnoster theme
 export OMZ_GIT_TIMEOUT=1
+
 # Maximum character lengths for prompt segments (incl. ellipsis marker)
 export OMZ_MAX_USER_LENGTH=10
 export OMZ_MAX_HOST_LENGTH=10
 export OMZ_MAX_GIT_REF_LENGTH=20
 export OMZ_MAX_DIR_LENGTH=30
+export OMZ_MAX_CMD_LENGTH=50   # last command shown in the tmux pane title
+
+# Move some segments (user/host/gpu/nproc/arch) into the tmux pane title when
+# inside tmux. Set to 0 to disable: everything renders inline as before.
+export OMZ_TMUX_TITLE=1
 
 
-# Defaults
-source ~/.config/zsh/mini-omz/themes/agnoster.zsh-theme
-
-# Shared helpers (must load before segment overrides)
-source ~/.config/zsh/zsh-agnoster-custom-truncate.sh
-
-# Mods
-if [[ $HAS_NV_SMI = 1 ]]; then
-  # Shows GPU name in prompt line
-  source ~/.config/zsh/zsh-agnoster-custom-context-nv.sh
-else
-  source ~/.config/zsh/zsh-agnoster-custom-context.sh
-fi
-
-source ~/.config/zsh/zsh-agnoster-custom-git.sh
-source ~/.config/zsh/zsh-agnoster-custom-dir.sh
+# Stock theme + our extensions (segments, routing, tmux title). The loader
+# sources everything in order; GPU detection lives in agnoster-ext/sysinfo.sh.
+source ~/.config/zsh/agnoster-ext/init.sh
 
 ###############################################################
 ###############################################################

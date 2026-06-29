@@ -6,9 +6,11 @@ Configs for said programs, rc files, and other helpers.
 
 Rest of readme is AI-generated, pinch of coarse kosher salt needed.
 
+![Preview on macOS](resources/screenshots/preview-mac.png)
+
 ## PREREQUISITES
 
-Obviously `git`, basic c/c++ compiler, `tar`, `curl`, `zip`/`unzip`.
+Obviously `git`, basic c/c++ compiler, `tar` (with `xz-utils`), `curl`, `zip`/`unzip`.
 
 ## RUN
 
@@ -24,7 +26,7 @@ make WORKERS=8 install
 - `WORKERS=N` — build parallelism. Default 1.
 - `BUILD_ONLY=1` — build programs only, no linking config/rc files. Brew-only tools skipped.
 - `PROGRAMS_PATH=dir` — where tools go. Default `~/.programs/<distro-or-os>_<arch>`.
-- `IS_PERSONAL=1`: run on personal devices that need the personal tmux config, terminal emulator config, pdf viewer, latex. Default 1 on mac devices.
+- `IS_PERSONAL=1`: run on personal devices that need the personal tmux config, terminal emulator config, pdf viewer, latex. Default is 1 on mac devices, otherwise 0.
 
 ## PROGRAMS
 

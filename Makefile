@@ -1,9 +1,9 @@
 .PHONY=install
 
-WORKERS ?= 1
+WORKERS ?= 
 BUILD_ONLY ?= 0
 PROGRAMS_PATH ?= 
-IS_PERSONAL ?= 0
+IS_PERSONAL ?= 
 
 all: install
 
