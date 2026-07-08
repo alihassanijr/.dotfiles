@@ -82,3 +82,6 @@ y = 5
 [window.position]
 x = 900
 y = 300
+
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬"
