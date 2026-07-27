@@ -1,1 +1,2 @@
 - [Preserve code comments in walkthroughs](memory/feedback_walkthrough_comments.md) — when quoting code during walkthroughs, keep the inline comments verbatim
+- [Memory scope: project-first](memory/feedback-memory-scope-project-first.md) — project-specific memories go in the project-level .claude dir, never global
