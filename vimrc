@@ -187,6 +187,37 @@ let g:limelight_default_coefficient = 0.7
 map <leader>ge :Limelight!!<cr>
 "-------------------------------------------------
 
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" Context: sticky scroll
+"""""""""""""""""""""""""""""""""""""""""""""""""
+let g:context_enabled = 1
+let g:context_max_per_indent = 8
+let g:context_max_join_parts = 8
+
+map <leader>ct :ContextToggle<cr>
+
+" AI-generated solution for fixing dumbness when access specifiers don't indent
+function! ContextCppIndent(lnum) abort
+  let l:indent = indent(a:lnum)
+
+  if l:indent < 0
+    return [-1, -1]
+  endif
+
+  " Treat C++ access specifiers as one logical level inside the class,
+  " while retaining their real indentation for display.
+  if &filetype ==# 'cpp'
+        \ && getline(a:lnum) =~# '^\s*\%(public\|protected\|private\)\s*:'
+    return [l:indent + 1, l:indent]
+  endif
+
+  return [l:indent, l:indent]
+endfunction
+
+let g:Context_indent = function('ContextCppIndent')
+
+"-------------------------------------------------
+
 
 """"""""""""""""""""""""""""""""""""" PERSONAL DEVICE PLUGINS """""""""""""""""""""""""""""""""""""
 

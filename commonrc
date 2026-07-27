@@ -159,6 +159,7 @@ alias gbr='git branch --show-current'
 
 # because bureaucrats are here, a pain in my rear, getting used to it
 alias claude='claude --model "opus[1m]" --effort high --append-system-prompt "use caveman skill"'
+alias claudef='claude --model "fable" --effort xhigh --append-system-prompt "use caveman skill"'
 
 # kill current ssh agent process
 alias kssh='ssh-agent -k'
