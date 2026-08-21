@@ -190,7 +190,7 @@ map <leader>ge :Limelight!!<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""
 " Context: sticky scroll
 """""""""""""""""""""""""""""""""""""""""""""""""
-let g:context_enabled = 1
+let g:context_enabled = 0
 let g:context_max_per_indent = 8
 let g:context_max_join_parts = 8
 
@@ -302,5 +302,17 @@ autocmd WinEnter,BufEnter * call CheckCursorLineStatus()
 
 " Key mapping: \cc
 map <leader>cc :call ToggleCursorLine()<cr>
+
+"-------------------------------------------------
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+""" Stick scroll toggle
+"""""""""""""""""""""""""""""""""""""""""""""""""
+""" It just isn't relevant for certain files / content like SASS,
+""" and makes everything hella slow.
+""" Luckily it provides its own ContextToggle
+"""
+" Key mapping: \st
+map <leader>st :ContextToggle<cr>
 
 "-------------------------------------------------
