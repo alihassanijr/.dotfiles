@@ -1,0 +1,7 @@
+mlir.vim
+
+From: https://github.com/llvm/llvm-project
+Commit: 2d6d57d29e6b0035b8f7e059946ab95cdd66d3f4
+Path: llvm/utils/vim
+
++ some modifications marked with "(ali)" because the defaults suuuuck
