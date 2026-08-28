@@ -25,5 +25,5 @@
 [user]
 	name = Ali Hassani
 [rebase]
-  # print author name next to commit message in rebase view
-	instructionFormat = %s (%an)
+  # print author name + date/time next to commit message in rebase view
+	instructionFormat = %s (%an, %ar)
