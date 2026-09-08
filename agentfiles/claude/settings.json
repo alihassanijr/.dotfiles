@@ -84,5 +84,9 @@
   "feedbackSurveyRate": 0,
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
-  "theme": "dark"
+  "theme": "dark",
+  "env": {
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "CLAUDE_CODE_NO_COPY_ON_SELECT": "1"
+  }
 }
