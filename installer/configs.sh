@@ -89,6 +89,49 @@ link_fzf() {
   fi
 }
 
+#
+# "AGI is here maaaaaaaan! Just let claude do it maaaaan!!!!"
+# Result:
+# https://github.com/anthropics/claude-code/issues/60755#issuecomment-5311131693
+#
+# copyOnSelect only lives in ~/.claude.json, which also tracks your local projects!! Brilliant!!!
+# So we have to check / patch it... Every single time!
+# Oh what a wonderful life!
+claude_disable_copy_on_select() {
+  local CFG=$HOMEDIR/.claude.json
+  if [[ ! -f $CFG ]]; then
+    echo "Creating $CFG with copyOnSelect=false"
+    echo '{ "copyOnSelect": false }' > "$CFG"
+    return 0
+  fi
+  if grep -q '"copyOnSelect": *false' "$CFG"; then
+    echo "copyOnSelect already false in $CFG, skipping..."
+    return 0
+  fi
+  if grep -q '"copyOnSelect": *true' "$CFG"; then
+    if [[ "$BUILD_ONLY" -eq 1 ]]; then
+      REPLY="y"
+    else
+      read -p "copyOnSelect is true in $CFG; flip to false? [y/n]: " -r
+      echo ""
+    fi
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo "Leaving copyOnSelect as is."
+      return 0
+    fi
+    sed 's/"copyOnSelect": *true/"copyOnSelect": false/' "$CFG" > "$CFG.tmp" && mv "$CFG.tmp" "$CFG"
+    echo "Set copyOnSelect=false in $CFG"
+    return 0
+  fi
+  # key absent: inject after the opening brace (expects pretty-printed JSON, "{" alone on line 1)
+  sed '1s/^{$/{ "copyOnSelect": false,/' "$CFG" > "$CFG.tmp" && mv "$CFG.tmp" "$CFG"
+  if grep -q '"copyOnSelect": false' "$CFG"; then
+    echo "Added copyOnSelect=false to $CFG"
+  else
+    echo "WARNING: could not add copyOnSelect to $CFG (unexpected format); set it manually."
+  fi
+}
+
 link_agentfiles() {
   if program_exists "claude"; then
     mkdir -p $HOME/.claude
@@ -100,6 +143,7 @@ link_agentfiles() {
     link_directory "$THISDIR/agentfiles/claude/memory" "$HOMEDIR/.claude/memory"
     claude plugin marketplace add JuliusBrussee/caveman
     claude plugin install caveman@caveman
+    claude_disable_copy_on_select
   fi
 
   if program_exists "codex"; then
