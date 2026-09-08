@@ -69,7 +69,7 @@
       "Bash(.pypirc)"
     ]
   },
-  "model": "opus[1m]",
+  "model": "fable[1m]",
   "enabledPlugins": {
     "caveman@caveman": true
   },
@@ -83,5 +83,6 @@
   },
   "feedbackSurveyRate": 0,
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high"
+  "effortLevel": "xhigh",
+  "theme": "dark"
 }

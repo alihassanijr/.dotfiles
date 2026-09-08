@@ -93,6 +93,7 @@ link_agentfiles() {
   if program_exists "claude"; then
     mkdir -p $HOME/.claude
     link_to_home "Claude config" "agentfiles/claude/settings.json" ".claude/settings.json"
+    link_to_home "Claude keybindings" "agentfiles/claude/keybindings.json" ".claude/keybindings.json"
     link_to_home "Claude prompt" "agentfiles/claude/CLAUDE.md" ".claude/CLAUDE.md"
     link_to_home "Claude memory index" "agentfiles/claude/MEMORY.md" ".claude/MEMORY.md"
     # Memory dir (link_to_home only handles files)
