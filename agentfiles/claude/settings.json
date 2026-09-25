@@ -4,9 +4,6 @@
   },
   "permissions": {
     "allow": [
-      "Read",
-      "Glob",
-      "Grep",
       "Bash(git diff)",
       "Bash(git diff:*)",
       "Bash(git diff*)",
@@ -20,9 +17,17 @@
       "Bash(wc:*)",
       "Bash(wc -:*)"
     ],
+    "ask": [
+      "Bash(* ~*)",
+      "Bash(*$HOME*)",
+      "Bash(* ..*)",
+      "Bash(*/..*)"
+    ],
     "deny": [
+      "Bash(/*)",
+      "Bash(* /*)",
       "Bash(find /:*)",
-      "Bash(* find /:*)",
+      "Bash(* find /*)",
       "Bash(rm -rf:*)",
       "Bash(rm -fr:*)",
       "Bash(git push)",
@@ -72,9 +77,10 @@
       "Bash(.pypirc)"
     ]
   },
-  "model": "fable[1m]",
+  "model": "fable",
   "enabledPlugins": {
-    "caveman@caveman": true
+    "caveman@caveman": true,
+    "clangd-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
