@@ -17,12 +17,6 @@
       "Bash(wc:*)",
       "Bash(wc -:*)"
     ],
-    "ask": [
-      "Bash(* ~*)",
-      "Bash(*$HOME*)",
-      "Bash(* ..*)",
-      "Bash(*/..*)"
-    ],
     "deny": [
       "Bash(/*)",
       "Bash(* /*)",
@@ -75,6 +69,12 @@
       "Bash(.netrc)",
       "Bash(.npmrc)",
       "Bash(.pypirc)"
+    ],
+    "ask": [
+      "Bash(* ~*)",
+      "Bash(*$HOME*)",
+      "Bash(* ..*)",
+      "Bash(*/..*)"
     ]
   },
   "model": "fable",
