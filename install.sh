@@ -132,6 +132,7 @@ ensure_watch
 ensure_cmake
 ensure_git_lfs
 ensure_parallel
+ensure_jq
 
 # Everyday
 ensure_clang_format

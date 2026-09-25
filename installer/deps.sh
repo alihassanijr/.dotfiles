@@ -149,6 +149,12 @@ ensure_htop() {
   configure_dependency "htop" "configure_htop"
 }
 
+# jq
+source installer/dependencies/jq.sh
+ensure_jq() {
+  check_and_install_dependency "jq" "$LOCALDIR/bin/jq" "install_jq"
+}
+
 # LSD
 source installer/dependencies/lsd.sh
 ensure_lsd() {
