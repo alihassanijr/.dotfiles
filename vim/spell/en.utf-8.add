@@ -115,3 +115,4 @@ python3
 logsumexp
 str
 lse
+variadic
