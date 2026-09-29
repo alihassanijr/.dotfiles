@@ -49,6 +49,7 @@ fi
 source installer/utils.sh
 source installer/deps.sh
 source installer/configs.sh
+source installer/permissions.sh
 
 assert_dotfiles_in_home
 
@@ -175,11 +176,7 @@ if [[ "$BUILD_ONLY" -ne 1 ]]; then
   link_agentfiles
 
   # Fix permissions
-  [ -d $LOCALDIR ] && chmod 700 $LOCALDIR
-  [ -d $NCDIR ] && chmod 700 $NCDIR
-
-  # Just for being safe
-  [ -d $HOME/.ssh ] && chmod 700 $HOME/.ssh
+  fix_permissions
 
 else
   echo "BUILD_ONLY set; skipping config linking."
