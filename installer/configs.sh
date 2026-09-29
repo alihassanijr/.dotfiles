@@ -81,6 +81,10 @@ link_git_config() {
 }
 
 link_fzf() {
+  # TODO: but to quote Franklin, "this don't make no goddamn sense!"
+  # fzf is usually not arch/os agnostic!
+  # but symlinks to home should be!
+  # I have not idea how tf this works!
   # apparently we need ~/.fzf for the vim plugins to work...
   local SRC_PATH=$FZF_DIR/.fzf
   local DST_PATH=$HOMEDIR/.fzf
