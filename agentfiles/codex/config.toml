@@ -1,4 +1,4 @@
-model = "gpt-5.5"
+model = "gpt-6-astra"
 model_reasoning_effort = "xhigh"
 approvals_reviewer = "user"
 personality = "pragmatic"

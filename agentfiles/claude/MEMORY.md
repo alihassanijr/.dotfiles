@@ -9,5 +9,5 @@ Before saving ask "true outside this repo?" No: project dir. Yes: here, written 
 
 # Context-dependent
 - [Style](memory/feedback-style.md) — no single-letter names except M, N, loop indices; constants CamelCase, ALL_CAPS only macros; column 100; never remove comments
-- [Presentation](memory/feedback-presentation.md) — label files as reference vs edit; quoted code keeps inline comments verbatim
+- [Presentation](memory/feedback-presentation.md) — label files as reference vs edit; quoted code keeps inline comments verbatim; review = report findings first, fix only after user picks
 - [Test rules](memory/feedback-test-rules.md) — always verbose: lit -a/-v, pytest -v, ctest -V

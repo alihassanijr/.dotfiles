@@ -141,8 +141,12 @@ link_agentfiles() {
     link_to_home "Claude memory index" "agentfiles/claude/MEMORY.md" ".claude/MEMORY.md"
     # Memory dir (link_to_home only handles files)
     link_directory "$THISDIR/agentfiles/claude/memory" "$HOMEDIR/.claude/memory"
-    claude plugin marketplace add JuliusBrussee/caveman
-    claude plugin install caveman@caveman
+    # PreToolUse guard hook; settings.json points at ~/.claude/hooks/guard.sh
+    link_directory "$THISDIR/agentfiles/claude/hooks" "$HOMEDIR/.claude/hooks"
+    # Skills: linked one dir per skill, since ~/.claude/skills also holds
+    # skills that don't live in the dotfiles.
+    mkdir -p $HOME/.claude/skills
+    link_directory "$THISDIR/agentfiles/claude/skills/caveman" "$HOMEDIR/.claude/skills/caveman"
     claude_disable_copy_on_select
   fi
 
@@ -155,11 +159,13 @@ link_agentfiles() {
     link_to_home "Codex Claude-port rules" "agentfiles/codex/rules/claude-port.rules" ".codex/rules/claude-port.rules"
     # User-managed memory dir (link_to_home only handles files)
     link_directory "$THISDIR/agentfiles/codex/memory" "$HOMEDIR/.codex/memory"
+    # Just don't bother!
+    # I'll use codex when they fix their fucking tui!
     # don't let codex crash the installer because plugin is already installed!
-    codex plugin marketplace add JuliusBrussee/caveman || {
-      echo "codex caveman plugin install failed.";
-      echo "this is probably nothing. codex tends to complain about this when it's already been installed.";
-    }
+    #codex plugin marketplace add JuliusBrussee/caveman || {
+    #  echo "codex caveman plugin install failed.";
+    #  echo "this is probably nothing. codex tends to complain about this when it's already been installed.";
+    #}
   fi
 }
 

@@ -4,6 +4,8 @@ Rules here override all prior. Use caveman skill til told otherwise.
 ## Memory
 Index `@./MEMORY.md`, files `./memory/`, both next to this file. Scope rules at top of MEMORY.md.
 Read every `# ALWAYS READ` entry each session.
+DO NOT TRY TO READ `~/.claude` just to get access to memory! Read `MEMORY.md` itself first, and ONLY
+load references from it!
 
 ## General rules
 - Use Glob not bash for browse files.

@@ -5,7 +5,7 @@
   "permissions": {
     "allow": [],
     "deny": [
-      "Bash(find /:*)",
+      "Bash(find /*)",
       "Bash(* find /*)",
       "Bash(rm -rf:*)",
       "Bash(rm -fr:*)",
@@ -56,21 +56,30 @@
       "Bash(.pypirc)"
     ],
     "ask": [
-      "Bash"
+      "Bash(git *)"
+    ],
+    "defaultMode": "default",
+    "additionalDirectories": [
+      "~/.claude/memory"
     ]
   },
-  "model": "fable",
-  "enabledPlugins": {
-    "caveman@caveman": true,
-    "clangd-lsp@claude-plugins-official": true
-  },
-  "extraKnownMarketplaces": {
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
+  "model": "claude-fable-5-1[1m]",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Read|Glob|Grep|Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh ~/.claude/hooks/guard.sh",
+            "timeout": 15
+          }
+        ]
       }
-    }
+    ]
+  },
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true
   },
   "feedbackSurveyRate": 0,
   "alwaysThinkingEnabled": true,
