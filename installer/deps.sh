@@ -88,6 +88,13 @@ ensure_diff_so_fancy() {
   configure_dependency "diff-so-fancy" "configure_diff_so_fancy"
 }
 
+# fancy-smi
+source installer/dependencies/fancy-smi.sh
+ensure_fancy_smi() {
+  # Depends on uv and the base python venv (ensure_uv).
+  check_and_install_dependency "fancy-smi" "$PYTHON_BASE_VENV_DIR/bin/fancy-smi" "install_fancy_smi"
+}
+
 # Fzf
 source installer/dependencies/fzf.sh
 ensure_fzf() {

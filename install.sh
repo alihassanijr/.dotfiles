@@ -156,6 +156,7 @@ ensure_lsd              # alternative to ls
 ensure_htop             # alternative to top
 ensure_rg               # alternative to grep
 ensure_tre              # alternative to tree
+ensure_fancy_smi        # alternative to nvidia-smi
 
 # GUIs and other misc stuff
 ensure_zathura

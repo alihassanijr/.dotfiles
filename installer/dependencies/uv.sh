@@ -36,7 +36,8 @@ install_uv() {
 preconfigure_uv() {
   if [ ! -d $PYTHON_BASE_VENV_DIR ]; then
     echo "Setting up base python environment at $PYTHON_BASE_VENV_DIR"
-    uv venv $PYTHON_BASE_VENV_DIR --python 3.12
+    # --seed: also install pip into the venv; uv skips it by default in favor of `uv pip`.
+    uv venv $PYTHON_BASE_VENV_DIR --python 3.12 --seed
   else
     echo "Base python environment already set up at $PYTHON_BASE_VENV_DIR, skipping..."
   fi
