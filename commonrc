@@ -67,23 +67,33 @@ fi
 # General Exports
 export EDITOR="vim"
 
-# Load homebrew (if available)
-if [[ -d $LOCAL_HOME_PATH/.brew ]]; then
-  export PATH="$LOCAL_HOME_PATH/.brew/bin:$LOCAL_HOME_PATH/.brew/sbin:$PATH"
-fi
+# Programs exposure, with safety check against duplication
+if [[ ${COMMONRC_PATHS_APPLIED:-0} != 1 ]]; then
+  export PRE_COMMONRC_PATH=$PATH
+  export PRE_COMMONRC_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+  export PRE_COMMONRC_MANPATH=$MANPATH
+  export COMMONRC_PATHS_APPLIED=1
 
-# Load local binaries
-export PATH=$LOCAL_HOME_PATH/.local/bin:$PATH
-export MANPATH=$LOCAL_HOME_PATH/.local/man:$MANPATH
-if [[ -d "$LOCAL_HOME_PATH/.local/extras/coreutils" ]]; then
-  export PATH=$LOCAL_HOME_PATH/.local/extras/coreutils/bin:$PATH
-  export MANPATH=$LOCAL_HOME_PATH/.local/extras/coreutils/man:$MANPATH
-fi
+  # Load homebrew (if available)
+  if [[ -d $LOCAL_HOME_PATH/.brew ]]; then
+    export PATH="$LOCAL_HOME_PATH/.brew/bin:$LOCAL_HOME_PATH/.brew/sbin:$PATH"
+  fi
 
-export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+  # Load local binaries
+  export PATH=$LOCAL_HOME_PATH/.local/bin:$PATH
+  # Trailing colon on MANPATH is intentional: manpath(5) appends the system default path there.
+  export MANPATH=$LOCAL_HOME_PATH/.local/man:$MANPATH
+  if [[ -d "$LOCAL_HOME_PATH/.local/extras/coreutils" ]]; then
+    export PATH=$LOCAL_HOME_PATH/.local/extras/coreutils/bin:$PATH
+    export MANPATH=$LOCAL_HOME_PATH/.local/extras/coreutils/man:$MANPATH
+  fi
+
+  export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.ncurses/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+  export LD_LIBRARY_PATH=$LOCAL_HOME_PATH/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+fi
 
 # FZF
+# already checks paths and skips if already sourced
 if [[ -n "$ZSH_VERSION" ]]; then
   [ -f $LOCAL_HOME_PATH/.fzf.zsh ] && source $LOCAL_HOME_PATH/.fzf.zsh
 elif [[ -n "$BASH_VERSION" ]]; then
@@ -92,6 +102,45 @@ fi
 
 # uv
 export UV_PYTHON_INSTALL_DIR=$LOCAL_HOME_PATH/.uv-python
+export UV_VENV_SEED=1
+
+# Base uv venv is our way of getting our own python
+# Activated by default, set DISABLE_DEFAULT_PYTHON_VENV=1 to skip.
+PYTHON_BASE_VENV_DIR=$LOCAL_HOME_PATH/.python-base
+
+_activate_venv() {
+  local venv_dir=$1
+  # PS1 isn't set up yet at rc time; don't let activate save/modify it.
+  VIRTUAL_ENV_DISABLE_PROMPT=1
+  source $venv_dir/bin/activate
+  unset VIRTUAL_ENV_DISABLE_PROMPT
+}
+
+_ensure_venv() {
+  if [[ -n $VIRTUAL_ENV && -f $VIRTUAL_ENV/bin/activate ]]; then
+    # Inherited venv: PATH already has it, only the `deactivate` fn is missing (functions don't
+    # cross processes). Define one; venv's own relies on _OLD_VIRTUAL_PATH, which we don't have.
+    if ! typeset -f deactivate >/dev/null 2>&1; then
+      deactivate() {
+        PATH=":$PATH:"
+        PATH=${PATH//":$VIRTUAL_ENV/bin:"/:}
+        PATH=${PATH#:}
+        PATH=${PATH%:}
+        unset VIRTUAL_ENV VIRTUAL_ENV_PROMPT
+        hash -r 2>/dev/null
+        unset -f deactivate
+      }
+    fi
+  elif [[ -f $PYTHON_BASE_VENV_DIR/bin/activate ]]; then
+    # Nothing active: fall back to base.
+    unset VIRTUAL_ENV
+    _activate_venv $PYTHON_BASE_VENV_DIR
+  fi
+}
+
+if [[ ${DISABLE_DEFAULT_PYTHON_VENV:-0} != 1 ]]; then
+  _ensure_venv
+fi
 
 # Bat config
 export BAT_CONFIG_PATH="$HOME/.config/bat/bat.conf"
@@ -495,4 +544,107 @@ ggit() {
   done
   echo "ggit: all 100 attempts failed"
   return 1
+}
+
+# Revert PATH & co. to their pre-commonrc snapshot.
+# Warning: if PATH was pre-polluted, this does will not be effective.
+# Use 'purge_paths' instead.
+restore_paths() {
+  local path_vars=(PATH LD_LIBRARY_PATH MANPATH)
+  if [[ -z ${PRE_COMMONRC_PATH+x} ]]; then
+    echo "restore_paths: no PRE_COMMONRC_* snapshot in this shell; nothing to restore."
+    return 1
+  fi
+
+  local var
+  for var in "${path_vars[@]}"; do
+    echo "$var"
+    echo "  current: $(printenv $var)"
+    echo "  restore: $(printenv PRE_COMMONRC_$var)"
+  done
+  local reply
+  printf 'Restore? [y/n]: '
+  read -r reply
+  if [[ ! $reply =~ ^[Yy]$ ]]; then
+    echo "Aborted."
+    return 1
+  fi
+
+  local backup
+  for var in "${path_vars[@]}"; do
+    backup=$(printenv PRE_COMMONRC_$var)
+    if [[ -n $backup ]]; then
+      export "$var=$backup"
+    else
+      unset $var
+    fi
+    unset PRE_COMMONRC_$var
+  done
+  unset COMMONRC_PATHS_APPLIED
+  # Venv bin is gone from PATH now; drop the rest of the venv state so re-sourcing starts clean.
+  unset VIRTUAL_ENV VIRTUAL_ENV_PROMPT _OLD_VIRTUAL_PATH _OLD_VIRTUAL_PS1
+  unset -f deactivate 2>/dev/null
+  hash -r 2>/dev/null
+  echo "Restored."
+}
+
+# Print colon-separated $1 without entries containing $2. Empty entries kept as is.
+_remove_paths_including() {
+  local rest=$1
+  local pattern=$2
+  local entry
+  local out=""
+  local first=1
+  while :; do
+    entry=${rest%%:*}
+    if [[ $entry != *"$pattern"* ]]; then
+      if [[ $first == 1 ]]; then
+        out=$entry
+        first=0
+      else
+        out="$out:$entry"
+      fi
+    fi
+    [[ $rest == *:* ]] || break
+    rest=${rest#*:}
+  done
+  printf '%s' "$out"
+}
+
+# Kick every entry under LOCAL_HOME_PATH off PATH & co. Works regardless of snapshot state.
+purge_paths() {
+  local path_vars=(PATH LD_LIBRARY_PATH MANPATH)
+  local var current
+  for var in "${path_vars[@]}"; do
+    current=$(printenv $var)
+    echo "$var"
+    echo "  current: $current"
+    echo "  purged:  $(_remove_paths_including "$current" "$LOCAL_HOME_PATH")"
+  done
+  local reply
+  printf 'Purge? [y/n]: '
+  read -r reply
+  if [[ ! $reply =~ ^[Yy]$ ]]; then
+    echo "Aborted."
+    return 1
+  fi
+
+  local purged
+  for var in "${path_vars[@]}"; do
+    purged=$(_remove_paths_including "$(printenv $var)" "$LOCAL_HOME_PATH")
+    if [[ -n $purged ]]; then
+      export "$var=$purged"
+    else
+      unset $var
+    fi
+    unset PRE_COMMONRC_$var
+  done
+  unset COMMONRC_PATHS_APPLIED
+  # Venvs under LOCAL_HOME_PATH (incl. base) just lost their bin; drop their state too.
+  if [[ -n $VIRTUAL_ENV && $VIRTUAL_ENV == *"$LOCAL_HOME_PATH"* ]]; then
+    unset VIRTUAL_ENV VIRTUAL_ENV_PROMPT _OLD_VIRTUAL_PATH _OLD_VIRTUAL_PS1
+    unset -f deactivate 2>/dev/null
+  fi
+  hash -r 2>/dev/null
+  echo "Purged."
 }
