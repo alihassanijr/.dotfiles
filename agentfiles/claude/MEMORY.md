@@ -1,5 +1,7 @@
-Project-specific memories (findings, rulings, style decisions made during one project's work) go in `<repo>/.claude/memory/`, indexed in `<repo>/.claude/MEMORY.md`. Never here. `~/.claude/projects/<hash>/memory/` is acceptable but not preferred; search it too when recalling. Global memory files: rule + How to apply only. No Why section, no project/tool/system/host names, no dates, no session details.
-Before saving ask "true outside this repo?" No: project dir. Yes: here, written generic.
+Project-specific memories (findings, rulings, style decisions made during one project's work) go in project scope: `~/.claude/projects/<cwd-with-slashes-as-dashes>/memory/`, indexed in `~/.claude/projects/<same>/MEMORY.md`. That is the dir the harness reports as the memory directory. Never here. Global memory files: rule + How to apply only. No Why section, no project/tool/system/host names, no dates, no session details.
+Before saving ask "true outside this repo?" No: project scope. Yes: here, written generic.
+NEVER write or edit anything here or in `memory/` without asking the user first and getting a yes.
+New memories go to project scope first; then ask whether to promote.
 
 # ALWAYS READ
 - [RARELY USE GENERAL KNOWLEDGE](memory/feedback-rarely-use-general-knowledge.md) — answer from fetched docs/code, not pretraining memory, unless indisputable; else say "not in sources"
@@ -9,5 +11,5 @@ Before saving ask "true outside this repo?" No: project dir. Yes: here, written 
 
 # Context-dependent
 - [Style](memory/feedback-style.md) — no single-letter names except M, N, loop indices; constants CamelCase, ALL_CAPS only macros; column 100; never remove comments
-- [Presentation](memory/feedback-presentation.md) — label files as reference vs edit; quoted code keeps inline comments verbatim; review = report findings first, fix only after user picks
+- [Presentation](memory/feedback-presentation.md) — label files as reference vs edit; quoted code keeps inline comments verbatim; review = report findings first, fix only after user picks; state a fix's premise before building, flag it if unverified
 - [Test rules](memory/feedback-test-rules.md) — always verbose: lit -a/-v, pytest -v, ctest -V

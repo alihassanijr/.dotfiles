@@ -1,6 +1,6 @@
 ---
 name: feedback-presentation
-description: Presenting code and files to user. Label each file as read-only reference or to-be-edited; quoted code keeps inline comments verbatim
+description: Presenting code and files to user. Label each file as read-only reference or to-be-edited; quoted code keeps inline comments verbatim; state a fix's premise before building on it
 metadata:
   type: feedback
 ---
@@ -13,6 +13,10 @@ When quoting code snippets (tutorial, review, explain), copy inline comments ver
 When asked to review or check something, report the findings first and stop. Apply fixes only
 after the user picks which ones.
 
+When proposing a fix, state the premise it rests on in one sentence first. If the premise is
+unverified, say so before building on it.
+
 **How to apply:** Tag each file inline, e.g. "(reference only)" vs "(edit)". If a file holds a
 base abstraction the new work only implements, say so up front. Strip a comment only when it has
-no bearing on what is being explained.
+no bearing on what is being explained. Before the first edit of a fix, write the premise ("this
+assumes X"); if X was not read from docs, code, or the user, mark it as an assumption.
