@@ -6,26 +6,50 @@ here=$(cd "$(dirname "$0")" && pwd)
 cwd=$(mktemp -d)   # neutral cwd so memory/config zones are not inside it
 outside=$(mktemp -d)
 ln -s "$cwd/README.md" "$outside/link.md"   # symlink from outside cwd into cwd
-trap 'rm -rf "$cwd" "$outside"' EXIT
+mkdir -p "$cwd/sub"                          # a subdirectory to start a "session" in
 home=$HOME
-transcript="$home/.claude/projects/-fake-project/t.jsonl"
-mode=default   # permission_mode sent with each event; reassign before a block to test others
+dotfiles=$(cd "$here/../../.." && pwd)
+# Claude Code names ~/.claude/projects/<X> by mangling the cwd: non-alphanumerics -> "-".
+mangle() { printf '%s' "$1" | sed 's/[^A-Za-z0-9]/-/g'; }
+proj=$(mangle "$cwd")                        # this session's project dir name
+projdir="$home/.claude/projects/$proj"
+scratch="/tmp/claude-test/$proj/fake-session/scratchpad"
 fail=0
 n=0
 
+transcripts=$(mktemp -d)
+trap 'rm -rf "$cwd" "$outside" "$transcripts"' EXIT
+
+# run TOOL INPUT EXPECTED [MODE] [CWD] [START] [ADDED]
+# MODE defaults to "default" (Manual), CWD to the temp cwd. START is where the session
+# started (the project root); defaults to CWD. Without ADDED the transcript path is a
+# non-existent file under the mangled START dir, so the guard uses its fallback. With
+# ADDED, a real transcript is written holding Claude Code's environment snapshot with
+# workingDirectory=START and additionalWorkingDirectories=[ADDED], as /add-dir records it.
 run() {
   tool=$1
   input=$2
   expected=$3
+  m=${4:-default}
+  c=${5:-$cwd}
+  start=${6:-$c}
+  added=$7
+  if [ -n "$added" ]; then
+    transcript="$transcripts/$(mangle "$start").jsonl"
+    printf '{"type":"attachment","attachment":{"type":"environment","snapshot":{"workingDirectory":"%s","additionalWorkingDirectories":["%s"]}}}\n' \
+      "$start" "$added" > "$transcript"
+  else
+    transcript="$home/.claude/projects/$(mangle "$start")/fake-session.jsonl"
+  fi
   n=$((n + 1))
-  out=$(printf '{"cwd":"%s","transcript_path":"%s","permission_mode":"%s","tool_name":"%s","tool_input":%s}' \
-        "$cwd" "$transcript" "$mode" "$tool" "$input" | sh "$here/guard.sh" 2>/dev/null)
+  out=$(printf '{"cwd":"%s","transcript_path":"%s","session_id":"fake-session","scratchpad_dir":"%s","permission_mode":"%s","tool_name":"%s","tool_input":%s}' \
+        "$c" "$transcript" "$scratch" "$m" "$tool" "$input" | sh "$here/guard.sh" 2>/dev/null)
   got=$(printf '%s' "$out" | sed -n 's/.*"permissionDecision": *"\([a-z]*\)".*/\1/p')
   [ -z "$got" ] && got=none
   if [ "$got" = "$expected" ]; then
-    printf 'ok   %2d %-5s %-12s %-5s %s\n' "$n" "$expected" "$mode" "$tool" "$input"
+    printf 'ok   %2d %-5s %-12s %-5s %s\n' "$n" "$expected" "$m" "$tool" "$input"
   else
-    printf 'FAIL %2d want %-5s got %-5s %-12s %-5s %s\n' "$n" "$expected" "$got" "$mode" "$tool" "$input"
+    printf 'FAIL %2d want %-5s got %-5s %-12s %-5s %s\n' "$n" "$expected" "$got" "$m" "$tool" "$input"
     fail=1
   fi
 }
@@ -38,30 +62,58 @@ run Read  '{"file_path":"/etc/hosts"}'                                  ask
 run Read  '{"file_path":"~/.zshrc"}'                                    ask
 run Read  '{"file_path":"~/.ssh/id_rsa"}'                               deny
 run Read  '{"file_path":"'"$home"'/.claude/memory/x.md"}'               allow
-run Read  '{"file_path":"'"$home"'/.claude/projects/-fake-project/memory/x.md"}' allow
+run Read  '{"file_path":"'"$projdir"'/memory/x.md"}'                    allow
 run Read  '{"file_path":"'"$home"'/.claude/projects/-other-project/memory/x.md"}' ask
+run Read  '{"file_path":"'"$projdir"'/fake-session/tool-results/t.txt"}' allow
+run Read  '{"file_path":"'"$projdir"'/other-session/tool-results/t.txt"}' ask
+run Read  '{"file_path":"'"$projdir"'/fake-session/x.jsonl"}'           ask
+run Read  '{"file_path":"'"$projdir"'/fake-session/subagents/a.jsonl"}' ask
+run Read  '{"file_path":"'"$projdir"'/y.jsonl"}'                        ask
+run Bash  '{"command":"cat '"$projdir"'/fake-session/tool-results/t.txt"}' allow
+run Read  '{"file_path":"'"$scratch"'/notes.md"}'                       none
+run Read  '{"file_path":"/tmp/claude-test/'"$proj"'/fake-session/images/p.png"}' allow
+run Read  '{"file_path":"/tmp/claude-test/'"$proj"'/other-session/images/p.png"}' ask
 run Read  '{"file_path":"'"$home"'/.claude/MEMORY.md"}'                 allow
-run Read  '{"file_path":"'"$home"'/.claude/projects/-fake-project/MEMORY.md"}' allow
+run Read  '{"file_path":"'"$projdir"'/MEMORY.md"}'                      allow
+# cwd moved into a subdirectory (model ran `cd`); the project root is where the session
+# started, so files elsewhere in the project are still inside
+run Read  '{"file_path":"'"$cwd"'/README.md"}'                          none   default "$cwd/sub" "$cwd"
+run Read  '{"file_path":"'"$cwd"'/other/x.py"}'                         none   default "$cwd/sub" "$cwd"
+run Bash  '{"command":"cat ../README.md"}'                              allow  default "$cwd/sub" "$cwd"
+run Bash  '{"command":"cd '"$cwd"'/other && cat x.py"}'                 none   default "$cwd/sub" "$cwd"
+run Read  '{"file_path":"'"$outside"'/other.md"}'                       ask    default "$cwd/sub" "$cwd"
+run Edit  '{"file_path":"'"$cwd"'/README.md"}'                          none   acceptEdits "$cwd/sub" "$cwd"
+# /add-dir: the added directory gets the same treatment as the project root
+run Read  '{"file_path":"'"$outside"'/other.md"}'                       none   default "$cwd" "$cwd" "$outside"
+run Bash  '{"command":"cat '"$outside"'/other.md"}'                     allow  default "$cwd" "$cwd" "$outside"
+run Write '{"file_path":"'"$outside"'/other.md","file_text":""}'        ask    default "$cwd" "$cwd" "$outside"
+run Write '{"file_path":"'"$outside"'/other.md","file_text":""}'        none   acceptEdits "$cwd" "$cwd" "$outside"
+run Read  '{"file_path":"/etc/hosts"}'                                  ask    default "$cwd" "$cwd" "$outside"
+# session started in a subdirectory: the parent's project dir is this session's too
+run Read  '{"file_path":"'"$projdir"'/memory/x.md"}'                    allow  default "$cwd/sub"
+run Read  '{"file_path":"'"$home"'/.claude/projects/'"$(mangle "$cwd/sub")"'/memory/x.md"}' allow default "$cwd/sub"
+run Read  '{"file_path":"'"$projdir"'/fake-session/tool-results/t.txt"}' allow default "$cwd/sub"
+run Read  '{"file_path":"'"$projdir"'-other/memory/x.md"}'              ask    default "$cwd/sub"
+run Read  '{"file_path":"'"$projdir"'/other.jsonl"}'                    ask    default "$cwd/sub"
 run Read  '{"file_path":"$HOME/x"}'                                     ask
 run Write '{"file_path":"/etc/hosts","file_text":""}'                   deny
 run Write '{"file_path":"~/.zshrc","file_text":""}'                     ask
 run Write '{"file_path":"~/.cache/x","file_text":""}'                   deny
 run Write '{"file_path":"~/.claude/settings.json","file_text":""}'      deny
 run Write '{"file_path":"'"$home"'/.claude/memory/x.md","file_text":""}' ask
-run Write '{"file_path":"'"$home"'/.claude/projects/-fake-project/memory/x.md","file_text":""}' ask
+run Write '{"file_path":"'"$projdir"'/memory/x.md","file_text":""}'     ask
 run Edit  '{"file_path":"src/a.cpp"}'                                   ask
 run Edit  '{"file_path":"'"$outside"'/link.md"}'                        ask
 run Write '{"file_path":"'"$outside"'/other.md","file_text":""}'        ask
-mode=acceptEdits
-run Edit  '{"file_path":"src/a.cpp"}'                                   none
-run Write '{"file_path":"'"$home"'/.claude/projects/-fake-project/memory/x.md","file_text":""}' none
-run Write '{"file_path":"'"$home"'/.claude/memory/x.md","file_text":""}' ask
-run Write '{"file_path":"~/.zshrc","file_text":""}'                     ask
-run Write '{"file_path":"'"$outside"'/other.md","file_text":""}'        ask
-mode=auto
-run Edit  '{"file_path":"src/a.cpp"}'                                   ask
-run Write '{"file_path":"'"$home"'/.claude/projects/-fake-project/memory/x.md","file_text":""}' ask
-mode=default
+# acceptEdits: writes inside cwd and project memory go silent, everything else still asks
+run Edit  '{"file_path":"src/a.cpp"}'                                   none   acceptEdits
+run Write '{"file_path":"'"$projdir"'/memory/x.md","file_text":""}'     none   acceptEdits
+run Write '{"file_path":"'"$home"'/.claude/memory/x.md","file_text":""}' ask   acceptEdits
+run Write '{"file_path":"~/.zshrc","file_text":""}'                     ask    acceptEdits
+run Write '{"file_path":"'"$outside"'/other.md","file_text":""}'        ask    acceptEdits
+# auto: writes never go silent
+run Edit  '{"file_path":"src/a.cpp"}'                                   ask    auto
+run Write '{"file_path":"'"$projdir"'/memory/x.md","file_text":""}'     ask    auto
 run Glob  '{"pattern":"**/*.py"}'                                       none
 run Glob  '{"pattern":"../**/*.py"}'                                    ask
 run Grep  '{"pattern":"foo","path":"/usr/include"}'                     ask
@@ -69,7 +121,7 @@ run Grep  '{"pattern":"foo","path":"/usr/include"}'                     ask
 # bash: paths
 run Bash '{"command":"ls -la"}'                                         allow
 run Bash '{"command":"ls '"$home"'/.claude/memory"}'                    allow
-run Bash '{"command":"cat '"$home"'/.claude/projects/-fake-project/memory/x.md"}' allow
+run Bash '{"command":"cat '"$projdir"'/memory/x.md"}'                   allow
 run Bash '{"command":"grep -rn foo src/"}'                              allow
 run Bash '{"command":"tail -f log.txt"}'                                none
 run Bash '{"command":"ls && ls"}'                                       none
@@ -176,53 +228,44 @@ run Bash '{"command":"git status"}'                                     ask
 run Bash '{"command":"echo \"unbalanced"}'                              ask
 
 # denies hold in every permission mode
-for mode in default plan acceptEdits auto dontAsk bypassPermissions; do
-  run Read  '{"file_path":"~/.ssh/id_rsa"}'                             deny
-  run Read  '{"file_path":"/dev/sda"}'                                  deny
-  run Write '{"file_path":"/etc/hosts","file_text":""}'                 deny
-  run Write '{"file_path":"~/.cache/x","file_text":""}'                 deny
-  run Write '{"file_path":"~/.claude/settings.json","file_text":""}'    deny
-  run Bash  '{"command":"sudo ls"}'                                     deny
-  run Bash  '{"command":"rm -rf /"}'                                    deny
-  run Bash  '{"command":"cat ~/.ssh/id_rsa"}'                           deny
-  run Bash  '{"command":"cat /proc/self/environ"}'                      deny
-  run Bash  '{"command":"echo $GITHUB_TOKEN"}'                          deny
-  run Bash  '{"command":"echo x > ~/.zshrc"}'                           deny
+for m in default plan acceptEdits auto dontAsk bypassPermissions; do
+  run Read  '{"file_path":"~/.ssh/id_rsa"}'                             deny "$m"
+  run Read  '{"file_path":"/dev/sda"}'                                  deny "$m"
+  run Write '{"file_path":"/etc/hosts","file_text":""}'                 deny "$m"
+  run Write '{"file_path":"~/.cache/x","file_text":""}'                 deny "$m"
+  run Write '{"file_path":"~/.claude/settings.json","file_text":""}'    deny "$m"
+  run Bash  '{"command":"sudo ls"}'                                     deny "$m"
+  run Bash  '{"command":"rm -rf /"}'                                    deny "$m"
+  run Bash  '{"command":"cat ~/.ssh/id_rsa"}'                           deny "$m"
+  run Bash  '{"command":"cat /proc/self/environ"}'                      deny "$m"
+  run Bash  '{"command":"echo $GITHUB_TOKEN"}'                          deny "$m"
+  run Bash  '{"command":"echo x > ~/.zshrc"}'                           deny "$m"
 done
-mode=default
 
 # cwd = the dotfiles repo itself: memory stays readable, dotfiles writes ask in every mode
-tmpcwd=$cwd
-cwd=$(cd "$here/../../.." && pwd)
-run Read  '{"file_path":"'"$home"'/.claude/MEMORY.md"}'                 allow
-run Read  '{"file_path":"'"$home"'/.claude/memory/x.md"}'               allow
-run Read  '{"file_path":"~/.zshrc"}'                                    ask
-run Read  '{"file_path":"zshrc"}'                                       none
-run Read  '{"file_path":"'"$cwd"'/zshrc"}'                              none
-run Read  '{"file_path":"'"$cwd"'/agentfiles/claude/hooks/guard.py"}'   none
-run Bash  '{"command":"cat '"$cwd"'/zshrc"}'                            allow
-run Edit  '{"file_path":"'"$cwd"'/zshrc"}'                              ask
-run Edit  '{"file_path":"'"$home"'/.claude/MEMORY.md"}'                 ask
-run Edit  '{"file_path":"agentfiles/claude/MEMORY.md"}'                 ask
-run Edit  '{"file_path":"zshrc"}'                                       ask
-run Bash  '{"command":"cat '"$home"'/.claude/MEMORY.md"}'               allow
-run Bash  '{"command":"cat zshrc"}'                                     allow
-run Bash  '{"command":"make"}'                                          ask
-run Bash  '{"command":"echo x > zshrc"}'                                ask
-mode=acceptEdits
-run Edit  '{"file_path":"zshrc"}'                                       ask
-run Edit  '{"file_path":"agentfiles/claude/memory/x.md"}'               ask
-mode=default
-cwd=$tmpcwd
+run Read  '{"file_path":"'"$home"'/.claude/MEMORY.md"}'                 allow default "$dotfiles"
+run Read  '{"file_path":"'"$home"'/.claude/memory/x.md"}'               allow default "$dotfiles"
+run Read  '{"file_path":"~/.zshrc"}'                                    ask   default "$dotfiles"
+run Read  '{"file_path":"zshrc"}'                                       none  default "$dotfiles"
+run Read  '{"file_path":"'"$dotfiles"'/zshrc"}'                         none  default "$dotfiles"
+run Read  '{"file_path":"'"$dotfiles"'/agentfiles/claude/hooks/guard.py"}' none default "$dotfiles"
+run Bash  '{"command":"cat '"$dotfiles"'/zshrc"}'                       allow default "$dotfiles"
+run Edit  '{"file_path":"'"$dotfiles"'/zshrc"}'                         ask   default "$dotfiles"
+run Edit  '{"file_path":"'"$home"'/.claude/MEMORY.md"}'                 ask   default "$dotfiles"
+run Edit  '{"file_path":"agentfiles/claude/MEMORY.md"}'                 ask   default "$dotfiles"
+run Edit  '{"file_path":"zshrc"}'                                       ask   default "$dotfiles"
+run Bash  '{"command":"cat '"$home"'/.claude/MEMORY.md"}'               allow default "$dotfiles"
+run Bash  '{"command":"cat zshrc"}'                                     allow default "$dotfiles"
+run Bash  '{"command":"make"}'                                          ask   default "$dotfiles"
+run Bash  '{"command":"echo x > zshrc"}'                                ask   default "$dotfiles"
+run Edit  '{"file_path":"zshrc"}'                                       ask   acceptEdits "$dotfiles"
+run Edit  '{"file_path":"agentfiles/claude/memory/x.md"}'               ask   acceptEdits "$dotfiles"
 
 # cwd = HOME or above: everything denied
-cwd=$HOME
-run Read  '{"file_path":"README.md"}'                                   deny
-run Bash  '{"command":"ls"}'                                            deny
-run Write '{"file_path":"x","file_text":""}'                            deny
-cwd=/
-run Bash  '{"command":"ls"}'                                            deny
-cwd=$tmpcwd
+run Read  '{"file_path":"README.md"}'                                   deny  default "$HOME"
+run Bash  '{"command":"ls"}'                                            deny  default "$HOME"
+run Write '{"file_path":"x","file_text":""}'                            deny  default "$HOME"
+run Bash  '{"command":"ls"}'                                            deny  default /
 
 # history modification of any kind
 run Bash  '{"command":"set +o history"}'                                deny

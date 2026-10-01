@@ -12,6 +12,7 @@ import os
 import re
 import shlex
 import sys
+from pathlib import PurePosixPath
 
 FILE_TOOLS = {"Read", "Glob", "Grep", "Edit", "Write", "NotebookEdit"}
 WRITE_TOOLS = {"Edit", "Write", "NotebookEdit"}
@@ -135,33 +136,116 @@ def within(path, root):
     return path == root or path.startswith(root + "/")
 
 
+def mangled_as_path(path):
+    """Claude Code names ~/.claude/projects/<X> by replacing every non-alphanumeric char of
+    the cwd with '-'. Not invertible, so comparisons happen in mangled space: mangle, then
+    read the '-' back as '/' on both sides and compare as pseudo-paths."""
+    return PurePosixPath(re.sub(r"[^A-Za-z0-9]", "-", path).replace("-", "/"))
+
+
+def environment_snapshot(transcript_path):
+    """Newest environment attachment in the session transcript: Claude Code records the
+    session's start directory and every /add-dir target there, as
+    {"type":"attachment","attachment":{"type":"environment","snapshot":{
+        "workingDirectory": ..., "additionalWorkingDirectories": [...], ...}}}.
+    Scanned from the end so the latest /add-dir wins and the read stays short. Returns {}
+    when the file is missing or has no such record."""
+    try:
+        with open(transcript_path, "rb") as fh:
+            fh.seek(0, os.SEEK_END)
+            size = fh.tell()
+            pos = size
+            tail = b""
+            while pos > 0:
+                step = min(65536, pos)
+                pos -= step
+                fh.seek(pos)
+                tail = fh.read(step) + tail
+                lines = tail.split(b"\n")
+                tail = lines[0]  # possibly partial first line; carry into the next chunk
+                for line in reversed(lines[1:]):
+                    if b'"additionalWorkingDirectories"' not in line:
+                        continue
+                    try:
+                        rec = json.loads(line)
+                    except ValueError:
+                        continue
+                    snap = (rec.get("attachment") or {}).get("snapshot") or {}
+                    if "workingDirectory" in snap:
+                        return snap
+            if b'"additionalWorkingDirectories"' in tail:
+                try:
+                    snap = (json.loads(tail).get("attachment") or {}).get("snapshot") or {}
+                    if "workingDirectory" in snap:
+                        return snap
+                except ValueError:
+                    pass
+    except OSError:
+        pass
+    return {}
+
+
 class Zones:
     def __init__(self, data):
-        self.cwd = os.path.realpath(data["cwd"])
-        self.home = os.path.realpath(os.path.expanduser("~"))
-        self.safe = [self.cwd]
-        # Same dirs as written (unresolved), for comparing against written paths: Claude
-        # spells in-repo paths with the cwd it was given, which may itself go through a
-        # symlink and differ from the realpath.
-        self.safe_raw = [os.path.normpath(data["cwd"])]
+        # cwd is the shell's CURRENT directory: it moves when the model runs `cd`. Used only
+        # to resolve relative paths and to find memory dirs. The project boundary is where
+        # the session started plus every /add-dir target; both come from the environment
+        # snapshot Claude Code writes into the transcript. Fallback when the transcript has
+        # none yet (first calls of a session): the start dir is the ancestor of cwd whose
+        # mangled name is the transcript's directory.
+        self.cwd_raw = os.path.normpath(data["cwd"])
+        self.cwd = os.path.realpath(self.cwd_raw)
+        self.home_raw = os.path.expanduser("~")
+        self.home = os.path.realpath(self.home_raw)
+        snap = environment_snapshot(data.get("transcript_path") or "")
+        roots_raw = []
+        if snap.get("workingDirectory"):
+            roots_raw.append(os.path.normpath(snap["workingDirectory"]))
+        else:
+            if data.get("transcript_path"):
+                project = mangled_as_path(
+                    os.path.basename(os.path.dirname(data["transcript_path"])))
+            else:
+                project = mangled_as_path(self.cwd_raw)
+            cur = self.cwd_raw
+            while True:
+                if mangled_as_path(cur) == project:
+                    roots_raw.append(cur)
+                    break
+                parent = os.path.dirname(cur)
+                if parent == cur:
+                    break  # cwd has left the project (user-approved cd); nothing is "inside"
+                cur = parent
+        for extra in snap.get("additionalWorkingDirectories") or []:
+            if isinstance(extra, str) and extra.startswith("/"):
+                roots_raw.append(os.path.normpath(extra))
+        self.root = os.path.realpath(roots_raw[0]) if roots_raw else None
+        # Mangled names of the start dir and added dirs, for memory-dir matching.
+        self.roots_mangled = [mangled_as_path(r) for r in roots_raw]
+        # Safe dirs, resolved and as written. Claude spells in-project paths with the path
+        # it was given, which may go through a symlink and differ from the realpath.
+        self.safe = [os.path.realpath(r) for r in roots_raw]
+        self.safe_raw = list(roots_raw)
         if data.get("scratchpad_dir"):
             self.safe.append(os.path.realpath(data["scratchpad_dir"]))
             self.safe_raw.append(os.path.normpath(data["scratchpad_dir"]))
         # Memory: global (readable, writes ask) and project-local (the only writable one).
-        # Each dir plus the MEMORY.md index that sits next to it.
         self.global_memory = [os.path.realpath(os.path.expanduser("~/.claude/memory")),
                               os.path.realpath(os.path.expanduser("~/.claude/MEMORY.md"))]
-        self.project_memory = []
-        if data.get("transcript_path"):
-            project_dir = os.path.realpath(os.path.dirname(data["transcript_path"]))
-            self.project_memory = [os.path.join(project_dir, "memory"),
-                                   os.path.join(project_dir, "MEMORY.md")]
-        self.memory = self.global_memory + self.project_memory
+        # Project-local lives under ~/.claude/projects/<project, cwd, or an ancestor>/;
+        # see is_project_memory.
+        self.projects_root = os.path.realpath(os.path.expanduser("~/.claude/projects"))
+        self.cwd_mangled = mangled_as_path(self.cwd_raw)
+        self.session_id = data.get("session_id") or ""
+        # Pasted images sit next to the scratchpad: <tmp>/<project>/<session>/images/.
+        self.session_extra = []
+        if data.get("scratchpad_dir"):
+            session_tmp = os.path.dirname(data["scratchpad_dir"].rstrip("/"))
+            self.session_extra.append(os.path.realpath(os.path.join(session_tmp, "images")))
         self.config = [os.path.realpath(os.path.expanduser(p)) for p in (
             "~/.claude/settings.json", "~/.claude/settings.local.json",
             "~/.claude/hooks", "~/.claude.json")]
         # Writes anywhere under these always ask, whatever the mode or cwd.
-        self.home_raw = os.path.expanduser("~")
         self.guarded = [os.path.realpath(os.path.expanduser("~/.dotfiles")),
                         os.path.realpath(os.path.expanduser("~/.claude"))]
         self.claude_raw = os.path.normpath(os.path.expanduser("~/.claude"))
@@ -172,7 +256,7 @@ class Zones:
     def requested(self, raw):
         """The path as written, normalized, symlinks NOT resolved. Relative paths are
         joined onto the cwd as written. normpath keeps a leading //, collapse it."""
-        req = os.path.normpath(os.path.join(self.safe_raw[0], os.path.expanduser(raw)))
+        req = os.path.normpath(os.path.join(self.cwd_raw, os.path.expanduser(raw)))
         return re.sub(r"^/+", "/", req)
 
     def requested_inside(self, raw):
@@ -191,12 +275,29 @@ class Zones:
         return not rel.startswith("..") and rel.split("/")[0].startswith(".")
 
     def is_project_memory(self, real):
-        return any(within(real, p) for p in self.project_memory)
+        """~/.claude/projects/<X>/{memory/**, MEMORY.md, <session_id>/tool-results/**} where
+        <X> is the mangled path of cwd or of one of its ancestors (a session started in a
+        subdirectory keeps its memory under the parent's dir)."""
+        if not within(real, self.projects_root):
+            return False
+        rel = os.path.relpath(real, self.projects_root).split("/")
+        if len(rel) < 2:
+            return False
+        project = mangled_as_path(rel[0])
+        if (project not in self.roots_mangled and project != self.cwd_mangled
+                and project not in self.cwd_mangled.parents):
+            return False
+        rest = rel[1:]
+        if rest[0] == "memory" or rest == ["MEMORY.md"]:
+            return True
+        return len(rest) >= 2 and rest[0] == self.session_id and rest[1] == "tool-results"
 
     def is_memory(self, real):
-        """Global or project memory by realpath. Not via zone: inside a dotfiles cwd the
-        zone is 'safe', but the ~/.x read rule must still not fire on memory."""
-        return any(within(real, m) for m in self.memory)
+        """Global or project memory, or this session's image dir, by realpath. Not via zone:
+        inside a dotfiles cwd the zone is 'safe', but the ~/.x read rule must still not
+        fire on memory."""
+        return (any(within(real, m) for m in self.global_memory + self.session_extra)
+                or self.is_project_memory(real))
 
     def is_guarded(self, raw, real):
         """Under ~/.dotfiles or ~/.claude by realpath, or written as ~/.claude/..."""
@@ -218,7 +319,7 @@ class Zones:
             return "safe", real
         if SENSITIVE_WORDS.search(raw) or SENSITIVE_WORDS.search(real):
             return "sensitive", real
-        if any(within(real, m) for m in self.memory):
+        if self.is_memory(real):
             return "memory", real
         if any(within(real, c) for c in self.config):
             return "config", real
@@ -472,7 +573,7 @@ def check_bash(command, zones):
         if "{" in tok and "}" in tok:
             asks.add("brace expansion: " + tok)
     read_only = simple_read_only(names)
-    if not read_only and any(within(zones.cwd, g) for g in zones.guarded):
+    if not read_only and zones.root and any(within(zones.root, g) for g in zones.guarded):
         asks.add("non-read-only command inside ~/.dotfiles or ~/.claude")
     for cand in path_candidates(tokens):
         if "$" in cand or "`" in cand:
@@ -510,9 +611,9 @@ def main():
     inp = data.get("tool_input") or {}
     mode = data.get("permission_mode") or ""
     zones = Zones(data)
-    if within(zones.home, zones.cwd):
-        # cwd is $HOME or an ancestor of it: every ~/.x would count as "inside cwd".
-        decide("deny", "session cwd is HOME or above (" + zones.cwd + "); refusing all tools")
+    if within(zones.home, zones.cwd) or (zones.root and within(zones.home, zones.root)):
+        # Project root or cwd is $HOME or above: every ~/.x would count as "inside".
+        decide("deny", "session root or cwd is HOME or above; refusing all tools")
     if tool in FILE_TOOLS:
         check_file_tool(tool, inp, zones, mode)
     elif tool == "Bash":
