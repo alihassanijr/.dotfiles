@@ -347,8 +347,16 @@ def check_file_tool(tool, inp, zones, mode):
     if "$" in raw or "`" in raw:
         decide("ask", "unresolvable path: " + raw)
     pattern = inp.get("pattern", "")
-    if tool == "Glob" and (pattern.startswith(("/", "~")) or ".." in pattern):
-        decide("ask", "Glob pattern escapes search dir: " + pattern)
+    if tool == "Glob":
+        # The pattern may carry the directory itself, absolute or relative to `path`.
+        # Its static prefix (up to the first glob char) is a plain path: resolve it
+        # against the search dir and classify it like any other path. Only a `..` that
+        # sits after a glob char cannot be resolved and stays a hard ask.
+        prefix = re.split(r"[*?\[{]", pattern, 1)[0]
+        if ".." in pattern[len(prefix):]:
+            decide("ask", "Glob pattern with .. after a wildcard: " + pattern)
+        if prefix:
+            raw = os.path.join(raw, prefix.rstrip("/") or "/")
     file_glob = inp.get("glob") or ""
     if tool == "Grep" and SENSITIVE_FILES.search(file_glob):
         decide("deny", "Grep glob targets sensitive files: " + file_glob)

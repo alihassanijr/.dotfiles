@@ -116,6 +116,14 @@ run Edit  '{"file_path":"src/a.cpp"}'                                   ask    a
 run Write '{"file_path":"'"$projdir"'/memory/x.md","file_text":""}'     ask    auto
 run Glob  '{"pattern":"**/*.py"}'                                       none
 run Glob  '{"pattern":"../**/*.py"}'                                    ask
+run Glob  '{"pattern":"'"$cwd"'/sub/**/*.py"}'                          none
+run Glob  '{"pattern":"**/*.py","path":"'"$cwd"'/sub"}'                 none
+run Glob  '{"pattern":"sub/**/*.py"}'                                   none
+run Glob  '{"pattern":"'"$outside"'/**/*.py"}'                          ask
+run Glob  '{"pattern":"~/.ssh/*"}'                                      deny
+run Glob  '{"pattern":"/etc/*"}'                                        ask
+run Glob  '{"pattern":"sub/**/../*.py"}'                                ask
+run Glob  '{"pattern":"'"$cwd"'/.claude/**"}'                           none
 run Grep  '{"pattern":"foo","path":"/usr/include"}'                     ask
 
 # bash: paths
