@@ -679,7 +679,8 @@ update_shell() {
 # ssh into a node, source commonrc there (in bash), then run a command. Flags, any order:
 #   -n NODE  node to ssh into (required)
 #   -x CMD   remote command; one string, no single quotes inside (required)
-#   -k KEY   add KEY to the agent on the way in (-o AddKeysToAgent=yes -i KEY)
+#   -k KEY   ssh with -i KEY, and add it to the agent on the way in (-o AddKeysToAgent=yes)
+#   --no-agent  don't add to the agent (-o AddKeysToAgent=no), with or without -k
 #   -H FILE  export HISTFILE_OVERRIDE=FILE on the remote
 #   -c       cd into the local $PWD on the remote
 # LOAD_PERSONAL_RC: always load my rcfiles. on some servers i make my rc file loading optional.
@@ -689,6 +690,8 @@ update_shell() {
 _ssh_commonrc() {
   local node=""
   local cmd=""
+  local key=""
+  local add_to_agent=1
   local ssh_opts=()
   local pre="export LOAD_PERSONAL_RC=1 && "
   local post=""
@@ -697,7 +700,8 @@ _ssh_commonrc() {
     case $1 in
       -n) node=$2; shift 2 ;;
       -x) cmd=$2; shift 2 ;;
-      -k) ssh_opts+=(-o AddKeysToAgent=yes -i "$2"); shift 2 ;;
+      -k) key=$2; shift 2 ;;
+      --no-agent) add_to_agent=0; shift ;;
       -H) post="export HISTFILE_OVERRIDE=\"$2\" && "; shift 2 ;;
       -c) pre="cd \"$PWD\" && ${pre}"; shift ;;
       *) echo "unknown argument: $1"; return 1 ;;
@@ -707,13 +711,20 @@ _ssh_commonrc() {
     echo "-n NODE and -x CMD are required"
     return 1
   fi
+  [[ -n $key ]] && ssh_opts+=(-i "$key")
+  if [[ $add_to_agent == 0 ]]; then
+    ssh_opts+=(-o AddKeysToAgent=no)
+  elif [[ -n $key ]]; then
+    ssh_opts+=(-o AddKeysToAgent=yes)
+  fi
   ssh -t "${ssh_opts[@]}" -o RemoteCommand=none "$node" \
     "bash -c '${pre}source ~/.commonrc && ${post}${cmd}'"
 }
 
 # SMUX: SSH and then attach to tmux
+# Usage: smux NODE
 smux () {
-  _ssh_commonrc -x 'tmux a || tmux' "$@"
+  _ssh_commonrc -n "$1" -x 'tmux a || tmux'
 }
 
 # ssh and run my locally built zsh
