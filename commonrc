@@ -663,3 +663,41 @@ purge_paths() {
   hash -r 2>/dev/null
   echo "Purged."
 }
+
+# Resolve $1 through the current PATH only: no aliases, functions, or hash table.
+_resolve_on_path() {
+  if [[ -n $ZSH_VERSION ]]; then
+    whence -p "$1"
+  else
+    type -P "$1"
+  fi
+}
+
+get_local_bash() {
+  _resolve_on_path bash
+}
+
+get_local_zsh() {
+  _resolve_on_path zsh
+}
+
+# Point SHELL at the bash/zsh found through the updated PATH (our local build, if installed), so
+# tmux, ssh, etc. spawn that one.
+update_shell() {
+  local shell_path
+  if [[ -n $ZSH_VERSION ]]; then
+    shell_path=$(get_local_zsh)
+  elif [[ -n $BASH_VERSION ]]; then
+    shell_path=$(get_local_bash)
+  else
+    echo "update_shell: not bash or zsh; SHELL left as $SHELL"
+    return 1
+  fi
+  if [[ -z $shell_path ]]; then
+    echo "update_shell: current shell not found on PATH; SHELL left as $SHELL"
+    return 1
+  fi
+  export SHELL=$shell_path
+}
+
+update_shell
