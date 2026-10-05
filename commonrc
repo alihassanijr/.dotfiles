@@ -324,30 +324,6 @@ vicd() {
     cd "$dst"
 }
 
-# SMUX: SSH and then attach to tmux
-smux () {
-  # LOAD_PERSONAL_RC: always load my rcfiles. on some servers i make my rc file loading optional.
-  # REMOTE_TMUX: tells zsh on remote server that we're running from a local tmux, so that we can get
-  # the panel_title from it -- only when we actually are in a local tmux.
-  local pre=
-  [[ -n $TMUX ]] && pre='export REMOTE_TMUX=1 && '
-  ssh -t ${@} -o RemoteCommand=none "bash -c \"export LOAD_PERSONAL_RC=1 && ${pre}source .commonrc && tmux a || tmux\""
-}
-
-# ssh and run my locally builtazsh 
-szh () {
-  local pre=
-  [[ -n $TMUX ]] && pre='export REMOTE_TMUX=1 && '
-  ssh -t ${@} -o RemoteCommand=none "bash -c \"export LOAD_PERSONAL_RC=1 && ${pre}source .commonrc && zsh\""
-}
-
-# ssh and run my locally built bash
-sbh () {
-  local pre=
-  [[ -n $TMUX ]] && pre='export REMOTE_TMUX=1 && '
-  ssh -t ${@} -o RemoteCommand=none "bash -c \"export LOAD_PERSONAL_RC=1 && ${pre}source .commonrc && bash\""
-}
-
 # Diff so fancy shortcut
 diffs () {
     diff -u $1 $2 | diff-so-fancy | less
@@ -698,6 +674,82 @@ update_shell() {
     return 1
   fi
   export SHELL=$shell_path
+}
+
+# ssh into a node, source commonrc there (in bash), then run a command. Flags, any order:
+#   -n NODE  node to ssh into (required)
+#   -x CMD   remote command; one string, no single quotes inside (required)
+#   -k KEY   add KEY to the agent on the way in (-o AddKeysToAgent=yes -i KEY)
+#   -H FILE  export HISTFILE_OVERRIDE=FILE on the remote
+#   -c       cd into the local $PWD on the remote
+# LOAD_PERSONAL_RC: always load my rcfiles. on some servers i make my rc file loading optional.
+# REMOTE_TMUX: tells zsh on remote server that we're running from a local tmux, so that we can get
+# the panel_title from it -- only when we actually are in a local tmux.
+# Remote payload is single-quoted: survives csh login shells, and keeps $(...) for the remote bash.
+_ssh_commonrc() {
+  local node=""
+  local cmd=""
+  local ssh_opts=()
+  local pre="export LOAD_PERSONAL_RC=1 && "
+  local post=""
+  [[ -n $TMUX ]] && pre="${pre}export REMOTE_TMUX=1 && "
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -n) node=$2; shift 2 ;;
+      -x) cmd=$2; shift 2 ;;
+      -k) ssh_opts+=(-o AddKeysToAgent=yes -i "$2"); shift 2 ;;
+      -H) post="export HISTFILE_OVERRIDE=\"$2\" && "; shift 2 ;;
+      -c) pre="cd \"$PWD\" && ${pre}"; shift ;;
+      *) echo "unknown argument: $1"; return 1 ;;
+    esac
+  done
+  if [[ -z $node || -z $cmd ]]; then
+    echo "-n NODE and -x CMD are required"
+    return 1
+  fi
+  ssh -t "${ssh_opts[@]}" -o RemoteCommand=none "$node" \
+    "bash -c '${pre}source ~/.commonrc && ${post}${cmd}'"
+}
+
+# SMUX: SSH and then attach to tmux
+smux () {
+  _ssh_commonrc -x 'tmux a || tmux' "$@"
+}
+
+# ssh and run my locally built zsh
+ssh-zsh () {
+  _ssh_commonrc -x 'exec zsh -l' "$@"
+}
+
+# ssh and run my locally built bash
+ssh-bash () {
+  _ssh_commonrc -x 'exec bash' "$@"
+}
+
+# Usage: ssh-cmd [-k KEY] [-H FILE] [-c] -n NODE -x CMD
+ssh-cmd () {
+  _ssh_commonrc "$@"
+}
+
+ssh-smi () {
+  _ssh_commonrc -x "nvidia-smi" "$@"
+}
+
+ssh-fancy-smi () {
+  _ssh_commonrc -x "fancy-smi" "$@"
+}
+
+# Usage: ssh-fancy-smi-watch -n NODE [-k KEY] [-H FILE] [-c] [-r SECONDS, default 1]
+ssh-fancy-smi-watch () {
+  local interval=1
+  local args=()
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -r) interval=$2; shift 2 ;;
+      *) args+=("$1"); shift ;;
+    esac
+  done
+  _ssh_commonrc -x "fancy-smi -r $interval" "${args[@]}"
 }
 
 update_shell
