@@ -42,10 +42,17 @@ run() {
     transcript="$home/.claude/projects/$(mangle "$start")/fake-session.jsonl"
   fi
   n=$((n + 1))
+  err=$(mktemp)
   out=$(printf '{"cwd":"%s","transcript_path":"%s","session_id":"fake-session","scratchpad_dir":"%s","permission_mode":"%s","tool_name":"%s","tool_input":%s}' \
-        "$c" "$transcript" "$scratch" "$m" "$tool" "$input" | sh "$here/guard.sh" 2>/dev/null)
+        "$c" "$transcript" "$scratch" "$m" "$tool" "$input" | sh "$here/guard.sh" 2>"$err")
+  rc=$?
   got=$(printf '%s' "$out" | sed -n 's/.*"permissionDecision": *"\([a-z]*\)".*/\1/p')
   [ -z "$got" ] && got=none
+  if [ "$rc" -ne 0 ]; then
+    got="exit$rc"   # wrapper denied: crash, bad JSON input, or timeout. Never reported as none.
+    sed 's/^/     | /' "$err"
+  fi
+  rm -f "$err"
   if [ "$got" = "$expected" ]; then
     printf 'ok   %2d %-5s %-12s %-5s %s\n' "$n" "$expected" "$m" "$tool" "$input"
   else

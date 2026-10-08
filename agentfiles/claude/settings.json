@@ -56,7 +56,37 @@
       "Bash(.pypirc)"
     ],
     "ask": [
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(perl *)",
+      "Bash(python *)",
+      "Bash(python2 *)",
+      "Bash(python3 *)",
+      "Bash(pip *)",
+      "Bash(pip3 *)",
+      "Bash(uv *)",
+      "Bash(conda *)",
+      "Bash(pytest *)",
+      "Bash(ruby *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(sh *)",
+      "Bash(bash *)",
+      "Bash(zsh *)",
+      "Bash(make *)",
+      "Bash(cmake *)",
+      "Bash(ninja *)",
+      "Bash(ctest *)",
+      "Bash(lit *)",
+      "Bash(gcc *)",
+      "Bash(g++ *)",
+      "Bash(cc *)",
+      "Bash(c++ *)",
+      "Bash(clang *)",
+      "Bash(clang++ *)",
+      "Bash(nvcc *)",
+      "Bash(cargo *)",
+      "Bash(go *)"
     ],
     "defaultMode": "default",
     "additionalDirectories": [
@@ -76,10 +106,23 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh ~/.claude/hooks/reload.sh",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
-    "clangd-lsp@claude-plugins-official": true
+    "clangd-lsp@claude-plugins-official": true,
+    "cc-plugin-diff@builtin": false
   },
   "feedbackSurveyRate": 0,
   "alwaysThinkingEnabled": true,
