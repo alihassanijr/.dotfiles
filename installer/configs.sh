@@ -46,7 +46,7 @@ link_bashrc() {
   SOURCEBASHRC="[ -f $HOME/.bashrc2 ] && source $HOME/.bashrc2"
   # Check if it's already appended
   if grep -Fxq "$SOURCEBASHRC" $HOMEDIR/.bashrc; then
-      echo "Perfect! Looks like you already installed once. Skipping appending bashrc to ~/.bashrc because it's already there!"
+      dim "Perfect! Looks like you already installed once. Skipping appending bashrc to ~/.bashrc because it's already there!"
   else
       echo "Appending bashrc to ~/.bashrc"
       echo $SOURCEBASHRC >> $HOMEDIR/.bashrc
@@ -113,7 +113,7 @@ claude_disable_copy_on_select() {
     return 0
   fi
   if grep -q '"copyOnSelect": *false' "$CFG"; then
-    echo "copyOnSelect already false in $CFG, skipping..."
+    dim "copyOnSelect already false in $CFG, skipping..."
     return 0
   fi
   if grep -q '"copyOnSelect": *true' "$CFG"; then
@@ -136,7 +136,45 @@ claude_disable_copy_on_select() {
   if grep -q '"copyOnSelect": false' "$CFG"; then
     echo "Added copyOnSelect=false to $CFG"
   else
-    echo "WARNING: could not add copyOnSelect to $CFG (unexpected format); set it manually."
+    warn "WARNING: could not add copyOnSelect to $CFG (unexpected format); set it manually."
+  fi
+}
+
+# Claude's own installer drops a binary in ~/.local/bin and versions in
+# ~/.local/share/claude. We install claude under $LOCALDIR ourselves, so
+# offer to remove those, and leave a file at ~/.local/share/claude so the
+# directory can't be recreated.
+claude_clean_home_pollution() {
+  local BIN=$HOMEDIR/.local/bin/claude
+  local SHARE=$HOMEDIR/.local/share/claude
+  local MARKER="# Placeholder by dotfiles installer (installer/configs.sh): blocks claude from recreating this directory."
+  if [[ ! -e $BIN && ! -d $SHARE ]]; then
+    if [[ -f $SHARE ]] && grep -Fxq "$MARKER" "$SHARE"; then
+      dim "$SHARE already blocked by us, skipping..."
+    fi
+    return 0
+  fi
+
+  echo "Cleaning up claude's own install, to prevent home directory pollution due to mindless vibe-coding gone wrong."
+
+  if [[ -e $BIN ]]; then
+    read -p "Remove $BIN? [y/n]: " -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      rm -f "$BIN"
+    fi
+  fi
+
+  if [[ -d $SHARE ]]; then
+    read -p "Remove $SHARE? [y/n]: " -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      rm -rf "$SHARE"
+      echo "$MARKER" > "$SHARE"
+      chmod 600 "$SHARE"
+    else
+      warn "WARNING: without this, claude will pollute $SHARE with all previous builds."
+    fi
   fi
 }
 
@@ -156,6 +194,7 @@ link_agentfiles() {
     mkdir -p $HOME/.claude/skills
     link_directory "$THISDIR/agentfiles/claude/skills/caveman" "$HOMEDIR/.claude/skills/caveman"
     claude_disable_copy_on_select
+    claude_clean_home_pollution
   fi
 
   if program_exists "codex"; then

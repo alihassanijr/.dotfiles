@@ -1,4 +1,4 @@
-.PHONY=install test-claude-hooks
+.PHONY=install check test-claude-hooks
 
 WORKERS ?=
 BUILD_ONLY ?= 0
@@ -12,6 +12,10 @@ install:
 		BUILD_ONLY=$(BUILD_ONLY) \
 		PROGRAMS_PATH=$(PROGRAMS_PATH) \
 		IS_PERSONAL=$(IS_PERSONAL) ./install.sh
+
+# Syntax-check every *.sh in the repo (bash/sh/zsh -n, picked from the shebang).
+check:
+	./installer/check.sh
 
 # Claude Code PreToolUse guard: decision tests, then per-call timing.
 test-claude-hooks:

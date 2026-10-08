@@ -6,7 +6,7 @@
 assert_dotfiles_in_home() {
   if [[ ! -d $THISDIR ]]
   then
-      echo "Please place .dotfiles in $HOME"
+      err "Please place .dotfiles in $HOME"
       exit 1
   fi
 }
@@ -20,6 +20,13 @@ program_path() {
 program_exists() {
   # Return success if the given program is on PATH.
   program_path "$1" >/dev/null 2>&1
+}
+
+ask_yn() {
+  # Prompt "<question> [y/n]: " (bold cyan question, green y, red n) and read
+  # the answer into REPLY.
+  read -p "${_C_BOLD}${_C_CYAN}$1${_C_RESET} [${_C_GREEN}y${_C_RESET}/${_C_RED}n${_C_RESET}]: " -r
+  echo ""
 }
 
 fetch_package() {
@@ -36,9 +43,9 @@ fetch_package() {
     else
       curl -fL --retry 3 --connect-timeout 30 -o "$OUTFILE" "$DLURL" && return 0
     fi
-    echo "Mirror failed, trying next: $DLURL"
+    warn "Mirror failed, trying next: $DLURL"
   done
-  echo "ERROR: all mirrors failed for $OUTFILE"
+  err "ERROR: all mirrors failed for $OUTFILE"
   return 1
 }
 
@@ -54,13 +61,42 @@ build_tmpdir() {
   fi
 }
 
+remove_brew_from_path() {
+  # Drop every PATH entry that mentions brew. Shows the current PATH with the
+  # doomed entries in red, then the resulting PATH, and waits for ENTER before
+  # exporting it.
+  local ENTRIES ENTRY SHOWN="" KEPT=""
+  IFS=: read -ra ENTRIES <<< "$PATH"
+  for ENTRY in "${ENTRIES[@]}"; do
+    if [[ $ENTRY == *brew* ]]; then
+      SHOWN="$SHOWN${SHOWN:+:}${_C_RED}${ENTRY}${_C_RESET}"
+    else
+      SHOWN="$SHOWN${SHOWN:+:}${ENTRY}"
+      KEPT="$KEPT${KEPT:+:}${ENTRY}"
+    fi
+  done
+  if [[ -z $KEPT ]]; then
+    err "ERROR: every PATH entry mentions brew; nothing would be left."
+    exit 1
+  fi
+  echo "Current PATH (entries in red will be removed):"
+  echo "  $SHOWN"
+  echo ""
+  echo "New PATH:"
+  echo "  $KEPT"
+  echo ""
+  echo "Press ENTER to confirm"
+  read
+  export PATH=$KEPT
+}
+
 check_soft_dependency() {
   local DEP_NAME=$1         # dependency name
 
   if program_exists "$DEP_NAME"; then
-    echo "$DEP_NAME is installed at $(program_path "$DEP_NAME")"
+    ok "$DEP_NAME is installed at $(program_path "$DEP_NAME")"
   else
-      echo "$DEP_NAME was not found on this system. It's a soft dependency."
+      warn "$DEP_NAME was not found on this system. It's a soft dependency."
   fi
 }
 
@@ -68,10 +104,10 @@ check_hard_dependency() {
   local DEP_NAME=$1         # dependency name
 
   if program_exists "$DEP_NAME"; then
-    echo "$DEP_NAME is installed at $(program_path "$DEP_NAME")"
+    ok "$DEP_NAME is installed at $(program_path "$DEP_NAME")"
   else
-      echo "$DEP_NAME was not found on this system, and it is a hard dependency. "
-      echo "Please install it before proceeding."
+      err "$DEP_NAME was not found on this system, and it is a hard dependency. "
+      err "Please install it before proceeding."
       exit 1
   fi
 }
@@ -81,26 +117,26 @@ check_and_install_hard_dependency() {
   local INSTALL_FUNCTION=$2 # if it doesn't exist, prompt install and call this function if responded yes
 
   if program_exists "$DEP_NAME"; then
-    echo "$DEP_NAME is installed at $(program_path "$DEP_NAME")"
+    ok "$DEP_NAME is installed at $(program_path "$DEP_NAME")"
   else
       echo "Local $DEP_NAME was not found. It is recommended that you install locally."
       echo "Note: this does not require sudo; just build tools."
       if [[ "$BUILD_ONLY" -eq 1 ]]; then
         REPLY="y"
       else
-        read -p "Install $DEP_NAME? [y/n]: " -r
-        echo ""
+        ask_yn "Install $DEP_NAME?"
       fi
       if [[ $REPLY =~ ^[Yy]$ ]]
       then
           echo "Installing $DEP_NAME"
           $INSTALL_FUNCTION || {
-            echo "$DEP_NAME install failed"
+            err "$DEP_NAME install failed"
             if [[ "$BUILD_ONLY" -eq 1 ]]; then
               exit 1
             fi
             return 1
           }
+          ok "$DEP_NAME installed"
       fi
   fi
 }
@@ -111,26 +147,26 @@ check_and_install_dependency() {
   local INSTALL_FUNCTION=$3 # if it doesn't exist, prompt install and call this function if responded yes
 
   if [[ -f $LOCAL_PATH ]]; then
-      echo "$DEP_NAME was found locally; skipping..."
+      ok "$DEP_NAME was found locally; skipping..."
   else
       echo "Local $DEP_NAME was not found. It is recommended that you install locally."
       echo "Note: this does not require sudo; just build tools."
       if [[ "$BUILD_ONLY" -eq 1 ]]; then
         REPLY="y"
       else
-        read -p "Install $DEP_NAME? [y/n]: " -r
-        echo ""
+        ask_yn "Install $DEP_NAME?"
       fi
       if [[ $REPLY =~ ^[Yy]$ ]]
       then
           echo "Installing $DEP_NAME"
           $INSTALL_FUNCTION || {
-            echo "$DEP_NAME install failed"
+            err "$DEP_NAME install failed"
             if [[ "$BUILD_ONLY" -eq 1 ]]; then
               exit 1
             fi
             return 1
           }
+          ok "$DEP_NAME installed"
       fi
   fi
 }
@@ -146,7 +182,7 @@ configure_dependency() {
   local DEP_NAME=$1               # dependency name
   local CONFIGURATION_FUNCTION=$2 # function to call
   if [[ "$BUILD_ONLY" -eq 1 ]]; then
-    echo "BUILD_ONLY set; skipping configuration of $DEP_NAME"
+    dim "BUILD_ONLY set; skipping configuration of $DEP_NAME"
     return 0
   fi
   echo "Configuring $DEP_NAME..."
@@ -159,7 +195,7 @@ configure_dependency() {
 # its destination (usually somewhere under $HOME). Common edge cases:
 #   - DST is already a symlink to SRC -> skip (idempotent re-runs)
 #   - DST exists (real file/dir, or a symlink to something else) -> ask before
-#     removing it; bail out with failure if the user refuses
+#     removing it
 #   - DST does not exist -> just create the symlink
 # _link_path does the work; link_file / link_directory wrap it and sanity-check
 # that SRC is the kind of thing the caller expects.
@@ -174,7 +210,7 @@ _link_path() {
     local CURRENT_TARGET
     CURRENT_TARGET="$(readlink "$DST")"
     if [[ "$CURRENT_TARGET" == "$SRC" ]]; then
-      echo "$DST is already pointing to $SRC, skipping..."
+      dim "$DST is already pointing to $SRC, skipping..."
       return 0
     fi
   fi
@@ -190,8 +226,7 @@ _link_path() {
       echo ""
     fi
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-      echo "ERROR: refused to remove $DST; cannot link $SRC."
-      exit 1
+      warn "WARNING: refused to remove $DST; cannot link $SRC."
     fi
     rm -rf "$DST"
   fi
@@ -204,7 +239,7 @@ link_file() {
   local SRC=$1 # source file (inside the dotfiles)
   local DST=$2 # destination to create the symlink at
   if [[ ! -f $SRC ]]; then
-    echo "ERROR: source file $SRC does not exist; cannot link to $DST."
+    err "ERROR: source file $SRC does not exist; cannot link to $DST."
     exit 1
   fi
   _link_path "file" "$SRC" "$DST"
@@ -214,7 +249,7 @@ link_directory() {
   local SRC=$1 # source directory (inside the dotfiles)
   local DST=$2 # destination to create the symlink at
   if [[ ! -d $SRC ]]; then
-    echo "ERROR: source directory $SRC does not exist; cannot link to $DST."
+    err "ERROR: source directory $SRC does not exist; cannot link to $DST."
     exit 1
   fi
   _link_path "directory" "$SRC" "$DST"

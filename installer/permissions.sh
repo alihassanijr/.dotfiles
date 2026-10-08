@@ -9,12 +9,12 @@ make_user_only_dir() {
   # symlinks, so linked dirs (e.g. ~/.vim -> $THISDIR/vim) get their target fixed.
   local DIR=$1
   if [[ -d $DIR ]]; then
-    echo "Setting user-only permissions (700) on $DIR"
+    note "Setting user-only permissions (700) on $DIR"
     chmod 700 "$DIR"
   elif [[ -L $DIR ]]; then
-    echo "WARNING: $DIR is a dangling symlink (-> $(readlink "$DIR")); skipping."
+    warn "WARNING: $DIR is a dangling symlink (-> $(readlink "$DIR")); skipping."
   else
-    echo "$DIR does not exist; skipping."
+    dim "$DIR does not exist; skipping."
   fi
 }
 
@@ -22,12 +22,12 @@ make_user_only_file() {
   # chmod 600 the given file if it exists. Same symlink behavior as above.
   local FILE=$1
   if [[ -f $FILE ]]; then
-    echo "Setting user-only permissions (600) on $FILE"
+    note "Setting user-only permissions (600) on $FILE"
     chmod 600 "$FILE"
   elif [[ -L $FILE ]]; then
-    echo "WARNING: $FILE is a dangling symlink (-> $(readlink "$FILE")); skipping."
+    warn "WARNING: $FILE is a dangling symlink (-> $(readlink "$FILE")); skipping."
   else
-    echo "$FILE does not exist; skipping."
+    dim "$FILE does not exist; skipping."
   fi
 }
 
