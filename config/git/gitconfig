@@ -1,0 +1,56 @@
+[core]
+	pager = diff-so-fancy | less --tabs=4 -RFX
+	# global ignore, linked by installer from config/git/gitignore
+	excludesfile = ~/.gitignore
+[interactive]
+	diffFilter = diff-so-fancy --patch
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	func = 146 bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Ali Hassani
+  # email intentionally excluded, varies based on remote target
+[init]
+	defaultBranch = main
+[rebase]
+  # print author name + date/time next to commit message in rebase view
+	instructionFormat = %s (%an, %ar)
+[log]
+	# ISO-ish, in my timezone instead of the author's
+	date = iso-local
+[alias]
+	# git log with local human-style date + relative, author name (no email), colors,
+	# body indented like git log. Pager/body wrapping unchanged.
+	lg = log --date=human-local --format='%C(yellow)commit %H%C(auto)%d%C(reset)%n%C(green)Author: %an%C(reset)%n%C(cyan)Date:   %ad %C(dim)(%ar)%C(reset)%n%n%w(0,4,4)%B'
+	# flat lg: one line per commit. Same date; columns padded so they line up.
+	lgl = log --date=human-local --format='%C(yellow)%h%C(reset) %C(cyan)%<(16)%ad%C(reset) %C(dim)%<(16)%ar%C(reset) %C(green)%<(16,trunc)%an%C(reset)%C(auto)%d%C(reset) %s'
+	# -nm: same, minus merge commits (megarepos).
+	lg-nm = log --no-merges --date=human-local --format='%C(yellow)commit %H%C(auto)%d%C(reset)%n%C(green)Author: %an%C(reset)%n%C(cyan)Date:   %ad %C(dim)(%ar)%C(reset)%n%n%w(0,4,4)%B'
+	lgl-nm = log --no-merges --date=human-local --format='%C(yellow)%h%C(reset) %C(cyan)%<(16)%ad%C(reset) %C(dim)%<(16)%ar%C(reset) %C(green)%<(16,trunc)%an%C(reset)%C(auto)%d%C(reset) %s'
+
+[include]
+	path = ~/.gitconfig-local
+
+[includeIf "hasconfig:remote.*.url:https://github.com/**"]
+	path = ~/.gitconfig-github
+[includeIf "hasconfig:remote.*.url:git@github.com:*/**"]
+	path = ~/.gitconfig-github
+[includeIf "hasconfig:remote.*.url:ssh://git@github.com/**"]
+	path = ~/.gitconfig-github

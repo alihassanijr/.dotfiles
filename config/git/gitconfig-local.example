@@ -1,0 +1,6 @@
+# gitconfig-local.example
+# Machine-specific git settings.
+
+[user]
+	# default email on this machine; override per repo with `git config user.email`
+	email = you@example.com

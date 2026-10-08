@@ -1,39 +1,9 @@
-commonrc-extra
-commonrc-local
-config/git/gitconfig-local
-
-vim/pack-large
+# Global gitignore: editor / OS / tool junk that should never land in any repo.
+# Linked to ~/.gitignore by the installer; gitconfig sets core.excludesfile to it.
+# Project-specific patterns (build dirs, language caches) belong in each repo.
 
 ###########################################################################
-# BEGIN ignore patterns for:
-#                                   cmake
-#
-###########################################################################
-
-CMakeLists.txt.user
-CMakeCache.txt
-CMakeFiles
-CMakeScripts
-Testing
-#Makefile
-cmake_install.cmake
-install_manifest.txt
-compile_commands.json
-CTestTestfile.cmake
-_deps
-CMakeUserPresets.json
-
-###########################################################################
-# END ignore patterns for:
-#                                   cmake
-#
-###########################################################################
-
-
-###########################################################################
-# BEGIN ignore patterns for:
-#                                    vim
-#
+# vim
 ###########################################################################
 
 # Swap
@@ -58,16 +28,7 @@ tags
 [._]*.un~
 
 ###########################################################################
-# END ignore patterns for:
-#                                    vim
-#
-###########################################################################
-
-
-###########################################################################
-# BEGIN ignore patterns for:
-#                                   macOS
-#
+# macOS
 ###########################################################################
 
 # General
@@ -96,21 +57,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-
 ###########################################################################
-# END ignore patterns for:
-#                                   macOS
-#
+# Linux
 ###########################################################################
-
-
-###########################################################################
-# BEGIN ignore patterns for:
-#                                   Linux
-#
-###########################################################################
-
-*~
 
 # temporary files which can be created if a process still has a handle open of a deleted file
 .fuse_hidden*
@@ -128,7 +77,8 @@ Temporary Items
 nohup.out
 
 ###########################################################################
-# END ignore patterns for:
-#                                   Linux
-#
+# Coding agents
 ###########################################################################
+
+# Claude Code per-machine project settings (permissions granted locally)
+.claude/settings.local.json

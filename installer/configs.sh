@@ -77,7 +77,11 @@ link_lscolors() {
 }
 
 link_git_config() {
-  link_to_home "Git config" "gitconfig" ".gitconfig"
+  link_to_home "Git config" "config/git/gitconfig" ".gitconfig"
+  # Machine-specific
+  link_to_home "Git config local" "config/git/gitconfig-local" ".gitconfig-local"
+  # Global ignore file
+  link_to_home "Git ignore" "config/git/gitignore" ".gitignore"
 }
 
 link_fzf() {
