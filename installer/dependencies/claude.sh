@@ -4,7 +4,7 @@
 # which only copies that binary into ~/.local/bin. We skip that and drop the
 # pinned binary straight into $LOCALDIR/bin ourselves, so it honors PROGRAMS_PATH.
 
-CLAUDE_VERSION="2.1.282"
+CLAUDE_VERSION="2.1.295"
 
 install_claude() {
     echo "Downloading Claude Code $CLAUDE_VERSION"
