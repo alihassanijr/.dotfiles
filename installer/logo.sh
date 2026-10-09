@@ -4,10 +4,12 @@
 # NOTE: this should be sourced from ./dotfiles/, after installer/colors.sh
 
 
-# Stars and stripes. "ALI'S" over "DOTFILES" in figlet's ANSI Shadow font,
-# solid blocks in OG blue and the box-drawing shadow in OG red, on a white
-# panel so the palette reads the same on any terminal theme. A canton of star
-# emoji (offset 6/5 rows) sits left of ALI'S; thin blue/white stripes frame the
+# Stars and stripes. "ALI'S" (figlet ANSI Regular, 5 rows, solid) over
+# "DOTFILES" (figlet ANSI Shadow), solid blocks in OG blue and the box-drawing
+# shadow in OG red, on a white panel so the palette reads the same on any
+# terminal theme. A canton of star emoji (7 rows alternating 6/5, starting and
+# ending with 6, like the flag) sits left of ALI'S, which is centered on it
+# with a star-only row above and below; thin blue/white stripes frame the
 # panel: upper half blocks on top, lower half blocks at the bottom, so both
 # edges end on blue and the stripes mirror each other.
 #
@@ -16,12 +18,13 @@
 # literals because printf padding counts bytes, not columns. Each star emoji
 # is 2 columns wide.
 _LOGO_ROWS=(
-  " ⭐  ⭐  ⭐  ⭐  ⭐  ⭐         █████╗ ██╗     ██╗██╗███████╗"
-  "   ⭐  ⭐  ⭐  ⭐  ⭐          ██╔══██╗██║     ██║╚═╝██╔════╝"
-  " ⭐  ⭐  ⭐  ⭐  ⭐  ⭐        ███████║██║     ██║   ███████╗"
-  "   ⭐  ⭐  ⭐  ⭐  ⭐          ██╔══██║██║     ██║   ╚════██║"
-  " ⭐  ⭐  ⭐  ⭐  ⭐  ⭐        ██║  ██║███████╗██║   ███████║"
-  "   ⭐  ⭐  ⭐  ⭐  ⭐          ╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝"
+  " ⭐  ⭐  ⭐  ⭐  ⭐  ⭐                                      "
+  "   ⭐  ⭐  ⭐  ⭐  ⭐            █████  ██      ██ ██ ███████"
+  " ⭐  ⭐  ⭐  ⭐  ⭐  ⭐         ██   ██ ██      ██    ██     "
+  "   ⭐  ⭐  ⭐  ⭐  ⭐           ███████ ██      ██    ███████"
+  " ⭐  ⭐  ⭐  ⭐  ⭐  ⭐         ██   ██ ██      ██         ██"
+  "   ⭐  ⭐  ⭐  ⭐  ⭐           ██   ██ ███████ ██    ███████"
+  " ⭐  ⭐  ⭐  ⭐  ⭐  ⭐                                      "
   "                                                             "
   "██████╗  ██████╗ ████████╗███████╗██╗██╗     ███████╗███████╗"
   "██╔══██╗██╔═══██╗╚══██╔══╝██╔════╝██║██║     ██╔════╝██╔════╝"
