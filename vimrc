@@ -191,11 +191,45 @@ map <leader>ge :Limelight!!<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""
 " Context: sticky scroll
 """""""""""""""""""""""""""""""""""""""""""""""""
+" Optional plugin (because boy it runs slow on limited hw) loaded on first toggle; autocmds added/removed by toggle
 let g:context_enabled = 0
 let g:context_max_per_indent = 8
 let g:context_max_join_parts = 8
+let g:context_add_autocmds = 0
+let g:context_add_mappings = 0
 
-map <leader>ct :ContextToggle<cr>
+let s:ContextOn = 0
+function! s:ToggleContext() range abort
+  if !s:ContextOn
+    if !exists(':ContextActivate')
+      packadd context.vim
+    endif
+    augroup MyContext
+      autocmd!
+      autocmd BufAdd * call context#update('BufAdd')
+      autocmd BufEnter * call context#update('BufEnter')
+      autocmd CursorMoved * call context#update('CursorMoved')
+      autocmd VimResized * call context#update('VimResized')
+      autocmd CursorHold * call context#update('CursorHold')
+      autocmd User GitGutter call context#update('GitGutter')
+      autocmd OptionSet number,relativenumber,numberwidth,signcolumn,tabstop,list
+            \ call context#update('OptionSet')
+      if exists('##WinScrolled')
+        autocmd WinScrolled * call context#update('WinScrolled')
+      endif
+    augroup END
+    ContextActivate
+    ContextEnable
+  else
+    ContextDisable
+    augroup MyContext
+      autocmd!
+    augroup END
+  endif
+  let s:ContextOn = !s:ContextOn
+endfunction
+
+map <leader>ct :call <SID>ToggleContext()<cr>
 
 " AI-generated solution for fixing dumbness when access specifiers don't indent
 function! ContextCppIndent(lnum) abort
@@ -345,3 +379,13 @@ augroup END
 augroup filetype
  au! BufRead,BufNewFile *.rst     set filetype=rest
 augroup END
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+""" Machine-specific settings
+"""""""""""""""""""""""""""""""""""""""""""""""""
+
+let s:ExtraVimrc = expand('~/.vimrc-local')
+if filereadable(s:ExtraVimrc)
+  execute 'source' fnameescape(s:ExtraVimrc)
+endif
+
