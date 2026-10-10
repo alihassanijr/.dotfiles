@@ -1,0 +1,2 @@
+" Make vimrc-local, and 'make' will link it for you to ~/.vimrc-local like it does vimrc to ~/.vimrc
+" vimrc itself tries to source ~/.vimrc-local if it exists

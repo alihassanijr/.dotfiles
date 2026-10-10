@@ -264,6 +264,8 @@ link_to_home() {
   if [[ -f $SRC_PATH ]]; then
     echo "Linking $RC_NAME."
     link_file "$SRC_PATH" "$DST_PATH"
+  else
+    dim "Skipping: $SRC_PATH does not exist"
   fi
 }
 

@@ -202,6 +202,7 @@ configure_vim() {
     echo "Linking vim files..."
     link_directory "$THISDIR/vim" "$HOMEDIR/.vim"
     link_file "$THISDIR/vimrc" "$HOMEDIR/.vimrc"
+    link_to_home "Vimrc Local" "vimrc-local" ".vimrc-local"
 
     # Separate directory to hold persistent undo history
     mkdir -p $HOMEDIR/.vimfiles/undodir

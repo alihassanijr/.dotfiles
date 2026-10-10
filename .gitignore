@@ -1,6 +1,7 @@
 commonrc-extra
 commonrc-local
 config/git/gitconfig-local
+vimrc-local
 
 vim/pack-large
 
