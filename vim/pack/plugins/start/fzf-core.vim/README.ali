@@ -1,0 +1,4 @@
+This is `plugin/fzf.vim` from FZF itself.
+We need it loaded for the ripgrep / fzf in vim plugin to work.
+And we don't wanna put fzf in $HOME because we be smarty-pants and
+build per arch under ~/.programs.

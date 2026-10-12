@@ -46,7 +46,6 @@ fix_permissions() {
   make_user_only_dir "$HOMEDIR/.vim"
   make_user_only_dir "$HOMEDIR/.vimfiles"
   make_user_only_dir "$HOMEDIR/.vifm"
-  make_user_only_dir "$HOMEDIR/.fzf"
   make_user_only_dir "$HOMEDIR/.config"
 
   # Coding agents: configs, memory, project/session history

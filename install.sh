@@ -137,7 +137,6 @@ if [[ "$BUILD_ONLY" -ne 1 ]]; then
   link_commonrc
   link_bashrc
   link_git_config
-  link_fzf
   link_agentfiles
 
   # Fix permissions
