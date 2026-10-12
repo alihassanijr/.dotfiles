@@ -61,6 +61,32 @@ action = "ToggleViMode"
 key = "Escape"
 mods = "Control"
 
+# Fuck you, Claude!
+[[keyboard.bindings]]
+action = "None"
+key = "U"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "None"
+key = "M"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "None"
+key = "H"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "None"
+key = "["
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "None"
+key = "P"
+mods = "Control"
+
 [mouse]
 hide_when_typing = false
 

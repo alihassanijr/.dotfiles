@@ -5,6 +5,13 @@
     {
       "context": "Chat",
       "bindings": {
+        "ctrl+w": null,
+        "ctrl+u": null,
+        "ctrl+k": null,
+        "ctrl+m": null,
+        "ctrl+a": null,
+        "ctrl+c": null,
+        "ctrl+p": null,
         "ctrl+s": null,
         "ctrl+x": null
       }
