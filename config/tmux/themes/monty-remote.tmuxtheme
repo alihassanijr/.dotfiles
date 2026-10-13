@@ -26,6 +26,7 @@ set -goq @color-white      colour15
 set -goq @color-green      '#7ce38b'
 set -goq @color-darkgreen  '#1e4839'
 set -goq @color-orange     '#faa356'
+set -goq @color-orange-claude '#d97757'   # Claude logo orange (Anthropic primary accent)
 set -goq @color-darkblue   '#161b22'
 set -goq @color-blue       '#77bdfb'
 set -goq @color-lightblue  '#a2d2fb'
@@ -76,7 +77,20 @@ set -goqF @theme-message-command-fg "#{@color-white}"
 set -goqF @theme-mode-bg "#{@color-blue}"
 set -goqF @theme-mode-fg "#{@color-black}"
 set -goq  @theme-pane-active-border-bg default
-set -goqF @theme-pane-active-border-fg "#{@color-og-blue-light}"
+#set -goqF @theme-pane-active-border-fg "#{@color-og-blue-light}"
+
+# active pane's command (literal; -F below pastes it in verbatim)
+set -goq  @theme-active-cmd "#{P:,#{pane_current_command}}"
+
+# active border style by command. Rebuilt on every source.
+# Each line wraps previous as fallthrough => LAST line has highest priority.
+# Rule shape: glob, style-if-match, else. Separate style attrs with spaces,
+# not commas: commas split the #{?,,} conditional.
+set -gqF  @theme-abs "fg=#{@color-og-blue-light} bg=#{@theme-pane-active-border-bg}"
+set -gqF  @theme-abs "##{?##{m:*claude*,#{@theme-active-cmd}},fg=#{@color-orange-claude},#{@theme-abs}}"
+set -gqF  @theme-abs "##{?##{m:*vim*,#{@theme-active-cmd}},fg=#{@color-green},#{@theme-abs}}"
+set -goqF @theme-pane-active-border-style "#{@theme-abs}"
+
 set -goq  @theme-pane-border-bg default
 set -goqF @theme-pane-border-fg "#{@color-white}"
 set -goqF @theme-status-bg "#{@powerline-status-bg}"
@@ -132,7 +146,7 @@ set -gF  status-style "fg=#{@theme-status-fg},bg=#{@theme-status-bg}"
 set -gwF clock-mode-colour "#{@theme-clock-mode-colour}"
 set -gwF clock-mode-style "#{@theme-clock-mode-style}"
 set -gwF mode-style "fg=#{@theme-mode-fg},bg=#{@theme-mode-bg}"
-set -gwF pane-active-border-style "fg=#{@theme-pane-active-border-fg},bg=#{@theme-pane-active-border-bg}"
+set -gwF pane-active-border-style "#{@theme-pane-active-border-style}"
 set -gwF pane-border-style "fg=#{@theme-pane-border-fg},bg=#{@theme-pane-border-bg}"
 set -gwF window-status-activity-style "fg=#{@theme-window-status-activity-fg},bg=#{@theme-window-status-activity-bg}"
 set -gwF window-status-current-format "#{@theme-window-status-current-format}"
