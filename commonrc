@@ -213,6 +213,7 @@ claude() {
     --permission-mode manual \
     --model "opus[1m]" \
     --effort high \
+    --autocompact 1m \
     --append-system-prompt "use caveman skill, ALWAYS READ MEMORY.md" \
     "$@"
 }
@@ -221,6 +222,7 @@ claudef() {
     --permission-mode manual \
     --model "fable" \
     --effort xhigh \
+    --autocompact 1m \
     --append-system-prompt "use caveman skill, ALWAYS READ MEMORY.md" \
     "$@"
 }

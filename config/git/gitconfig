@@ -33,17 +33,35 @@
   # print author name + date/time next to commit message in rebase view
 	instructionFormat = %s (%an, %ar)
 [log]
-	# ISO-ish, in my timezone instead of the author's
-	date = iso-local
+	# fixed-width local date ("Mon Oct 13 21:10"), same as the lg aliases; not `human`,
+	# which turns into relative for same-day commits
+	date = format-local:%a %b %d %H:%M
+[pretty]
+	# named format, same as alias lg; usable as --pretty=lg
+	lg = %C(yellow)commit %H%C(auto)%d%C(reset)%n%C(green)Author: %an%C(reset)%n%C(cyan)Date:   %ad %C(dim)(%ar)%C(reset)%n%n%w(0,4,4)%B
+[format]
+	# default for `git log` and `git show`; aliases cannot shadow builtins
+	pretty = lg
+[pager]
+	# core.pager plus: highlight my own name (from user.name) bold, OG red #B31942 on
+	# white (truecolor SGR). Pretty formats have no conditionals, so this is a sed pass.
+	# Whole value is in config-level double quotes so `;` is literal rather than a
+	# comment; inside them `\\033` is `\033` and `\"` is `"` after git's unescaping.
+	# First sed expression: "Author: NAME" (full format) gets two spaces of padding inside
+	# the highlight; `t` then skips the rest. Second: bare NAME (flat lgl format) gets no
+	# padding, so git's column widths stay intact.
+	# Only when paging; `--no-pager` / piped output has no highlight.
+	log = "name=$(git config user.name); hl=$(printf '\\033[1;38;2;179;25;66;48;2;255;255;255m'); rst=$(printf '\\033[m'); sed -e \"s/Author: $name/Author: $hl  $name  $rst/\" -e t -e \"s/$name/$hl$name$rst/\" | diff-so-fancy | less --tabs=4 -RFX"
 [alias]
-	# git log with local human-style date + relative, author name (no email), colors,
+	# git log with fixed-width local date ("Mon Oct 13 21:10"; not `human`, which turns
+	# into relative for same-day commits) + relative, author name (no email), colors,
 	# body indented like git log. Pager/body wrapping unchanged.
-	lg = log --date=human-local --format='%C(yellow)commit %H%C(auto)%d%C(reset)%n%C(green)Author: %an%C(reset)%n%C(cyan)Date:   %ad %C(dim)(%ar)%C(reset)%n%n%w(0,4,4)%B'
+	lg = log --date='format-local:%a %b %d %H:%M' --format='%C(yellow)commit %H%C(auto)%d%C(reset)%n%C(green)Author: %an%C(reset)%n%C(cyan)Date:   %ad %C(dim)(%ar)%C(reset)%n%n%w(0,4,4)%B'
 	# flat lg: one line per commit. Same date; columns padded so they line up.
-	lgl = log --date=human-local --format='%C(yellow)%h%C(reset) %C(cyan)%<(16)%ad%C(reset) %C(dim)%<(16)%ar%C(reset) %C(green)%<(16,trunc)%an%C(reset)%C(auto)%d%C(reset) %s'
+	lgl = log --date='format-local:%a %b %d %H:%M' --format='%C(yellow)%h%C(reset) %C(cyan)%<(16)%ad%C(reset) %C(dim)%<(16)%ar%C(reset) %C(green)%<(16,trunc)%an%C(reset)%C(auto)%d%C(reset) %s'
 	# -nm: same, minus merge commits (megarepos).
-	lg-nm = log --no-merges --date=human-local --format='%C(yellow)commit %H%C(auto)%d%C(reset)%n%C(green)Author: %an%C(reset)%n%C(cyan)Date:   %ad %C(dim)(%ar)%C(reset)%n%n%w(0,4,4)%B'
-	lgl-nm = log --no-merges --date=human-local --format='%C(yellow)%h%C(reset) %C(cyan)%<(16)%ad%C(reset) %C(dim)%<(16)%ar%C(reset) %C(green)%<(16,trunc)%an%C(reset)%C(auto)%d%C(reset) %s'
+	lg-nm = log --no-merges --date='format-local:%a %b %d %H:%M' --format='%C(yellow)commit %H%C(auto)%d%C(reset)%n%C(green)Author: %an%C(reset)%n%C(cyan)Date:   %ad %C(dim)(%ar)%C(reset)%n%n%w(0,4,4)%B'
+	lgl-nm = log --no-merges --date='format-local:%a %b %d %H:%M' --format='%C(yellow)%h%C(reset) %C(cyan)%<(16)%ad%C(reset) %C(dim)%<(16)%ar%C(reset) %C(green)%<(16,trunc)%an%C(reset)%C(auto)%d%C(reset) %s'
 
 [include]
 	path = ~/.gitconfig-local
