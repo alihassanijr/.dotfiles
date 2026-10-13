@@ -104,11 +104,6 @@ action = "None"
 key = "["
 mods = "Control"
 
-[[keyboard.bindings]]
-action = "None"
-key = "P"
-mods = "Control"
-
 [mouse]
 hide_when_typing = false
 
