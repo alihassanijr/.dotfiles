@@ -42,7 +42,7 @@ configure_diff_so_fancy() {
     # Have git use diff-so-fancy instead of diff
     # Already applied to our local rcfiles/git/gitconfig, which is symlinked to ~/.gitconfig
     # Kept here for reference.
-
+    :
     #git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
     #git config --global interactive.diffFilter "diff-so-fancy --patch"
     #git config --global color.ui true
