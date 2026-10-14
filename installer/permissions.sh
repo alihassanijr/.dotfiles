@@ -6,7 +6,7 @@
 
 make_user_only_dir() {
   # chmod 700 the given directory if it exists. Both the test and chmod follow
-  # symlinks, so linked dirs (e.g. ~/.vim -> $THISDIR/vim) get their target fixed.
+  # symlinks, so linked dirs (e.g. ~/.vim -> $THISDIR/config/vim) get their target fixed.
   local DIR=$1
   if [[ -d $DIR ]]; then
     note "Setting user-only permissions (700) on $DIR"

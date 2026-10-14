@@ -169,10 +169,10 @@ configure_tmux() {
   if program_exists tmux; then
     if [[ $IS_PERSONAL -eq 1 ]]; then
       echo "Linking PERSONAL tmux config"
-      link_file "$THISDIR/tmux.personal.conf" "$HOMEDIR/.tmux.conf"
+      link_file "$THISDIR/rcfiles/tmux/tmux.personal.conf" "$HOMEDIR/.tmux.conf"
     else
       echo "Linking default (remote) tmux config"
-      link_file "$THISDIR/tmux.conf" "$HOMEDIR/.tmux.conf"
+      link_file "$THISDIR/rcfiles/tmux/tmux.conf" "$HOMEDIR/.tmux.conf"
     fi
 
     mkdir -p $HOMEDIR/.config/

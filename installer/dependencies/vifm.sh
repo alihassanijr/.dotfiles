@@ -45,14 +45,14 @@ configure_vifm() {
     # Replace the vifm files
     echo "Linking vifm files..."
     if [[ "$_OS_NAME" == "darwin" ]]; then
-        VIFMRC=$THISDIR/vifmrc.mac
+        VIFMRC=$THISDIR/rcfiles/vifm/vifmrc.mac
     else
-        VIFMRC=$THISDIR/vifmrc
+        VIFMRC=$THISDIR/rcfiles/vifm/vifmrc
     fi
     # Don't go removing my vifm
     # rm -rf $HOMEDIR/.vifm
     if ! [[ -d $HOMEDIR/.vifm ]]; then
-        # cp -r $THISDIR/vifm $HOMEDIR/.vifm
+        # cp -r $THISDIR/config/vifm $HOMEDIR/.vifm
         mkdir -p $HOMEDIR/.vifm
     fi
     link_file "$VIFMRC" "$HOMEDIR/.vifm/vifmrc"
@@ -61,10 +61,10 @@ configure_vifm() {
     for vifmfile in ${VIFMFILES[*]};do
         echo "Linking $vifmfile";
         # VIFMFILES is a mix of directories and plain files.
-        if [[ -d $THISDIR/vifm/$vifmfile ]]; then
-            link_directory "$THISDIR/vifm/$vifmfile" "$HOMEDIR/.vifm/$vifmfile"
+        if [[ -d $THISDIR/config/vifm/$vifmfile ]]; then
+            link_directory "$THISDIR/config/vifm/$vifmfile" "$HOMEDIR/.vifm/$vifmfile"
         else
-            link_file "$THISDIR/vifm/$vifmfile" "$HOMEDIR/.vifm/$vifmfile"
+            link_file "$THISDIR/config/vifm/$vifmfile" "$HOMEDIR/.vifm/$vifmfile"
         fi
     done;
 }

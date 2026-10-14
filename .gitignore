@@ -1,9 +1,9 @@
-commonrc-extra
-commonrc-local
-config/git/gitconfig-local
-vimrc-local
-
-vim/pack-large
+# Machine-local / downloaded bits (new layout: rcfiles/<program>/, config/<program>/)
+rcfiles/common/commonrc-extra
+rcfiles/common/commonrc-local
+rcfiles/git/gitconfig-local
+rcfiles/vim/vimrc-local
+config/vim/pack-large
 
 ###########################################################################
 # BEGIN ignore patterns for:

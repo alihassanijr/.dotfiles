@@ -36,6 +36,7 @@ set -goq @color-purple     '#cea5fb'
 set -goq @color-lightgrey  '#21262d'
 set -goq @color-darkgrey   '#161b22'
 set -goq @color-og-red   '#B31942'
+set -goq @color-og-red-inactive '#CFAFB8'   # greyed-out og-red, inactive borders
 set -goq @color-og-red-0 '#C03F62'
 set -goq @color-og-red-1 '#CC6681'
 set -goq @color-og-red-2 '#D98CA1'
@@ -93,7 +94,7 @@ set -gqF  @theme-abs "##{?##{m:*vim*,#{@theme-active-cmd}},fg=#{@color-abs-black
 set -goqF @theme-pane-active-border-style "#{@theme-abs}"
 
 set -goq  @theme-pane-border-bg default
-set -goqF @theme-pane-border-fg "#{@color-white}"
+set -goqF @theme-pane-border-fg "#{@color-og-red-inactive}"
 set -goqF @theme-status-bg "#{@powerline-status-bg}"
 set -goqF @theme-status-fg "#{@powerline-status-fg}"
 set -goq  @theme-status-interval 1

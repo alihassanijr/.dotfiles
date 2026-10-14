@@ -1,6 +1,6 @@
 [core]
 	pager = diff-so-fancy | less --tabs=4 -RFX
-	# global ignore, linked by installer from config/git/gitignore
+	# global ignore, linked by installer from rcfiles/git/gitignore
 	excludesfile = ~/.gitignore
 [interactive]
 	diffFilter = diff-so-fancy --patch

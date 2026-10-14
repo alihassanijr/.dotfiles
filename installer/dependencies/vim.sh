@@ -131,12 +131,12 @@ verify_sha256() {
 
 fetch_vim_pack_large_plugin() {
     # Usage: fetch_vim_pack_large_plugin <name> <url> <sha256> <tarball_topdir>
-    local NAME=$1          # target dir name under vim/pack-large
+    local NAME=$1          # target dir name under config/vim/pack-large
     local URL=$2
     local SHA256=$3
     local TAR_TOPDIR=$4    # top-level dir inside the tarball
 
-    local DEST="$THISDIR/vim/pack-large/$NAME"
+    local DEST="$THISDIR/config/vim/pack-large/$NAME"
     local STAMP="$DEST/.fetched"
 
     # Skip if we already fetched this exact version (verified by hash).
@@ -200,9 +200,9 @@ fetch_vimtex() {
 configure_vim() {
     # Replace the vim files
     echo "Linking vim files..."
-    link_directory "$THISDIR/vim" "$HOMEDIR/.vim"
-    link_file "$THISDIR/vimrc" "$HOMEDIR/.vimrc"
-    link_to_home "Vimrc Local" "vimrc-local" ".vimrc-local"
+    link_directory "$THISDIR/config/vim" "$HOMEDIR/.vim"
+    link_file "$THISDIR/rcfiles/vim/vimrc" "$HOMEDIR/.vimrc"
+    link_to_home "Vimrc Local" "rcfiles/vim/vimrc-local" ".vimrc-local"
 
     # Separate directory to hold persistent undo history
     mkdir -p $HOMEDIR/.vimfiles/undodir
