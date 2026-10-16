@@ -279,22 +279,26 @@ link_bin() {
 
 }
 
+# Ensure expected directories exist
 ensure_local_exists() {
-  # Ensure expected directories exist
-
-  # .local
+  # Dotfiles and program trees
   mkdir -p $LOCALDIR/
   mkdir -p $LOCALDIR/bin
   mkdir -p $LOCALDIR/man
   mkdir -p $LOCALDIR/share
-
-  # .ncurses
   mkdir -p $NCDIR
 
   if [[ "$BUILD_ONLY" -eq 1 ]]; then
     return 0
   fi
 
-  # .config
-  mkdir -p $HOMEDIR/.config
+  # Editors / tools configured by the installer (see dependencies/*.sh configure_* fns)
+  (umask 077 mkdir -p $HOMEDIR/.config)
+  (umask 077 mkdir -p $HOMEDIR/.vimfiles)
+
+  # Just for being safe
+  (umask 077 mkdir -p $HOMEDIR/.ssh)
+
+  # Histfile backups -- to misquote a great man: "I cannot live without [histfiles]!"
+  (umask 077 && mkdir -p "$HISTFILE_BACKUP_DIR")
 }

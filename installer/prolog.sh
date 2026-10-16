@@ -59,6 +59,9 @@ FZF_DIR=$PROGRAMS_PATH
 # .brew
 BREWDIR=$PROGRAMS_PATH/.brew
 
+# histfile backups
+HISTFILE_BACKUP_DIR=${HISTFILE_BACKUP_DIR:-$HOMEDIR/.histfiles/zsh/backups}
+
 # uv & base python venv
 # uv python install dir: .uv-python
 # base python venv: .python-base

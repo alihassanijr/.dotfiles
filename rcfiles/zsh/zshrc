@@ -29,6 +29,26 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory autocd
 
+# Daily histfile backups: $HISTFILE_BACKUP_DIR/histfile-YYYY-MM-DD, newest 14 kept.
+# If the histfile got zeroed out (empty/missing) while backups exist: warn, don't copy.
+export HISTFILE_BACKUP_DIR=${HISTFILE_BACKUP_DIR:-$HOME/.histfiles/zsh/backups}
+() {
+  local dir=$HISTFILE_BACKUP_DIR
+  [[ -d $dir ]] || (umask 077 && mkdir -p "$dir")
+  local -a backups; backups=( "$dir"/histfile-*(N.On) )   # newest first
+  if [[ ! -s $HISTFILE ]]; then
+    if (( $#backups )); then
+      print -P -u2 "%F{red}%BWARNING:%b $HISTFILE is empty or missing.%f"
+      print -P -u2 "%F{red}Restore: cp $backups[1] $HISTFILE%f"
+    fi
+    return
+  fi
+  local today=$dir/histfile-$(date +%F)
+  [[ -e $today ]] || (umask 077 && cp "$HISTFILE" "$today")
+  local -a old; old=( "$dir"/histfile-*(N.On[15,-1]) )
+  (( $#old )) && rm -f "$old[@]"
+}
+
 ###############################################################
 ###############################################################
 ###############################################################
@@ -39,6 +59,11 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 [[ -n "$key[Up]" ]] && bindkey -- "$key[Up]" up-line-or-beginning-search
 [[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
+
+# Ctrl-G: edit the current command line in $EDITOR (vim). mini-omz already
+# autoloads edit-command-line (bound to Ctrl-X Ctrl-E). Ctrl-G was send-break,
+# which only drops the line like Ctrl-C does, so nothing is lost.
+bindkey '^G' edit-command-line
 
 ###############################################################
 # Load in Common RC file
