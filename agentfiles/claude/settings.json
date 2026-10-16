@@ -129,5 +129,6 @@
   "feedbackSurveyRate": 0,
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
+  "idleCompaction": false,
   "theme": "dark"
 }
