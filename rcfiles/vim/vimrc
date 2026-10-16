@@ -125,6 +125,10 @@ nnoremap <silent> <Leader><Space> :let @/ = "/\b\B"<cr>
 " Polyglot's auto-indent breaks a lot of things for me; vim + formatting tools is enough!
 " CSV formatting is also disabled; it is ANNOYING!!!
 let g:polyglot_disabled = ["autoindent", "csv"]
+
+" Markdown overrides gitgutter key bindings
+let g:vim_markdown_no_default_key_mappings = 1
+
 "-------------------------------------------------
 
 

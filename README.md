@@ -24,6 +24,8 @@
 ```
 
 Programs I need, locked to exact versions I need, cross-platform, runnable on (almost) anything.
+I'm talking from Pis to DGXes, to salvaged old laptops to NVL72s, they haven't failed me for 5+
+years.
 
 Configs for said programs, rc files, and other helpers.
 
@@ -58,4 +60,5 @@ make WORKERS=8 install
 - Brew only (skip in BUILD_ONLY): wget, zathura.
 
 ## NOTICE
-Use at your own risk. I develop this specifically for myself.
+Use at your own risk.
+I maintain this project specifically for myself.

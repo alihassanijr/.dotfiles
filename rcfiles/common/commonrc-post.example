@@ -1,0 +1,6 @@
+# Extra untracked commonrc
+# Copy into commonrc-post, and it will be sourced by commonrc at the very end
+# NOTE: rerun make so that it gets linked to $HOME.
+
+# Useful for things that could be conditional to machine and have no dependency
+# to anything else in commonrc like PATHs

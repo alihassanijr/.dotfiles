@@ -1,0 +1,10 @@
+# Extra untracked commonrc
+# Copy into commonrc-pre, and it will be sourced by commonrc at the very beginning 
+# NOTE: rerun make so that it gets linked to $HOME.
+
+# Useful for things that could be conditional to machine and that need to run ahead, for
+# instance due to something in commonrc depending on it.
+
+# For example:
+# custom ssh-agent identity lifetime (see scripts/sagent).
+# export SSH_AGENT_TTL=....

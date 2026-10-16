@@ -1,6 +1,7 @@
 # Machine-local / downloaded bits (new layout: rcfiles/<program>/, config/<program>/)
-rcfiles/common/commonrc-extra
-rcfiles/common/commonrc-local
+rcfiles/common/commonrc-pre
+rcfiles/common/commonrc-mid
+rcfiles/common/commonrc-post
 rcfiles/git/gitconfig-local
 rcfiles/vim/vimrc-local
 config/vim/pack-large

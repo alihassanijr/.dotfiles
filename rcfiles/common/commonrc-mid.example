@@ -1,0 +1,6 @@
+# Extra untracked commonrc
+# Copy into commonrc-mid, and it will be sourced by commonrc right after PATH / env var
+# modifications, but ahead of alias definitions.
+# NOTE: rerun make so that it gets linked to $HOME.
+
+# Useful mostly for additional PATH modifications, ahead of aliases
