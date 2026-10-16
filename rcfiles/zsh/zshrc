@@ -65,6 +65,10 @@ zle -N down-line-or-beginning-search
 # which only drops the line like Ctrl-C does, so nothing is lost.
 bindkey '^G' edit-command-line
 
+# Ctrl-S: nothing (was history-incremental-search-forward). Empty string
+# binding = no-op; bindkey -r would make it beep as an undefined key.
+bindkey -s '^S' ''
+
 ###############################################################
 # Load in Common RC file
 ###############################################################
