@@ -2,7 +2,9 @@
 # Things I want in all shells (specifically bash and zsh)
 
 # Untracked commonrc: loaded ahead of main commonrc
-[ -f $HOME/.commonrc-pre ] && source $HOME/.commonrc-pre
+if [[ -f $HOME/.commonrc-pre ]]; then
+  source $HOME/.commonrc-pre
+fi
 
 export LANG=en_US.UTF-8
 
@@ -98,9 +100,13 @@ fi
 # FZF
 # already checks paths and skips if already sourced
 if [[ -n "$ZSH_VERSION" ]]; then
-  [ -f $LOCAL_HOME_PATH/.fzf.zsh ] && source $LOCAL_HOME_PATH/.fzf.zsh
+  if [[ -f $LOCAL_HOME_PATH/.fzf.zsh ]]; then
+    source $LOCAL_HOME_PATH/.fzf.zsh
+  fi
 elif [[ -n "$BASH_VERSION" ]]; then
-  [ -f $LOCAL_HOME_PATH/.fzf.bash ] && source $LOCAL_HOME_PATH/.fzf.bash
+  if [[ -f $LOCAL_HOME_PATH/.fzf.bash ]]; then
+    source $LOCAL_HOME_PATH/.fzf.bash
+  fi
 fi
 
 # uv
@@ -168,7 +174,9 @@ if [[ -f /etc/profile.d/modules.sh ]]; then
 fi
 
 # Untracked commonrc: loaded after PATH modifications, ahead of aliases
-[ -f $HOME/.commonrc-mid ] && source $HOME/.commonrc-mid
+if [[ -f $HOME/.commonrc-mid ]]; then
+  source $HOME/.commonrc-mid
+fi
 
 #####################
 # Aliases
@@ -772,4 +780,6 @@ ssh-fancy-smi-watch () {
 update_shell
 
 # Untracked commonrc: loaded after main commonrc
-[ -f $HOME/.commonrc-post ] && source $HOME/.commonrc-post
+if [[ -f $HOME/.commonrc-post ]]; then
+  source $HOME/.commonrc-post
+fi
