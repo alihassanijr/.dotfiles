@@ -46,7 +46,10 @@ pkg-config conflicts with ours.
 - `configs.sh`: `link_*` for things not tied to one program: commonrc, bashrc, inputrc, colors,
   gitconfig, agentfiles, custom scripts.
 - `check.sh`: `make check`. Runs `<shell> -n` on every `*.sh`, shell picked from the shebang.
-- `colors.sh`, `logo.sh`, `permissions.sh`: output helpers, banner, `fix_permissions`.
+- `colors.sh`, `logo.sh`: output helpers, banner.
+- `permissions.sh`: `make_private_dir` (700), `make_private_dir_private_files` (recursive 700/600),
+  `make_private_file` (600). All follow symlinks and skip missing paths. `fix_permissions` calls
+  them on the dotfiles, program trees, `~/.config`, agent dirs, `~/.ssh`, etc.
 
 Order in `install.sh` matters: git, brew, uv first; then build tools; ncurses; utilities; then
 everything else. Config linking runs last and only when `BUILD_ONLY != 1`.
@@ -77,6 +80,44 @@ Machine-local overrides, gitignored, linked only if present: `common/commonrc-pr
 4. Its rc files go in `rcfiles/<name>/`, config dirs in `config/<name>/`.
 
 ## Rules
+
+### Never run anything here; ask first
+
+Everything in this repo exists to mutate `$HOME`, `$PROGRAMS_PATH`, or a live shell. Unless the
+user says so in the current request, do not run: `install.sh` or `make` (any target), any
+`ensure_*` / `install_*` / `configure_*`, builds of any kind, the programs this repo installs
+(`tmux` above all: not even a throwaway `-L` socket), state-changing git (`add`, `commit`,
+`checkout`, `stash`, `reset`, ...), or anything else that could break the user's session. Edit
+files, then stop and report. Unsure whether something is safe: ask.
+
+### Reuse installer helpers
+
+Before writing a raw `chmod`, `ln`, `cp`, `mkdir`, or `wget`/`curl` in the installer, look for the
+helper that already does it: `make_private_dir`, `make_private_dir_private_files`,
+`make_private_file` (`permissions.sh`); `link_file`, `link_directory`, `link_to_home`, `link_bin`,
+`fetch_package`, `build_tmpdir`, `program_exists`, `ask_yn` (`utils.sh`). Fits: call it. Almost
+fits (e.g. needs a recursive chmod): propose extending the helper and wait. Never drop a one-off
+beside an existing helper; it bypasses the helper's guards and leaves two ways of doing one thing.
+
+### tmux: never invoke it
+
+The user works inside a live tmux session; any `tmux` command, including a throwaway server on a
+separate `-L` socket, can interfere with it. Check `rcfiles/tmux/*` and `config/tmux/` against the
+man page or source of the pinned build (see below), or hand the user the command to run
+themselves. Mark anything unverified as such.
+
+### Personal data: placeholder, never look it up
+
+Email, handles, keys, hostnames, account IDs belong in the gitignored machine-local files
+(`git/gitconfig-local`, `common/commonrc-{pre,mid,post}`, `vim/vimrc-local`). Never pull them from
+`git log`, env, shell history, or other files to fill a config. Write a placeholder
+(`#email = you@example.com`) and ask the user to fill it in.
+
+### Config options: check against the pinned version
+
+Each program's version is pinned in `installer/dependencies/<program>.sh`, sometimes as a fork tag
+(see `tmux.sh`). When checking whether an option, flag, or syntax is valid, read the man page or
+source at that tag, not the latest docs or the default branch.
 
 ### Conditional sourcing: explicit `if` only
 
