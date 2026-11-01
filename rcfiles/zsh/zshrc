@@ -43,8 +43,13 @@ export HISTFILE_BACKUP_DIR=${HISTFILE_BACKUP_DIR:-$HOME/.histfiles/zsh/backups}
     fi
     return
   fi
-  local today=$dir/histfile-$(date +%F)
-  [[ -e $today ]] || (umask 077 && cp "$HISTFILE" "$today")
+  # Copy to a per-process temp (dot-prefixed, so the globs above skip it), then rename:
+  # rename is atomic, so shells starting at once each land a complete file, last one wins.
+  # Stale temps from a shell that died mid-copy; older than 5 min, so a live copy is never hit.
+  rm -f "$dir"/.histfile-*.tmp(N.mm+5)
+  local today=$dir/histfile-$(date +%F) tmp=$dir/.histfile-$$.tmp
+  [[ -e $today ]] && return
+  (umask 077 && cp "$HISTFILE" "$tmp" && mv -f "$tmp" "$today" || rm -f "$tmp")
   local -a old; old=( "$dir"/histfile-*(N.On[15,-1]) )
   (( $#old )) && rm -f "$old[@]"
 }
