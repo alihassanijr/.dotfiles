@@ -12,9 +12,9 @@ link_commonrc() {
   link_to_home "Commonrc" "rcfiles/common/commonrc" ".commonrc"
 
   # Optional
-  link_to_home "Commonrc Local" "rcfiles/common/commonrc-pre" ".commonrc-pre"
-  link_to_home "Commonrc Local" "rcfiles/common/commonrc-mid" ".commonrc-mid"
-  link_to_home "Commonrc Extra" "rcfiles/common/commonrc-post" ".commonrc-post"
+  link_to_home "Commonrc pre ext" "rcfiles/common/commonrc-pre" ".commonrc-pre"
+  link_to_home "Commonrc mid ext" "rcfiles/common/commonrc-mid" ".commonrc-mid"
+  link_to_home "Commonrc post ext" "rcfiles/common/commonrc-post" ".commonrc-post"
 }
 
 # Bashrc
