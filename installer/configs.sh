@@ -160,6 +160,7 @@ link_agentfiles() {
     # skills that don't live in the dotfiles.
     mkdir -p $HOME/.claude/skills
     link_directory "$THISDIR/agentfiles/claude/skills/caveman" "$HOMEDIR/.claude/skills/caveman"
+    link_directory "$THISDIR/agentfiles/claude/skills/tmnt" "$HOMEDIR/.claude/skills/tmnt"
     claude_disable_copy_on_select
     claude_clean_home_pollution
   fi

@@ -224,7 +224,7 @@ claude() {
     --model "opus[1m]" \
     --effort high \
     --autocompact 1m \
-    --append-system-prompt "use caveman skill, ALWAYS READ MEMORY.md" \
+    --append-system-prompt "use tmnt skill, ALWAYS READ MEMORY.md" \
     "$@"
 }
 claudef() {
@@ -235,7 +235,7 @@ claudef() {
     --model "fable" \
     --effort xhigh \
     --autocompact 1m \
-    --append-system-prompt "use caveman skill, ALWAYS READ MEMORY.md" \
+    --append-system-prompt "use tmnt skill, ALWAYS READ MEMORY.md" \
     "$@"
 }
 

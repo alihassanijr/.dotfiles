@@ -123,7 +123,7 @@
     ]
   },
   "enabledPlugins": {
-    "clangd-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": false,
     "cc-plugin-diff@builtin": false
   },
   "feedbackSurveyRate": 0,

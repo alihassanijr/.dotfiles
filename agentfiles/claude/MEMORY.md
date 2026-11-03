@@ -4,6 +4,7 @@ NEVER write or edit anything here or in `memory/` without asking the user first 
 New memories go to project scope first; then ask whether to promote.
 
 # ALWAYS READ
+- [DICTIONARY](memory/DICTIONARY.md) — user's personal terms and abbreviations; expand on sight
 - [RARELY USE GENERAL KNOWLEDGE](memory/feedback-rarely-use-general-knowledge.md) — answer from fetched docs/code, not pretraining memory, unless indisputable; else say "not in sources"
 - [Environment](memory/feedback-environment-never-assume.md) — custom PATH/LD_LIBRARY_PATH, split edit/build/run machines, GNU on mac, shell usually zsh; never probe, build, run, or touch outside working dir; `python3` not venv path; ask
 - [Git](memory/feedback-never-touch-git-state.md) — no state-changing git unless user says git OK; user owns commits; "leave git to me" = no git at all; plain rm/mv
@@ -13,5 +14,5 @@ New memories go to project scope first; then ask whether to promote.
 # Context-dependent
 - [Style](memory/feedback-style.md) — no single-letter names except M, N, loop indices; constants CamelCase, ALL_CAPS only macros; column 100; never remove comments
 - [Presentation](memory/feedback-presentation.md) — label files as reference vs edit; quoted code keeps inline comments verbatim; review = report findings first, fix only after user picks; state a fix's premise before building, flag it if unverified
-- [Test rules](memory/feedback-test-rules.md) — always verbose: lit -a/-v, pytest -v, ctest -V
+- [Test rules](memory/feedback-test-rules.md) — always verbose: lit -a/-v, pytest -v, ctest -V; capture via `2>&1 | tee`, not `>`
 - [Library API at installed version](memory/feedback-library-api-at-installed-version.md) — read source at the locked/installed release tag, not default branch

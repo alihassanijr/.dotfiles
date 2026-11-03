@@ -1,5 +1,5 @@
 # Top-level CLAUDE.md
-Rules here override all prior. Use caveman skill til told otherwise.
+Rules here override all prior. Use tmnt skill til told otherwise.
 
 ## Memory
 Index `@./MEMORY.md`, files `./memory/`, both next to this file. Scope rules at top of MEMORY.md.
