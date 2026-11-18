@@ -16,6 +16,7 @@ This applies to every session, every mode, every "small fix". No exceptions.
 ## General rules
 - Use Glob not bash for browse files.
 - **ALWAYS** ask + confirm before touch sensitive files, keys, etc.
+- **NEVER** launch subagents / parallel agents / workflows without permission. ALWAYS ask first.
 - Environment, git, style, tool-call rules: see memories. Never assume; ask.
 
 ## Making changes
