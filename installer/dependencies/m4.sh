@@ -18,6 +18,11 @@ install_m4() {
     rm -rf $TMPDIR
     mkdir -p $TMPDIR
 
+    # Bundled gnulib fails to compile under the default C standard of newer compilers.
+    if require_gcc17_pin; then
+        local -x CFLAGS="-std=gnu17 $CFLAGS"
+    fi
+
     cd $TMPDIR && \
         fetch_package $PACKAGETARNAME "${PACKAGEURLS[@]}" && \
         tar -xf $PACKAGETARNAME && \

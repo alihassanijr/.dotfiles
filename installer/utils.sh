@@ -61,6 +61,21 @@ build_tmpdir() {
   fi
 }
 
+require_gcc17_pin() {
+  # Return success on distros whose compiler's default C standard breaks older sources we
+  # build (so far: pkg-config's bundled glib, m4's bundled gnulib, ncurses). Callers then add
+  # -std=gnu17 to their CFLAGS. Currently: Ubuntu 26 and later.
+  [[ $DISTRO_NAME =~ ^ubuntu_([0-9]+)$ ]] && (( 10#${BASH_REMATCH[1]} >= 2600 ))
+}
+
+require_cstdint_include() {
+  # Return success on distros whose C++ standard library no longer provides <cstdint>
+  # indirectly, breaking older sources we build that rely on it (so far: LLVM 18's
+  # llvm/ADT/SmallVector.h, built for clang-format). Callers then add -include cstdint to
+  # their CXXFLAGS. Currently: Ubuntu 26 and later.
+  [[ $DISTRO_NAME =~ ^ubuntu_([0-9]+)$ ]] && (( 10#${BASH_REMATCH[1]} >= 2600 ))
+}
+
 remove_brew_from_path() {
   # Drop every PATH entry that mentions brew. Shows the current PATH with the
   # doomed entries in red, then the resulting PATH, and waits for ENTER before

@@ -15,6 +15,13 @@ install_ncurses() {
     rm -rf $TMPDIR
     mkdir -p $TMPDIR
 
+    # ncurses fails to compile under the default C standard of newer compilers. configure
+    # below is handed its own CFLAGS, which overrides the environment, so the pin goes there.
+    local NCURSES_CFLAGS="-I$NCDIR/include"
+    if require_gcc17_pin; then
+        NCURSES_CFLAGS="-std=gnu17 $NCURSES_CFLAGS"
+    fi
+
     cd $TMPDIR && \
         fetch_package "ncurses-$NCURSES_VERSION.tar.gz" "${NCURSESURLS[@]}" && \
         tar -xzf ncurses*.tar.gz && \
@@ -25,7 +32,7 @@ install_ncurses() {
             --with-shared \
             --enable-pc-files \
             --prefix=$NCDIR \
-            CFLAGS="-I$NCDIR/include" \
+            CFLAGS="$NCURSES_CFLAGS" \
             LIBS="-L$NCDIR/lib" && \
         make -j$NUM_WORKERS VERBOSE=1 && \
         make install

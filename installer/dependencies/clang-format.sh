@@ -62,6 +62,12 @@ install_clang_format() {
         mv $expected_dir $target_dir
     done
 
+    # LLVM 18 headers (e.g. llvm/ADT/SmallVector.h) use fixed-width integer types without
+    # including <cstdint>, and fail to compile against GCC 15's standard library.
+    if require_cstdint_include; then
+        local -x CXXFLAGS="-include cstdint $CXXFLAGS"
+    fi
+
     # Build clang-format
     mkdir build && cd build
     cmake ../llvm/ -DLLVM_ENABLE_PROJECTS="clang" -DCMAKE_BUILD_TYPE=Release -DLLVM_INCLUDE_BENCHMARKS=OFF

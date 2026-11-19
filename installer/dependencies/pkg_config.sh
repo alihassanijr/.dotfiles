@@ -33,6 +33,12 @@ install_pkg_config() {
     else
         # TODO: this is untested; I've only needed to install
         # pkg-config on mac.
+
+        # Bundled glib fails to compile under the default C standard of newer compilers.
+        if require_gcc17_pin; then
+            local -x CFLAGS="-std=gnu17 $CFLAGS"
+        fi
+
         cd $TMPDIR && \
             cd $PACKAGEDIRNAME && \
             ./configure \
